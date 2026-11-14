@@ -81,3 +81,5 @@ details{font-size:19px;color:var(--dim)}summary{font-family:'Press Start 2P',mon
   #logp{height:200px;flex:none}
   .pcards{grid-template-columns:1fr 1fr}.pcard{padding:8px}.pcard .pic{width:52px;height:52px}
 }
+.seg{gap:6px}.seg button{flex:1 1 0;min-width:0;padding-left:4px;padding-right:4px;overflow-wrap:anywhere}
+@media(max-width:480px){.seg button{font-size:9px}}
