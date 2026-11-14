@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script data-arcade-version>window.AV='mwgl7a02';fetch('./version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{})</script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pixel Arcade</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="shared/arcade.css">
+<link rel="stylesheet" href="shared/arcade.css?v=mwgl7a02">
 <style>
 :root{--bg:#0d0b1f;--panel:#1a1740;--panel2:#110f2c;--edge:#4b46b0}
 main{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:28px 16px 60px}
@@ -70,7 +71,7 @@ a.gcard.rise{animation-name:pop}
   <div class="ph rise" style="--d:2.1s">Games</div>
   <div class="games" id="games"></div>
 </main>
-<script src="shared/arcade.js"></script>
+<script src="shared/arcade.js?v=mwgl7a02"></script>
 <script>
 const {el,sprite,SFX,MUSIC}=Arcade;
 const GAMES=[
