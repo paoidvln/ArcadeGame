@@ -70,14 +70,14 @@ const SFX=(()=>{let ac=null,muted=false,nb=null;try{muted=localStorage.getItem('
     bad:()=>{noise(0,.3,.1,.6);tone(400,0,.4,'sawtooth',.08,70)},
     win:()=>seq([523,523,523,659,784,0,659,784,1047,1047],.12,'square',.08),
     lose:()=>seq([392,330,294,247,196,147],.2,'sawtooth',.07)};
-  return{ctx,tone,noise,seq,add(o){Object.assign(lib,o)},play(n){if(muted||!lib[n])return;try{if(ctx())lib[n]()}catch(e){}},
+  return{ctx,peek:()=>ac,tone,noise,seq,add(o){Object.assign(lib,o)},play(n){if(muted||!lib[n])return;try{if(ctx())lib[n]()}catch(e){}},
     get muted(){return muted},toggle(){muted=!muted;try{localStorage.setItem('arcade-mute',muted?'1':'0')}catch(e){}if(!muted)this.play('good');return muted}};
 })();
 const MUSIC=(()=>{let on=true,g=null,timer=0,next=0,si=0,song=null;try{on=localStorage.getItem('arcade-music')!=='0'}catch(e){}
   const F=n=>440*Math.pow(2,(n-69)/12);
   const note=(a,f,t,d,type,v)=>{const o=a.createOscillator(),e=a.createGain();o.type=type;o.frequency.value=f;e.gain.setValueAtTime(v,t);e.gain.exponentialRampToValueAtTime(.0001,t+d);
     o.connect(e);e.connect(g);o.start(t);o.stop(t+d+.03)};
-  const sched=()=>{const a=SFX.ctx();if(!a||a.state!=='running'||!song)return;if(next<a.currentTime)next=a.currentTime+.05;
+  const sched=()=>{const a=SFX.peek();if(!a||a.state!=='running'||!song)return;if(next<a.currentTime)next=a.currentTime+.05;
     const ST=60/song.bpm/2,per=song.per||8,len=song.mel.length;
     while(next<a.currentTime+.35){const i=si%len,c=song.ch[Math.floor(i/per)%song.ch.length];
       if(i%(song.bassEvery||4)===0)note(a,F(c[0]),next,ST*3.6,'triangle',.13);
@@ -87,9 +87,10 @@ const MUSIC=(()=>{let on=true,g=null,timer=0,next=0,si=0,song=null;try{on=localS
   const start=()=>{if(timer||!song)return;const a=SFX.ctx();if(!a)return;if(!g){g=a.createGain();g.connect(a.destination)}
     g.gain.setTargetAtTime(1,a.currentTime,.05);next=0;timer=setInterval(sched,100)};
   const stop=()=>{clearInterval(timer);timer=0;if(g)g.gain.setTargetAtTime(0,SFX.ctx().currentTime,.05)};
-  return{set(s){song=s},get on(){return on},kick(){if(on)start()},toggle(){on=!on;try{localStorage.setItem('arcade-music',on?'1':'0')}catch(e){}on?start():stop();return on}};
+  return{set(s){song=s;if(on)try{start()}catch(e){}},get on(){return on},kick(){if(on){start();SFX.ctx()}},toggle(){on=!on;try{localStorage.setItem('arcade-music',on?'1':'0')}catch(e){}on?start():stop();return on}};
 })();
-document.addEventListener('pointerdown',()=>MUSIC.kick());
+// browsers only allow sound after the visitor's first tap, click or key press — start on whichever comes first
+['pointerdown','pointerup','touchend','keydown','click'].forEach(ev=>document.addEventListener(ev,()=>MUSIC.kick(),true));
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('button,a.gcard'))SFX.play('click')});
 
 /* ---------- background pixels + particle bursts ---------- */
