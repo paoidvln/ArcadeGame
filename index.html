@@ -37,10 +37,27 @@ h1.title span{display:inline-block;animation:drop .5s steps(6) backwards;animati
 a.gcard.rise{animation-name:pop}
 @keyframes pop{0%{transform:scale(.2) rotate(-8deg);opacity:0}70%{transform:scale(1.08) rotate(2deg);opacity:1}100%{transform:none}}
 @media(prefers-reduced-motion:reduce){main,h1.title span,.rise{animation:none!important}}
+#gate{position:relative;z-index:1;min-height:100%;display:flex;align-items:center;justify-content:center;padding:20px}
+#gate[hidden]{display:none}
+#gate .card{text-align:center;animation:pop .5s steps(6) backwards}
+#gate.out .card{animation:gout .45s steps(6) forwards}
+@keyframes gout{to{transform:scale(.1) rotate(10deg);opacity:0}}
+#gate .gt{font-family:'Press Start 2P',monospace;font-weight:400;font-size:clamp(16px,5vw,26px);line-height:1.4;margin:6px 0 16px;text-shadow:3px 3px 0 #e0409a,6px 6px 0 #2a9df4,9px 9px 0 #000}
+#gate input{text-align:center;font-size:28px}
+#gate input.shake{animation:nope .35s steps(6);border-color:var(--bad)}
+@keyframes nope{25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-5px)}}
 </style>
 </head>
 <body>
-<main>
+<section id="gate" hidden>
+  <form class="card" id="gForm" autocomplete="off">
+    <h1 class="gt">PIXEL ARCADE</h1>
+    <p class="tag">Hello, new player! What is your name?</p>
+    <input id="gName" maxlength="14" placeholder="Type your name" aria-label="Your name">
+    <button class="primary big" type="submit">Enter the arcade</button>
+  </form>
+</section>
+<main id="main" hidden>
   <div class="bar"><button class="small" id="bMus" title="Music on/off">♪</button><button class="small" id="bSnd" title="Sound effects on/off">🔊</button></div>
   <h1 class="title" aria-label="Pixel Arcade">PIXEL ARCADE</h1>
   <p class="credit" id="credit" aria-label="Created by J.P. Ibarreta"></p>
@@ -70,14 +87,20 @@ GAMES.forEach(g=>{const a=el('a','gcard rise');a.href=g.href;a.style.cssText=`--
 const me=Arcade.loadProfile();
 const hello=()=>{document.getElementById('hello').textContent='Welcome, '+(Arcade.clean(me.name,'')||'player')+'!'};
 function drawMe(){const b=document.getElementById('me');b.innerHTML='';b.append(Arcade.playerCard(me,'Your name',c=>{me.color=c;drawMe()},()=>{Arcade.saveProfile(me);hello()}))}
-hello();
 // title letters drop in one by one, then the credit types itself out
-(function(){const h=document.querySelector('h1.title'),t=h.textContent;h.textContent='';let i=0;
+function intro(){const h=document.querySelector('h1.title'),t=h.textContent;h.textContent='';let i=0;
   t.split(' ').forEach((w,k)=>{if(k)h.append(' ');const g=el('span');g.style.cssText='animation:none;white-space:nowrap';[...w].forEach(ch=>{const s=el('span',null,ch);s.style.setProperty('--i',i++);g.append(s)});h.append(g)});
   const c=document.getElementById('credit'),txt='CREATED BY J.P. IBARRETA',cur=el('i',null,'_'),still=matchMedia('(prefers-reduced-motion:reduce)').matches;
   const tn=document.createTextNode(still?txt:'');c.append(tn,cur);let n=0;
-  if(!still)setTimeout(function type(){tn.textContent=txt.slice(0,++n);if(n<txt.length)setTimeout(type,55)},1500)})();
-drawMe();
+  if(!still)setTimeout(function type(){tn.textContent=txt.slice(0,++n);if(n<txt.length)setTimeout(type,55)},1500)}
+// first visit: ask for a name, then open the arcade with a greeting
+const gate=document.getElementById('gate'),gi=document.getElementById('gName');
+function enter(){gate.remove();document.getElementById('main').hidden=false;hello();drawMe();intro()}
+if(Arcade.clean(me.name,''))enter();
+else{gate.hidden=false;gi.focus();
+  document.getElementById('gForm').onsubmit=e=>{e.preventDefault();const n=Arcade.clean(gi.value,'');
+    if(!n){gi.classList.remove('shake');void gi.offsetWidth;gi.classList.add('shake');gi.focus();SFX.play('deny');return}
+    me.name=n;Arcade.saveProfile(me);SFX.play('good');gate.classList.add('out');setTimeout(enter,450)}}
 Arcade.initFx(['#ffffff','#7df9ff','#e0409a','#ffd66b']);
 MUSIC.set({bpm:120,arp:'triangle',ch:[[48,60,64,67],[45,57,60,64],[41,53,57,60],[43,55,59,62]],
   mel:[72,0,76,79,0,76,72,0, 69,0,72,76,0,72,69,0, 65,0,69,72,0,77,76,72, 74,0,71,67,0,71,74,0]});
