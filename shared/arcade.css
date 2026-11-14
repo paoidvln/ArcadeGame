@@ -83,3 +83,7 @@ details{font-size:19px;color:var(--dim)}summary{font-family:'Press Start 2P',mon
 }
 .seg{gap:6px}.seg button{flex:1 1 0;min-width:0;padding-left:4px;padding-right:4px;overflow-wrap:anywhere}
 @media(max-width:480px){.seg button{font-size:9px}}
+.pcard{min-width:0}.pcard .av{min-width:0}.pcard input{width:100%;min-width:0;box-sizing:border-box}
+@media(max-width:719px){.pcards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.pcard{padding:8px}.pcard .av{gap:2px}.pcard .av button{padding:6px 7px}.pcard input{font-size:19px;padding:5px 6px}.sw b{width:18px;height:18px}}
+@media(max-width:340px){.pcard .pic{width:40px;height:40px}}
+@media(max-width:350px){.seg button{font-size:7px}}
