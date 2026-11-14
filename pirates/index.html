@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Treasure Tides</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/arcade.css">
+<style>
+:root{--bg:#06202e;--panel:#0e3a4c;--panel2:#0a2a38;--edge:#2f8fa8;--accent:#d9862b;--accent-d:#8a4a12;--accent-l:#ffd08a;
+  --alt:#b8323c;--alt-d:#6e1a22;--alt-l:#ff9aa2;--dim:#9cc7d6;--hi:#7fe3ff}
+body{background:var(--bg) repeating-linear-gradient(180deg,#06202e 0 16px,#082838 16px 32px)}
+#sea{width:min(100%,calc((100dvh - 28px)*1.2));padding:3.2%;background:#1b6f96;border:4px solid #000;box-shadow:inset 0 0 0 4px #2f8fb8,8px 8px 0 #000;
+  background-image:repeating-linear-gradient(90deg,#ffffff14 0 12px,transparent 12px 36px),repeating-linear-gradient(0deg,#00000018 0 6px,transparent 6px 18px);animation:tide 3s steps(6) infinite}
+@keyframes tide{to{background-position:36px 0,0 0}}
+#island{display:grid;grid-template-columns:repeat(9,1fr);gap:0;border:4px solid #000;box-shadow:0 0 0 4px #f3e2a0}
+.cell{position:relative;aspect-ratio:1;padding:0;border:2px solid #0005;background:#e8d28a;box-shadow:inset 3px 3px 0 #fff5,inset -3px -3px 0 #a8873a88;
+  font-family:'Press Start 2P',monospace;font-size:clamp(9px,2.2vw,18px);color:#12081f;text-transform:none;line-height:1;display:flex;align-items:center;justify-content:center}
+.cell:nth-child(odd){background:#dfc67a}
+.cell:hover:not(:disabled){filter:none;border-color:#fff;background:#fff3c0}
+.cell:active:not(:disabled){transform:none}
+.cell:disabled{opacity:1;cursor:default}
+#island.lock .cell:not(.open){cursor:not-allowed}
+.cell.open{background:#8a6a3a;box-shadow:inset 4px 4px 0 #0005;border-color:#0007}
+.cell.open:nth-child(odd){background:#80603a}
+.cell svg{width:74%;height:74%}
+.cell.hint::after{content:"X";position:absolute;color:#d0202c;text-shadow:2px 2px 0 #000;animation:pbob .6s steps(2) infinite}
+.cell .who{position:absolute;right:3px;bottom:3px;width:22%;height:22%;border:2px solid #000}
+.cell .val{position:absolute;left:3px;top:3px;font-size:.7em;color:#ffd66b;text-shadow:2px 2px 0 #000}
+.n1{color:#9fe8ff}.n2{color:#b9ff9f}.n3{color:#ffd66b}.n4,.n5,.n6,.n7,.n8{color:#ff8a9a}
+.cell.open.num{text-shadow:2px 2px 0 #000}
+.cell.pop svg{animation:pop .4s steps(4)}@keyframes pop{0%{transform:scale(.2)}70%{transform:scale(1.25)}}
+#left{font-size:21px;color:var(--gold);width:100%}
+</style>
+</head>
+<body>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="../shared/arcade.js"></script>
+<script>
+const {el,sprite}=Arcade,W=9,H=7;
+const SPR={
+  gold:sprite([".kkkkkkkk.","kTttttttTk","kTttttttTk","kyyyyyyyyk","kttykkyttk","kttyyyyttk","kTttttttTk","kTttttttTk",".kkkkkkkk."]),
+  crab:sprite(["k..k..k..k","kr.k..k.rk",".kr....rk.","..krrrrk..",".krwkkwrk.",".krrrrrrk.","krkrrrrkrk","k.krrrrk.k","..k.kk.k.."]),
+  kraken:sprite(["...kkkk...","..kppppk..",".kpwkkwpk.",".kppppppk.",".kppppppk.","kpkpkkpkpk","kpkpkkpkpk","kp.kp.kpkp",".k..k..k.k"]),
+  rum:sprite(["....kk....","...kTTk...","...khhk...","..khhhhk..",".khhhhhhk.",".khwwwwhk.",".khwrrwhk.",".khwwwwhk.",".khhhhhhk.","..kkkkkk.."]),
+  spy:sprite(["......kkk.",".....kbbbk","....kybbbk","...kyyykk.","..ktyyk...",".kttyk....","kTttk.....","kTTk......",".kk......."])
+};
+const nbrs=i=>{const x=i%W,y=Math.floor(i/W),o=[];for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const nx=x+dx,ny=y+dy;if((dx||dy)&&nx>=0&&nx<W&&ny>=0&&ny<H)o.push(ny*W+nx)}return o};
+let cellEls=[];
+Arcade.run({
+  id:'pirates',name:'Treasure Tides',title:'TREASURE TIDES',tag:'Dig up the island. The richest pirate wins.',startLabel:'Set sail',min:2,max:4,
+  intro:'☠️ Twelve chests are buried on the island. Dig!',
+  bgColors:['#7fe3ff','#ffffff','#2f8fa8'],
+  how:`<p>Take turns digging one sand tile. Find <b>treasure chests</b> to collect gold (1, 2, 3 or 5).</p>
+<p>Empty sand shows a <b>number</b>: how many chests touch that tile, like Minesweeper.</p>
+<p>🦀 Crab: skip your next turn · 🐙 Kraken: lose 2 gold · 🍾 Rum: dig again · 🔭 Spyglass: marks a hidden chest with a red X for everyone.</p>
+<p>When all 12 chests are found, the pirate with the most gold wins.</p>`,
+  song:{bpm:126,arp:'triangle',ch:[[38,50,53,57],[36,48,52,55],[34,46,50,53],[33,45,49,52]],
+    mel:[62,0,65,69,0,69,67,65, 64,0,67,72,0,72,70,67, 65,0,70,74,0,74,72,70, 69,0,73,76,0,73,69,0,
+         74,0,72,69,0,65,67,69, 67,0,64,60,0,64,67,0, 65,0,62,58,0,62,65,0, 64,0,61,57,0,61,64,0]},
+  sfx:({tone,noise,seq})=>({
+    dig:()=>noise(0,.12,.09,.5),
+    coin:()=>seq([988,1319,1568],.08,'square',.07),
+    crab:()=>seq([300,250,300,250],.06,'square',.07),
+    rum:()=>seq([392,523,659],.08,'triangle',.1),
+    spy:()=>tone(600,0,.3,'sine',.09,1400)}),
+  init(players){
+    const types=[1,1,1,1,1,2,2,2,2,3,3,5].map(v=>({t:'gold',v}));
+    for(const [t,n] of [['crab',4],['kraken',3],['rum',3],['spy',3]])for(let i=0;i<n;i++)types.push({t});
+    while(types.length<W*H)types.push({t:'sand'});
+    const cells=Arcade.shuffle(types).map(c=>({t:c.t,v:c.v||0,o:0,by:-1,h:0,n:0}));
+    cells.forEach((c,i)=>c.n=nbrs(i).filter(j=>cells[j].t==='gold').length);
+    return{cells,gold:players.map(()=>0),skip:players.map(()=>0),left:12};
+  },
+  valid:(s,seat,a)=>Number.isInteger(a.i)&&!!s.cells[a.i]&&!s.cells[a.i].o,
+  auto(s){const h=s.cells.findIndex(c=>c.h&&!c.o);if(h>=0)return{i:h};const f=s.cells.map((c,i)=>c.o?-1:i).filter(i=>i>=0);return{i:f[Arcade.rnd(f.length)]}},
+  async act(s,seat,a,api){
+    const c=s.cells[a.i],p=s.players[seat],sel=`[data-i="${a.i}"]`;c.o=1;c.by=seat;c.h=0;let again=false;
+    switch(c.t){
+      case 'gold':s.gold[seat]+=c.v;s.left--;api.log(`💰 ${p.name} digs up a chest: +${c.v} gold!`,'gold');
+        await api.step(900,{sfx:'coin',pop:a.i,toast:`💰 ${p.name} +${c.v} gold`,burst:{sel,cols:['#ffd66b','#fff3c0','#d9862b']}});break;
+      case 'crab':s.skip[seat]++;api.log(`🦀 A crab pinches ${p.name} — skips next turn.`,'bad');
+        await api.step(900,{sfx:'crab',pop:a.i,toast:`🦀 Pinched! ${p.name} skips a turn`});break;
+      case 'kraken':{const lost=Math.min(2,s.gold[seat]);s.gold[seat]-=lost;api.log(`🐙 The Kraken grabs ${lost} gold from ${p.name}!`,'bad');
+        await api.step(1200,{sfx:'bad',pop:a.i,shake:1,banner:{text:'KRAKEN!',sub:`${p.name} loses ${lost} gold`,c:'bad'}});break}
+      case 'rum':again=true;api.log(`🍾 ${p.name} finds rum and digs again!`,'good');
+        await api.step(800,{sfx:'rum',pop:a.i,toast:'🍾 Rum! Dig again'});break;
+      case 'spy':{const f=s.cells.filter(x=>x.t==='gold'&&!x.o&&!x.h);if(f.length)f[api.rnd(f.length)].h=1;
+        api.log(`🔭 ${p.name}'s spyglass ${f.length?'marks a chest with an X':'finds nothing new'}.`,'hi');
+        await api.step(900,{sfx:'spy',pop:a.i,toast:f.length?'🔭 X marks a chest!':'🔭 Nothing new'});break}
+      default:api.log(`${p.name} digs sand — ${c.n?c.n+' chest'+(c.n>1?'s':'')+' nearby':'nothing nearby'}.`);
+        await api.step(350,{sfx:'dig'});
+    }
+    if(s.left===0){const m=Math.max(...s.gold);s.over=true;s.winners=s.players.filter(q=>s.gold[q.id]===m).map(q=>q.id);
+      api.log('☠️ All the treasure has been found!','gold');return}
+    if(again)return;
+    for(;;){s.turn=(s.turn+1)%s.players.length;if(s.skip[s.turn]>0){s.skip[s.turn]--;const q=s.players[s.turn];
+        api.log(`⏭️ ${q.name} nurses a pinched toe and skips.`);await api.step(800,{sfx:'deny',toast:`⏭️ ${q.name} skips a turn`})}else break}
+  },
+  status:(s,mine)=>s.busy?'Digging…':mine?'Pick a sand tile to dig':null,
+  score:(s,p)=>s.gold[p.id]+' G',
+  badge:(s,p)=>s.skip[p.id]?'🦀 skip':'',
+  endText(s){const m=Math.max(...s.gold);return s.winners.map(i=>s.players[i].name).join(' & ')+' sails away with '+m+' gold.'},
+  build(stage,s,ctx){
+    const sea=el('div');sea.id='sea';const isl=el('div');isl.id='island';cellEls=[];
+    s.cells.forEach((c,i)=>{const b=el('button','cell');b.dataset.i=i;b.onclick=()=>ctx.act({i});cellEls.push(b);isl.append(b)});
+    sea.append(isl);stage.append(sea);
+  },
+  render(s,ctx,ctl){
+    const can=ctx.canAct();document.getElementById('island').classList.toggle('lock',!can);
+    s.cells.forEach((c,i)=>{const b=cellEls[i],key=c.o+':'+c.h+':'+c.by;b.disabled=!!c.o||!can;
+      if(b.dataset.k===key)return;b.dataset.k=key;b.className='cell'+(c.o?' open':'')+(c.h?' hint':'');b.innerHTML='';
+      if(!c.o)return;
+      if(c.t==='sand'){if(c.n){b.classList.add('num','n'+c.n);b.textContent=c.n}}
+      else{b.innerHTML=SPR[c.t];if(c.t==='gold')b.append(el('span','val','+'+c.v))}
+      if(c.t!=='sand'){const w=el('span','who');w.style.background=s.players[c.by].color;w.title='Dug by '+s.players[c.by].name;b.append(w)}});
+    const l=el('div');l.id='left';l.textContent=`Chests left: ${s.left} of 12`;ctl.append(l);
+  },
+  fx(fx){if(fx.pop!=null&&cellEls[fx.pop]){const b=cellEls[fx.pop];b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop')}}
+});
+</script>
+</body>
+</html>

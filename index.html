@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pixel Arcade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/arcade.css">
+<style>
+:root{--bg:#0d0b1f;--panel:#1a1740;--panel2:#110f2c;--edge:#4b46b0}
+main{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:28px 16px 60px}
+h1.title{font-size:clamp(24px,7vw,52px);text-shadow:4px 4px 0 #e0409a,8px 8px 0 #2a9df4,12px 12px 0 #000;margin-bottom:22px}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin-top:8px}
+a.gcard{display:block;text-decoration:none;color:var(--text);background:var(--gp);border:4px solid #000;box-shadow:inset 0 0 0 3px var(--ge),8px 8px 0 #000;padding:18px;text-align:center}
+a.gcard:hover,a.gcard:focus-visible{border-color:#fff;transform:translate(-2px,-2px);box-shadow:inset 0 0 0 3px var(--ge),10px 10px 0 #000;outline:0}
+a.gcard:hover .art{animation:pbob .5s steps(2) infinite}
+.gcard .art{width:112px;height:112px;margin:4px auto 14px;display:flex;align-items:center;filter:drop-shadow(4px 4px 0 #000)}.gcard .art svg{width:100%}
+.gcard b{display:block;font-family:'Press Start 2P',monospace;font-weight:400;font-size:13px;line-height:1.5;color:var(--gt);text-shadow:2px 2px 0 #000}
+.gcard p{margin:10px 0;color:#e8e4ff;min-height:66px}
+.gcard small{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--ge);background:#000;padding:5px 8px;display:inline-block}
+.gcard .play{display:block;margin-top:14px;font-family:'Press Start 2P',monospace;font-size:11px;background:var(--ge);color:#000;border:3px solid #000;padding:10px;box-shadow:inset -3px -3px 0 #0005,inset 3px 3px 0 #fff6}
+.me{display:grid;grid-template-columns:260px 1fr;gap:18px;align-items:center;margin-bottom:26px}
+.me p{margin:0 0 8px;color:var(--dim)}
+.bar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px}
+@media(max-width:640px){.me{grid-template-columns:1fr}}
+.credit{text-align:center;font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.6;color:var(--gold);text-shadow:2px 2px 0 #000;margin:0 0 18px;min-height:16px}
+.credit i{font-style:normal;animation:blink .7s steps(2) infinite}@keyframes blink{50%{opacity:0}}
+#hello{color:var(--hi);font-size:26px;margin-bottom:4px}
+/* opening animation */
+main{animation:crt .7s steps(10) backwards;transform-origin:50% 30%}
+@keyframes crt{0%{transform:scale(.3,.004);filter:brightness(5)}45%{transform:scale(1,.004);filter:brightness(5)}100%{transform:none;filter:none}}
+h1.title span{display:inline-block;animation:drop .5s steps(6) backwards;animation-delay:calc(.65s + var(--i)*.07s)}
+@keyframes drop{0%{transform:translateY(-160px);opacity:0}60%{transform:translateY(10px);opacity:1}80%{transform:translateY(-4px)}100%{transform:none}}
+.rise{animation:rise .5s steps(6) backwards;animation-delay:var(--d,1.6s)}
+@keyframes rise{0%{transform:translateY(46px);opacity:0}100%{transform:none;opacity:1}}
+a.gcard.rise{animation-name:pop}
+@keyframes pop{0%{transform:scale(.2) rotate(-8deg);opacity:0}70%{transform:scale(1.08) rotate(2deg);opacity:1}100%{transform:none}}
+@media(prefers-reduced-motion:reduce){main,h1.title span,.rise{animation:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <div class="bar"><button class="small" id="bMus" title="Music on/off">♪</button><button class="small" id="bSnd" title="Sound effects on/off">🔊</button></div>
+  <h1 class="title" aria-label="Pixel Arcade">PIXEL ARCADE</h1>
+  <p class="credit" id="credit" aria-label="Created by J.P. Ibarreta"></p>
+  <p class="tag rise" id="hello" style="--d:1.7s"></p>
+  <p class="tag rise" style="--d:1.8s">Pick a game. Play on one device or share a room code with friends.</p>
+  <section class="panel me rise" style="--d:1.95s">
+    <div id="me"></div>
+    <div><div class="ph">Your player</div><p>Choose your avatar, name and colour once. Every game on this device remembers it.</p></div>
+  </section>
+  <div class="ph rise" style="--d:2.1s">Games</div>
+  <div class="games" id="games"></div>
+</main>
+<script src="shared/arcade.js"></script>
+<script>
+const {el,sprite,SFX,MUSIC}=Arcade;
+const GAMES=[
+ {href:'pirates/',name:'TREASURE TIDES',world:'Pirates',desc:'Dig up the island for buried chests. Read the clues, dodge the Kraken, grab the most gold.',players:'2–4 players',gp:'#0e3a4c',ge:'#ffb85a',gt:'#ffd66b',
+  art:sprite([".kkkkkkkk.","kTttttttTk","kTttttttTk","kyyyyyyyyk","kttykkyttk","kttyyyyttk","kTttttttTk","kTttttttTk",".kkkkkkkk."])},
+ {href:'space/',name:'ASTEROID DASH',world:'Space',desc:'Roll to fly, bank to stay safe. Push your luck across 50 light-years without hitting a rock.',players:'2–4 players',gp:'#11123a',ge:'#ff7ac0',gt:'#7df9ff',
+  art:sprite(["..kkkkkkk...",".zkcccccckk.","yzkccbbccdck","yzkccbbccdck",".zkcccccckk.","..kkkkkkk..."],'#e0409a')},
+ {href:'ghostbound/',name:'GHOSTBOUND',world:'Haunted',desc:'Race across 100 haunted tiles. Draw mystery cards and escape before the Ghost catches you three times.',players:'2–4 players',gp:'#1b0f36',ge:'#b796ff',gt:'#dffcff',
+  art:sprite(["...kkkkkk...","..kGGGGGGk..",".kGGGGGGGGk.",".kGkkGGkkGk.",".kGkkGGkkGk.",".kGGGGGGGGk.",".kGGGkkGGGk.",".kGGGkkGGGk.",".kGGGGGGGGk.",".kGGGGGGGGk.",".kGGkGGkGGk.","..kk.kk.kk.."])}
+];
+const box=document.getElementById('games');
+GAMES.forEach(g=>{const a=el('a','gcard rise');a.href=g.href;a.style.cssText=`--gp:${g.gp};--ge:${g.ge};--gt:${g.gt};--d:${2.2+GAMES.indexOf(g)*.18}s`;
+  const art=el('div','art');art.innerHTML=g.art;a.append(art,el('b',null,g.name),el('p',null,g.desc),el('small',null,g.world.toUpperCase()+' · '+g.players.toUpperCase()),el('span','play','PLAY'));box.append(a)});
+const me=Arcade.loadProfile();
+const hello=()=>{document.getElementById('hello').textContent='Welcome, '+(Arcade.clean(me.name,'')||'player')+'!'};
+function drawMe(){const b=document.getElementById('me');b.innerHTML='';b.append(Arcade.playerCard(me,'Your name',c=>{me.color=c;drawMe()},()=>{Arcade.saveProfile(me);hello()}))}
+hello();
+// title letters drop in one by one, then the credit types itself out
+(function(){const h=document.querySelector('h1.title'),t=h.textContent;h.textContent='';let i=0;
+  t.split(' ').forEach((w,k)=>{if(k)h.append(' ');const g=el('span');g.style.cssText='animation:none;white-space:nowrap';[...w].forEach(ch=>{const s=el('span',null,ch);s.style.setProperty('--i',i++);g.append(s)});h.append(g)});
+  const c=document.getElementById('credit'),txt='CREATED BY J.P. IBARRETA',cur=el('i',null,'_'),still=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const tn=document.createTextNode(still?txt:'');c.append(tn,cur);let n=0;
+  if(!still)setTimeout(function type(){tn.textContent=txt.slice(0,++n);if(n<txt.length)setTimeout(type,55)},1500)})();
+drawMe();
+Arcade.initFx(['#ffffff','#7df9ff','#e0409a','#ffd66b']);
+MUSIC.set({bpm:120,arp:'triangle',ch:[[48,60,64,67],[45,57,60,64],[41,53,57,60],[43,55,59,62]],
+  mel:[72,0,76,79,0,76,72,0, 69,0,72,76,0,72,69,0, 65,0,69,72,0,77,76,72, 74,0,71,67,0,71,74,0]});
+const bm=document.getElementById('bMus'),bs=document.getElementById('bSnd');
+bm.classList.toggle('off',!MUSIC.on);bm.onclick=()=>bm.classList.toggle('off',!MUSIC.toggle());
+bs.textContent=SFX.muted?'🔇':'🔊';bs.onclick=()=>bs.textContent=SFX.toggle()?'🔇':'🔊';
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Asteroid Dash</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/arcade.css">
+<style>
+:root{--bg:#05051a;--panel:#11123a;--panel2:#0a0b26;--edge:#3d46b8;--accent:#e0409a;--accent-d:#7a1f52;--accent-l:#ffa6d6;
+  --alt:#2a9df4;--alt-d:#12508a;--alt-l:#a6d8ff;--dim:#9aa0d8;--hi:#7df9ff}
+#space{width:min(100%,900px);display:flex;flex-direction:column;gap:14px}
+#lanes{display:flex;flex-direction:column;gap:10px}
+.lane{display:flex;align-items:center;gap:10px}
+.lane .who{width:40px;height:40px;flex:none}.lane .who svg{width:100%;height:100%}
+.lane .num{font-family:'Press Start 2P',monospace;font-size:10px;width:62px;text-align:right;color:var(--gold);flex:none}
+.track{position:relative;flex:1;height:54px;background:#000;border:3px solid #000;box-shadow:inset 0 0 0 2px var(--edge);
+  background-image:repeating-linear-gradient(90deg,transparent 0 calc(10% - 2px),#ffffff22 calc(10% - 2px) 10%)}
+.lane.cur .track{box-shadow:inset 0 0 0 2px #fff}
+.track .end{position:absolute;top:50%;width:34px;height:34px;transform:translate(-50%,-50%)}
+.track .end svg{width:100%;height:100%}
+.track .e0{left:20px}.track .e1{left:calc(100% - 22px)}
+.ship{position:absolute;top:50%;width:52px;height:26px;transform:translate(-50%,-50%);left:0;transition:left .5s steps(8);filter:drop-shadow(2px 2px 0 #000);z-index:2}
+.ship svg{width:100%;height:100%}
+.ship.plan{opacity:.35;z-index:1;animation:blink .5s steps(2) infinite}
+@keyframes blink{50%{opacity:.15}}
+#cockpit{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap}
+.die{width:84px;height:84px;background:#f1eaff;border:4px solid #000;box-shadow:inset -5px -5px 0 #a99ad0,inset 5px 5px 0 #fff,6px 6px 0 #000;display:grid;grid-template-columns:repeat(3,1fr);padding:11px;gap:3px}
+.die i{background:transparent}.die i.p{background:#12081f}
+.die.ast{display:block;padding:8px;background:#3a0f20;box-shadow:inset -5px -5px 0 #1a0510,inset 5px 5px 0 #7a1f3a,6px 6px 0 #000}.die.ast svg{width:100%;height:100%}
+.die.rolling{animation:shk .1s steps(2) infinite}@keyframes shk{50%{transform:translate(2px,-3px) rotate(4deg)}}
+#pot{text-align:center}#pot b{display:block;font-family:'Press Start 2P',monospace;font-weight:400;font-size:28px;color:var(--gold);text-shadow:3px 3px 0 #000;line-height:1.4}
+#pot span{color:var(--dim)}
+@media(max-width:719px){.die{width:64px;height:64px;padding:8px}.track{height:44px}.ship{width:40px;height:20px}.lane .who{width:30px;height:30px}.lane .num{width:54px;font-size:8px}}
+</style>
+</head>
+<body>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="../shared/arcade.js"></script>
+<script>
+const {el,sprite}=Arcade,GOAL=50;
+const ROCKET=["..kkkkkkk...",".zkcccccckk.","yzkccbbccdck","yzkccbbccdck",".zkcccccckk.","..kkkkkkk..."];
+const ASTEROID=sprite(["..kkkkk...",".kqqqqQk..","kqqQqqqQk.","kqqqqQqqQk","kQqqqqqqQk","kqqQqqqQQk",".kqqqqQQk.","..kkkkkk.."]);
+const EARTH=sprite(["..kkkk..",".kuuhhk.","kuhhhuuk","kuuhuuuk","khuuuhhk","kuuuhhuk",".kuuuuk.","..kkkk.."]);
+const PLANET=sprite(["..kkkk..",".kmmmmk.","kmmppmmk","kpmmmmpk","kmmpmmmk","kmmmmppk",".kmpmmk.","..kkkk.."]);
+let lanes=[],dice=[],rollIv=0;
+function setDie(d,f){d.className='die'+(f===6?' ast':'');d.innerHTML='';if(f===6){d.innerHTML=ASTEROID;return}
+  const pips={0:[],1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8]}[f]||[];for(let i=0;i<9;i++)d.append(el('i',pips.includes(i)?'p':''))}
+const pct=v=>(6+Math.min(1,v/GOAL)*88)+'%';
+Arcade.run({
+  id:'space',name:'Asteroid Dash',title:'ASTEROID DASH',tag:'Race 50 light-years to the pink planet. Push your luck — but mind the rocks.',startLabel:'Launch',min:2,max:4,
+  intro:'🚀 Engines on! First ship to 50 light-years wins.',
+  bgColors:['#ffffff','#7df9ff','#e0409a','#ffffff'],
+  how:`<p>On your turn, <b>Roll</b> two dice as often as you dare. The numbers are added to your <b>cargo</b>.</p>
+<p><b>Doubles</b> are a warp jump: that roll counts twice.</p>
+<p>An <b>asteroid</b> face is a crash: you lose all your cargo and your turn. Two asteroids is a meteor storm — you also lose 5 banked light-years.</p>
+<p>Press <b>Bank</b> to lock your cargo in and move your ship. Each pilot has one 🛡️ shield that absorbs the first crash.</p>
+<p>First to bank ${GOAL} light-years wins.</p>`,
+  song:{bpm:96,lead:'triangle',ch:[[45,57,60,64],[41,53,57,60],[36,48,52,55],[43,55,59,62]],
+    mel:[69,0,0,72,0,0,76,0, 77,0,0,72,0,0,69,0, 67,0,0,72,0,0,76,0, 74,0,0,71,0,0,67,0,
+         81,0,79,0,76,0,72,0, 77,0,76,0,72,0,69,0, 79,0,76,0,72,0,67,0, 74,0,0,0,71,0,74,0]},
+  sfx:({tone,noise,seq})=>({
+    dice:()=>{for(let i=0;i<8;i++)tone(240+Math.random()*500,i*.08,.05,'square',.05)},
+    gain:()=>seq([659,880],.07,'square',.06),
+    warp:()=>{tone(200,0,.5,'sine',.09,1800);tone(300,.08,.5,'triangle',.06,2400)},
+    shield:()=>seq([784,988,784,988],.07,'triangle',.09),
+    bank:()=>{seq([523,659,784,1047],.07,'square',.06);noise(0,.4,.04,1.6)}}),
+  init:players=>({bank:players.map(()=>0),shield:players.map(()=>1),pot:0,dice:[0,0]}),
+  valid:(s,seat,a)=>a.k==='roll'||(a.k==='bank'&&s.pot>0),
+  auto:(s,i)=>({k:s.pot>0&&(s.bank[i]+s.pot>=GOAL||s.pot>=14)?'bank':'roll'}),
+  async act(s,seat,a,api){
+    const p=s.players[seat],next=()=>{s.turn=(s.turn+1)%s.players.length;s.pot=0};
+    if(a.k==='bank'){
+      s.bank[seat]+=s.pot;api.log(`🚀 ${p.name} banks ${s.pot} and reaches ${Math.min(GOAL,s.bank[seat])} light-years.`,'good');
+      if(s.bank[seat]>=GOAL){s.pot=0;s.over=true;s.winners=[seat];api.log(`🪐 ${p.name} lands on the pink planet!`,'gold');await api.step(700,{sfx:'bank'});return}
+      const got=s.pot;next();await api.step(700,{sfx:'bank',toast:`🚀 ${p.name} banks ${got}`});return}
+    const d=[1+api.rnd(6),1+api.rnd(6)];s.dice=d;
+    await api.step(850,{sfx:'dice',roll:1});
+    const ast=(d[0]===6)+(d[1]===6);
+    if(!ast){const dbl=d[0]===d[1],g=(d[0]+d[1])*(dbl?2:1);s.pot+=g;
+      api.log(`🎲 ${p.name} rolls ${d[0]} + ${d[1]}${dbl?' — warp double!':''} Cargo ${s.pot}.`,dbl?'hi':'');
+      await api.step(450,{sfx:dbl?'warp':'gain',toast:dbl?`⚡ Warp double! +${g}`:`+${g} light-years`})}
+    else if(s.shield[seat]>0){s.shield[seat]--;api.log(`🛡️ ${p.name}'s shield absorbs an asteroid. Cargo is safe.`,'hi');
+      await api.step(1200,{sfx:'shield',banner:{text:'SHIELD HIT!',sub:`${p.name}'s cargo is safe — but the shield is gone`}})}
+    else{const lost=s.pot;let pen=0;if(ast===2){pen=Math.min(5,s.bank[seat]);s.bank[seat]-=pen}
+      api.log(`☄️ ${p.name} ${ast===2?'flies into a meteor storm':'hits an asteroid'} and loses ${lost} cargo${pen?' and '+pen+' banked':''}.`,'bad');
+      next();await api.step(1300,{sfx:'bad',shake:1,banner:{text:ast===2?'METEOR STORM!':'CRASH!',sub:`${p.name} loses ${lost} cargo${pen?' and '+pen+' banked light-years':''}`,c:'bad'}})}
+  },
+  status:(s,mine)=>s.busy?'Rolling…':mine?(s.pot?'Roll again or bank your cargo':'Roll the dice'):null,
+  score:(s,p)=>s.bank[p.id]+'/'+GOAL,
+  badge:(s,p)=>s.shield[p.id]?'🛡️':'',
+  endText:s=>s.players[s.winners[0]].name+' reaches the pink planet first!',
+  build(stage,s,ctx){
+    const root=el('div');root.id='space';const ln=el('div','panel');ln.id='lanes';lanes=[];
+    s.players.forEach(p=>{const r=el('div','lane'),who=el('div','who'),tr=el('div','track'),num=el('div','num');who.innerHTML=ctx.avatar(p);who.title=p.name;
+      const e0=el('div','end e0'),e1=el('div','end e1');e0.innerHTML=EARTH;e1.innerHTML=PLANET;
+      const plan=el('div','ship plan'),ship=el('div','ship');plan.innerHTML=ship.innerHTML=sprite(ROCKET,p.color);
+      tr.append(e0,e1,plan,ship);r.append(who,tr,num);ln.append(r);lanes.push({r,ship,plan,num})});
+    const ck=el('div','panel');ck.id='cockpit';dice=[el('div','die'),el('div','die')];
+    const pot=el('div');pot.id='pot';ck.append(dice[0],pot,dice[1]);
+    root.append(ln,ck);stage.append(root);
+  },
+  render(s,ctx,ctl){
+    s.players.forEach((p,i)=>{const L=lanes[i],cur=i===s.turn&&!s.over;L.r.classList.toggle('cur',cur);
+      L.ship.style.left=pct(s.bank[i]);L.plan.style.left=pct(s.bank[i]+(cur?s.pot:0));L.plan.style.display=cur&&s.pot?'':'none';
+      L.num.textContent=s.bank[i]+' LY'});
+    if(!dice[0].classList.contains('rolling'))dice.forEach((d,i)=>setDie(d,s.dice[i]));
+    const pot=document.getElementById('pot');pot.innerHTML='';pot.append(el('span',null,'CARGO'),el('b',null,s.pot),el('span',null,'light-years'));
+    if(!s.over){ctl.append(ctx.button('Roll',{k:'roll'}));const b=ctx.button(s.pot?'Bank '+s.pot:'Bank',{k:'bank'},'alt');if(!s.pot){b.disabled=true;b.classList.remove('go')}ctl.append(b)}
+  },
+  fx(fx,s){if(!fx.roll)return;clearInterval(rollIv);let n=0;dice.forEach(d=>d.classList.add('rolling'));
+    rollIv=setInterval(()=>{if(++n>=8){clearInterval(rollIv);dice.forEach((d,i)=>{setDie(d,s.dice[i])})}
+      else dice.forEach(d=>{setDie(d,1+Math.floor(Math.random()*6));d.classList.add('rolling')})},80)}
+});
+addEventListener('keydown',e=>{if(e.code==='Space'&&!/INPUT|BUTTON/.test(document.activeElement.tagName)){const b=document.querySelector('#ctl button.go');if(b){e.preventDefault();b.click()}}});
+</script>
+</body>
+</html>
