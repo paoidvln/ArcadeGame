@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwgl7a02';fetch('./version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{})</script>
+<script data-arcade-version>window.AV='mwglaiyi';fetch('./version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{})</script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pixel Arcade</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="shared/arcade.css?v=mwgl7a02">
+<link rel="stylesheet" href="shared/arcade.css?v=mwglaiyi">
 <style>
 :root{--bg:#0d0b1f;--panel:#1a1740;--panel2:#110f2c;--edge:#4b46b0}
 main{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:28px 16px 60px}
@@ -71,7 +71,7 @@ a.gcard.rise{animation-name:pop}
   <div class="ph rise" style="--d:2.1s">Games</div>
   <div class="games" id="games"></div>
 </main>
-<script src="shared/arcade.js?v=mwgl7a02"></script>
+<script src="shared/arcade.js?v=mwglaiyi"></script>
 <script>
 const {el,sprite,SFX,MUSIC}=Arcade;
 const GAMES=[
@@ -80,11 +80,13 @@ const GAMES=[
  {href:'space/',name:'ASTEROID DASH',world:'Space',desc:'Roll to fly, bank to stay safe. Push your luck across 50 light-years without hitting a rock.',players:'2–4 players',gp:'#11123a',ge:'#ff7ac0',gt:'#7df9ff',
   art:sprite(["..kkkkkkk...",".zkcccccckk.","yzkccbbccdck","yzkccbbccdck",".zkcccccckk.","..kkkkkkk..."],'#e0409a')},
  {href:'ghostbound/',name:'GHOSTBOUND',world:'Haunted',desc:'Race across 100 haunted tiles. Draw mystery cards and escape before the Ghost catches you three times.',players:'2–4 players',gp:'#1b0f36',ge:'#b796ff',gt:'#dffcff',
-  art:sprite(["...kkkkkk...","..kGGGGGGk..",".kGGGGGGGGk.",".kGkkGGkkGk.",".kGkkGGkkGk.",".kGGGGGGGGk.",".kGGGkkGGGk.",".kGGGkkGGGk.",".kGGGGGGGGk.",".kGGGGGGGGk.",".kGGkGGkGGk.","..kk.kk.kk.."])}
+  art:sprite(["...kkkkkk...","..kGGGGGGk..",".kGGGGGGGGk.",".kGkkGGkkGk.",".kGkkGGkkGk.",".kGGGGGGGGk.",".kGGGkkGGGk.",".kGGGkkGGGk.",".kGGGGGGGGk.",".kGGGGGGGGk.",".kGGkGGkGGk.","..kk.kk.kk.."])},
+ {href:'lizzy/',name:'PRINCESS LIZZY',world:'Locked',desc:'A game only for my Girlfriend.',players:'Password needed',play:'UNLOCK',gp:'#3a1638',ge:'#ff8fc0',gt:'#ffd66b',
+  art:sprite(["...y.yy.y...","...yyyyyy...","..kTTTTTTk..",".kTssssssTk.",".kTskssksTk.",".kTssssssTk.",".kTTsrrsTTk.","..kTmmmmTk..","..kmmwwmmk..",".kmmmmmmmmk.",".kmmmmmmmmk.","..kkkkkkkk.."])}
 ];
 const box=document.getElementById('games');
 GAMES.forEach(g=>{const a=el('a','gcard rise');a.href=g.href;a.style.cssText=`--gp:${g.gp};--ge:${g.ge};--gt:${g.gt};--d:${2.2+GAMES.indexOf(g)*.18}s`;
-  const art=el('div','art');art.innerHTML=g.art;a.append(art,el('b',null,g.name),el('p',null,g.desc),el('small',null,g.world.toUpperCase()+' · '+g.players.toUpperCase()),el('span','play','PLAY'));box.append(a)});
+  const art=el('div','art');art.innerHTML=g.art;a.append(art,el('b',null,g.name),el('p',null,g.desc),el('small',null,g.world.toUpperCase()+' · '+g.players.toUpperCase()),el('span','play',g.play||'PLAY'));box.append(a)});
 const me=Arcade.loadProfile();
 const hello=()=>{document.getElementById('hello').textContent='Welcome, '+(Arcade.clean(me.name,'')||'player')+'!'};
 function drawMe(){const b=document.getElementById('me');b.innerHTML='';b.append(Arcade.playerCard(me,'Your name',c=>{me.color=c;drawMe()},()=>{Arcade.saveProfile(me);hello()}))}
