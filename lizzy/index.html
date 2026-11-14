@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="tl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Princess Lizzy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/arcade.css">
+<style>
+:root{--bg:#1a0b1e;--panel:#3a1638;--panel2:#260d26;--edge:#c8508c;--accent:#ff5fa2;--accent-d:#8a2356;--accent-l:#ffc2e0;
+  --alt:#8a5cf0;--alt-d:#45288a;--alt-l:#d2c2ff;--dim:#e0a8c8;--hi:#ffc2e0;--gold:#ffd66b}
+h1.title{text-shadow:4px 4px 0 var(--accent),8px 8px 0 #000}
+#lock .card{text-align:center}
+#lock .pic{width:128px;height:128px;margin:0 auto 6px;filter:drop-shadow(4px 4px 0 #000);animation:pbob .8s steps(2) infinite}#lock .pic svg{width:100%;height:100%}
+#lock .nm{font-family:'Press Start 2P',monospace;font-size:14px;color:var(--gold);text-shadow:2px 2px 0 #000;margin-bottom:12px}
+#lock input{text-align:center;font-size:30px;letter-spacing:6px}
+#lock input.shake{animation:nope .35s steps(6);border-color:var(--bad)}
+@keyframes nope{25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-5px)}}
+#play.on{display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px;min-height:100dvh}
+#hud{width:min(100%,520px);display:flex;align-items:center;justify-content:space-between;gap:8px}
+#hud .ti{font-family:'Press Start 2P',monospace;font-size:9px;line-height:1.5;color:var(--gold);text-shadow:2px 2px 0 #000}
+#hud .ti small{display:block;font-family:VT323,monospace;font-size:18px;color:var(--dim)}
+#hud .hc{font-family:'Press Start 2P',monospace;font-size:11px;white-space:nowrap;display:flex;align-items:center;gap:6px}#hud .hc svg{width:22px;height:20px}
+#mapw{width:min(100%,520px,calc((100dvh - 250px)*9/11));border:4px solid #000;box-shadow:0 0 0 4px var(--edge),8px 8px 0 #000;position:relative}
+#map{display:grid;grid-template-columns:repeat(9,1fr);position:relative}
+.t{aspect-ratio:1;position:relative;display:flex;align-items:center;justify-content:center}
+.t svg{width:86%;height:86%}
+.t.h svg{width:60%;height:60%;animation:pbob .7s steps(2) infinite;filter:drop-shadow(2px 2px 0 #0008)}
+.t.f svg,.t.s svg{width:46%;height:46%}
+.t.w{background-image:repeating-linear-gradient(0deg,#ffffff18 0 3px,transparent 3px 12px);animation:tide 2s steps(4) infinite}
+@keyframes tide{to{background-position:0 12px}}
+.t.br{background:#8a5a2b!important;box-shadow:inset 0 0 0 3px #5c3a1a;background-image:repeating-linear-gradient(0deg,#0003 0 2px,transparent 2px 8px)!important;animation:none}
+.t.C{background:#6b6b85!important;background-image:repeating-linear-gradient(0deg,#0004 0 2px,transparent 2px 10px),repeating-linear-gradient(90deg,#0003 0 2px,transparent 2px 16px)!important}
+.t.g.shut svg{opacity:.35}
+.t.g.openg{animation:glow .8s steps(2) infinite}@keyframes glow{50%{box-shadow:inset 0 0 0 4px var(--gold)}}
+.c0 .t{background:#2a2350}.c0 .t:nth-child(odd){background:#27204a}.c0 .t.w{background-color:#16306a}
+.c1 .t{background:#3f8a4e}.c1 .t:nth-child(odd){background:#3a8248}
+.c2 .t{background:#4a5568}.c2 .t:nth-child(odd){background:#465062}
+.c3 .t{background:#7a5aa0}.c3 .t:nth-child(odd){background:#74559a}
+.c2 #map::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(105deg,transparent 0 14px,#bfe3ff40 14px 16px);background-size:60px 60px;animation:rain .35s linear infinite}
+@keyframes rain{to{background-position:-12px 60px}}
+#me,#he{position:absolute;width:11.11%;aspect-ratio:1;pointer-events:none;z-index:3;filter:drop-shadow(2px 2px 0 #000)}
+#me{transition:left .14s steps(3),top .14s steps(3)}
+#me svg,#he svg{width:100%;height:100%}
+#he{animation:pbob .8s steps(2) infinite}
+#ctl2{width:min(100%,520px);display:flex;align-items:center;justify-content:space-between;gap:10px}
+#pad{display:grid;grid-template-columns:repeat(3,46px);grid-template-rows:repeat(2,42px);gap:4px}
+#pad button{padding:0;font-size:14px}#pad .u{grid-column:2}#pad .l{grid-column:1;grid-row:2}#pad .d{grid-column:2;grid-row:2}#pad .r{grid-column:3;grid-row:2}
+#side{display:flex;flex-direction:column;gap:8px;align-items:stretch}
+#tip{font-size:18px;color:var(--dim);text-align:center;width:min(100%,520px)}
+/* letter / message cards */
+#msg .card{text-align:center;max-height:92dvh;overflow:auto;animation:pop .45s steps(6) backwards}
+@keyframes pop{0%{transform:scale(.2) rotate(-8deg);opacity:0}70%{transform:scale(1.08) rotate(2deg);opacity:1}}
+#msg .ic{width:96px;height:96px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(4px 4px 0 #000);animation:pbob .8s steps(2) infinite}#msg .ic svg{width:100%}
+#msg .ic.duo{width:190px;gap:6px}#msg .ic.duo svg{width:50%}
+#msg .lb{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--hi);letter-spacing:2px;margin-bottom:6px}
+#msg h2{color:var(--gold);margin:4px 0 12px}
+#msg .tx{background:var(--panel2);border:3px solid #000;box-shadow:inset 0 0 0 2px var(--edge);padding:14px 12px;text-align:left}
+#msg .tx p{margin:0 0 10px;font-size:23px;line-height:1.1;animation:fadeup .5s steps(5) backwards;animation-delay:calc(.35s + var(--i)*.55s)}#msg .tx p:last-child{margin:0}
+@keyframes fadeup{0%{opacity:0;transform:translateY(10px)}}
+#book .card{max-height:88dvh;overflow:auto}
+#book .e{border:3px solid #000;background:var(--panel2);box-shadow:inset 0 0 0 2px var(--edge);padding:10px;margin-bottom:8px}
+#book .e b{display:block;font-family:'Press Start 2P',monospace;font-weight:400;font-size:8px;color:var(--gold);margin-bottom:6px;line-height:1.5}
+#catch .card{text-align:center}
+#sky{position:relative;height:min(52dvh,360px);background:var(--panel2);border:3px solid #000;box-shadow:inset 0 0 0 2px var(--edge);overflow:hidden;margin-top:10px}
+#sky button{position:absolute;bottom:-60px;width:56px;height:52px;padding:6px;background:none;border:0;box-shadow:none;animation:rise 3.6s linear forwards}
+#sky button svg{width:100%;height:100%;filter:drop-shadow(2px 2px 0 #000)}
+@keyframes rise{to{bottom:110%}}
+#ccount{font-family:'Press Start 2P',monospace;font-size:12px;color:var(--gold);margin-top:10px}
+</style>
+</head>
+<body>
+<section id="lock" class="screen center on"><form class="card" id="lf" autocomplete="off">
+  <div class="pic" id="lpic"></div>
+  <div class="nm">Princess Lizzy</div>
+  <p class="tag">Para lang ito sa isang prinsesa.<br>Ano ang lihim na numero natin?</p>
+  <input id="pw" type="password" inputmode="numeric" maxlength="32" placeholder="• • • •" aria-label="Password">
+  <button class="primary big" type="submit" id="lb">Buksan</button>
+  <div class="err" id="lerr"></div>
+</form></section>
+
+<section id="play" class="screen">
+  <div id="hud" class="panel"><div class="ti" id="cti"></div><div class="hc" id="hc"></div></div>
+  <div id="mapw"><div id="map"></div></div>
+  <div id="tip">I-tap ang mapa o gamitin ang mga arrow para maglakad.</div>
+  <div id="ctl2">
+    <div id="pad"><button class="u" data-d="0,-1" aria-label="Taas">▲</button><button class="l" data-d="-1,0" aria-label="Kaliwa">◀</button><button class="d" data-d="0,1" aria-label="Baba">▼</button><button class="r" data-d="1,0" aria-label="Kanan">▶</button></div>
+    <div id="side"><button class="primary" id="bBook">Mga Liham (0)</button><span class="row"><button class="small" id="bMus" title="Music">♪</button><button class="small" id="bSnd" title="Sound">🔊</button><button class="small" id="bReset">Ulitin</button></span></div>
+  </div>
+</section>
+
+<div class="overlay" id="msg"><div class="card"><div class="ic" id="mIc"></div><div class="lb" id="mLb"></div><h2 id="mT"></h2><div class="tx" id="mTx"></div><button class="primary big" id="mOk"></button></div></div>
+<div class="overlay" id="book"><div class="card wide"><h2>Mga Liham ni Paul</h2><div id="bList"></div><button class="primary big" id="bClose">Isara</button></div></div>
+<div class="overlay" id="catch"><div class="card"><h2>Saluhin ang mga puso!</h2><p class="tag" id="cTag" style="margin:0"></p><div id="sky"></div><div id="ccount"></div></div></div>
+
+<script src="../shared/arcade.js"></script>
+<script src="data.js"></script>
+<script>
+const {$,el,sprite,SFX,MUSIC}=Arcade;
+const PRINCESS=sprite(["...y.yy.y...","...yyyyyy...","..kTTTTTTk..",".kTssssssTk.",".kTskssksTk.",".kTssssssTk.",".kTTsrrsTTk.","..kTmmmmTk..","..kmmwwmmk..",".kmmmmmmmmk.",".kmmmmmmmmk.","..kkkkkkkk.."]);
+const PRINCE=sprite(["...y.yy.y...","...yyyyyy...","...kTTTTk...","..kTssssTk..","..kskssksk..","..kssssssk..","...ksrrsk...","..kuuyyuuk..",".kuuuyyuuuk.",".ksuuuuuusk.","..kuukkuuk..","..kkk..kkk.."]);
+const HEART=sprite([".kk...kk.","krrk.krrk","krwrkrrrk","krrrrrrrk",".krrrrrk.","..krrrk..","...krk...","....k...."]);
+const ENVELOPE=sprite(["kkkkkkkkkkkk","kwkwwwwwwkwk","kwwkwwwwkwwk","kwwwkrrkwwwk","kwwwwrrwwwwk","kwwwwwwwwwwk","kwwwwwwwwwwk","kkkkkkkkkkkk"]);
+const TREE=sprite(["...kkkk...","..khhhhk..",".khhHhhhk.","khhhhhHhhk","khHhhhhhhk",".khhhhHhk.","..kkttkk..","...kttk...","...kTTk...","...kkkk..."]);
+const ROCK=sprite(["..........","...kkkk...","..kqqqQk..",".kqqQqqQk.","kqqqqqqQQk","kqQqqqQqQk","kqqqqQqqQk",".kkkkkkkk."]);
+const FLOWER=sprite(["..m...",".mym..","..m...","..h...",".hh...","..h..."]);
+const GATE=sprite(["..kkkkkk..",".kyyyyyyk.","kyykkkkyyk","kyk....kyk","kyk....kyk","kyk....kyk","kyk....kyk","kkk....kkk"]);
+const STAR=sprite(["...y...","...y...","yyyyyyy",".yyyyy.","..yyy..",".yy.yy.","y.....y"]);
+// # blocked · ~ water · b bridge (appears when the chapter's hearts are found) · h heart · s secret heart · f flower · P start · G goal · N prince · C castle
+const MAPS=[
+ ["~~~~G~~~~","~~~~b~~~~","~~~~b~~~~","#.......#","#.h.#...#","#...#.h.#","#.f...f.#","#.#.....#","#.h..#.s#","#...P...#","#########"],
+ ["#########","#...G...#","#.#...#.#","#.h.f...#","#...#.h.#","#.f.....#","###.###.#","#.....#.#","#.h.#...#","#...P.f.#","#########"],
+ ["#########","#G..#...#","##.##.#.#","#..h..#.#","#.###.#h#","#.....#.#","###.###.#","#.h.#...#","#.#...#.#","#...P.#s#","#########"],
+ ["###CCC###","###.N.###","#f.....f#","#.h...h.#","#...f...#","#.#...#.#","#f..h..f#","#.......#","#.#.f.#.#","#...P...#","#########"]
+];
+const W=9,H=11,KEY='lizzy-progress';
+let D=null,P={ch:0,got:[],done:false},M=null,ids=null,pos={x:0,y:0},open=false,busy=true,walkT=0,tiles=[],meEl=null,goal=null,prince=null;
+
+$('#lpic').innerHTML=PRINCESS;
+Arcade.initFx(['#ff5fa2','#ffc2e0','#ffffff','#8a5cf0']);
+MUSIC.set({bpm:84,lead:'triangle',arp:'triangle',ch:[[48,60,64,67],[45,57,60,64],[41,53,57,60],[43,55,59,62]],
+  mel:[76,0,0,79,0,0,76,0, 72,0,0,76,0,0,72,0, 69,0,0,72,0,0,77,0, 74,0,0,0,71,0,74,0,
+       76,0,79,0,84,0,83,0, 81,0,0,76,0,0,72,0, 77,0,76,0,74,0,72,0, 71,0,0,74,0,0,0,0]});
+SFX.add({
+  heart:()=>SFX.seq([784,988,1175,1568],.08,'triangle',.1),
+  step:()=>SFX.tone(420,0,.04,'square',.025,520),
+  letter:()=>SFX.seq([659,784,988],.1,'triangle',.08),
+  gate:()=>SFX.seq([523,659,784,1047,1319],.09,'square',.07),
+  pop:()=>SFX.tone(900,0,.08,'square',.06,1500)});
+$('#bMus').classList.toggle('off',!MUSIC.on);$('#bMus').onclick=function(){this.classList.toggle('off',!MUSIC.toggle())};
+$('#bSnd').textContent=SFX.muted?'🔇':'🔊';$('#bSnd').onclick=function(){this.textContent=SFX.toggle()?'🔇':'🔊'};
+
+/* ---------- unlock: the messages are encrypted; only the right password can read them ---------- */
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function decrypt(pw){
+  const B=window.LIZZY_BLOB,base=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
+  const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(B.s),iterations:B.i,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+  return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(B.v)},key,b64(B.d))));
+}
+$('#lf').onsubmit=async e=>{e.preventDefault();const inp=$('#pw'),pw=inp.value.trim(),btn=$('#lb');if(!pw||btn.disabled)return;
+  btn.disabled=true;btn.textContent='Binubuksan…';$('#lerr').textContent='';
+  try{D=await decrypt(pw)}catch(err){D=null}
+  btn.disabled=false;btn.textContent='Buksan';
+  if(!D){SFX.play('deny');inp.value='';inp.classList.remove('shake');void inp.offsetWidth;inp.classList.add('shake');inp.focus();
+    $('#lerr').textContent=(window.crypto&&crypto.subtle)?"Hindi 'yan, mahal. Subukan mo ulit.":'Kailangan ng https para mabuksan ito.';return}
+  SFX.play('gate');Arcade.burst(innerWidth/2,innerHeight/2,['#ff5fa2','#ffd66b','#ffffff'],50);
+  try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.got))P={ch:Math.min(3,Math.max(0,s.ch|0)),got:s.got.filter(x=>typeof x==='string'),done:!!s.done}}catch(e2){}
+  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id==='play'));
+  if(!P.got.length&&!P.ch)await card({icon:PRINCESS+PRINCE,duo:true,label:'ISANG LIHAM',title:D.intro.title,lines:D.intro.lines,ok:'Simulan ang adventure'});
+  startChapter(P.ch);
+};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}};
+
+/* ---------- message cards ---------- */
+function card({icon,duo,label,title,lines,ok,sfx}){
+  return new Promise(res=>{busy=true;const o=$('#msg');$('#mIc').className='ic'+(duo?' duo':'');$('#mIc').innerHTML=icon||ENVELOPE;$('#mLb').textContent=label||'';$('#mT').textContent=title||'';
+    const tx=$('#mTx');tx.innerHTML='';lines.forEach((l,i)=>{const p=el('p',null,l);p.style.setProperty('--i',i);tx.append(p)});
+    const b=$('#mOk');b.textContent=ok||'💜 Itago sa puso';o.classList.remove('on');void o.offsetWidth;o.classList.add('on');SFX.play(sfx||'letter');
+    b.onclick=()=>{o.classList.remove('on');busy=false;res()}});
+}
+function hearts(n){for(let k=0;k<n;k++)setTimeout(()=>Arcade.burst(innerWidth*(.2+.6*Math.random()),innerHeight*(.25+.4*Math.random()),['#ff5fa2','#ff4d6d','#ffc2e0','#ffd66b'],36),k*320)}
+
+/* ---------- map ---------- */
+const at=(x,y)=>M[y]&&M[y][x];
+const walkable=(x,y)=>{const c=at(x,y);if(!c||'#~CN'.includes(c))return false;if(c==='b'||c==='G')return open;return true};
+const place=(node,x,y)=>{node.style.left=(x/W*100)+'%';node.style.top=(y/H*100)+'%'};
+function left(){return ids.filter(id=>!id.endsWith('s')&&!P.got.includes(id)).length}
+function drawTile(x,y){const t=tiles[y*W+x],c=M[y][x];t.className='t';t.innerHTML='';
+  if(c==='#')t.innerHTML=P.ch===2?ROCK:TREE;
+  else if(c==='~')t.classList.add('w');
+  else if(c==='b'){if(open)t.classList.add('br');else t.classList.add('w')}
+  else if(c==='h'){t.classList.add('h');t.innerHTML=HEART}
+  else if(c==='f'||c==='s'){t.classList.add(c);t.innerHTML=FLOWER}
+  else if(c==='C')t.classList.add('C');
+  else if(c==='G'){t.classList.add('g',open?'openg':'shut');t.innerHTML=P.ch===0?'':GATE}
+}
+function hud(){const c=D.chapters[P.ch],ti=$('#cti');ti.innerHTML='';ti.append(c.title,el('small',null,c.sub));
+  const total=ids.filter(id=>!id.endsWith('s')).length,hc=$('#hc');hc.innerHTML=HEART;hc.append((total-left())+'/'+total);
+  $('#bBook').textContent='Mga Liham ('+P.got.length+')'}
+function startChapter(n){
+  P.ch=n;save();clearInterval(walkT);M=MAPS[n].map(r=>r.split(''));ids=[];goal=prince=null;let hi=0;
+  const map=$('#map');map.innerHTML='';tiles=[];$('#mapw').className='c'+n;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const c=M[y][x];
+    if(c==='h'){const id=n+'-'+(hi++);ids.push(id);if(P.got.includes(id))M[y][x]='.';else M[y][x]='h'}
+    if(c==='s'){const id=n+'-s';ids.push(id);if(P.got.includes(id))M[y][x]='f'}
+    if(c==='P'){pos={x,y};M[y][x]='.'}
+    if(c==='G')goal={x,y};if(c==='N')prince={x,y};
+    const t=el('div','t');t.onclick=()=>tap(x,y);tiles.push(t);map.append(t)}
+  open=left()===0;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++)drawTile(x,y);
+  meEl=el('div');meEl.id='me';meEl.innerHTML=PRINCESS;map.append(meEl);place(meEl,pos.x,pos.y);
+  const who=prince||(n===0?goal:null);if(who){const he=el('div');he.id='he';he.innerHTML=PRINCE;map.append(he);place(he,who.x,who.y)}
+  hud();busy=false;
+}
+// which heart is at (x,y): hearts are numbered in reading order
+function heartId(x,y){let k=0;const src=MAPS[P.ch];for(let yy=0;yy<H;yy++)for(let xx=0;xx<W;xx++)if(src[yy][xx]==='h'){if(xx===x&&yy===y)return P.ch+'-'+k;k++}return null}
+function path(tx,ty){const prev=new Map(),q=[[pos.x,pos.y]],k=(x,y)=>x+','+y;prev.set(k(pos.x,pos.y),null);
+  while(q.length){const [x,y]=q.shift();if(x===tx&&y===ty){const out=[];let c=k(x,y);while(prev.get(c)){out.unshift(c.split(',').map(Number));c=prev.get(c)}return out}
+    for(const [dx,dy] of [[0,-1],[1,0],[0,1],[-1,0]]){const nx=x+dx,ny=y+dy;if(walkable(nx,ny)&&!prev.has(k(nx,ny))){prev.set(k(nx,ny),k(x,y));q.push([nx,ny])}}}
+  return null}
+function tap(x,y){if(busy)return;MUSIC.kick();let p=walkable(x,y)?path(x,y):null;
+  if(!p){let best=null;for(const [dx,dy] of [[0,1],[-1,0],[1,0],[0,-1]]){const q=walkable(x+dx,y+dy)&&((x+dx===pos.x&&y+dy===pos.y)?[]:path(x+dx,y+dy));if(q&&(!best||q.length<best.length))best=q}p=best;
+    if(p&&!p.length){arrive();return}}
+  if(!p||!p.length){if(!open&&goal&&Math.abs(x-goal.x)+Math.abs(y-goal.y)<=2)SFX.play('deny');return}
+  clearInterval(walkT);let i=0;walkT=setInterval(()=>{if(busy||i>=p.length){clearInterval(walkT);return}stepTo(p[i][0],p[i][1]);i++;if(i>=p.length)clearInterval(walkT)},150)}
+function move(dx,dy){if(busy)return;clearInterval(walkT);const nx=pos.x+dx,ny=pos.y+dy;if(walkable(nx,ny))stepTo(nx,ny);else if(at(nx,ny)==='N')arrive(true);else SFX.play('deny')}
+function stepTo(x,y){pos={x,y};place(meEl,x,y);SFX.play('step');arrive()}
+async function arrive(bumped){
+  const {x,y}=pos,c=M[y][x],ch=D.chapters[P.ch];
+  if(c==='h'||c==='s'){clearInterval(walkT);const secret=c==='s',id=secret?P.ch+'-s':heartId(x,y),n=secret?null:+id.split('-')[1];
+    M[y][x]=secret?'f':'.';P.got.push(id);save();drawTile(x,y);hud();SFX.play('heart');Arcade.burstAt(tiles[y*W+x],['#ff4d6d','#ffc2e0','#ffffff'],30);
+    await card({label:secret?'LIHIM NA PUSO':'LIHAM '+(n+1)+' NG '+ch.hearts.length,title:secret?'May nahanap ka!':'Mula kay Paul',lines:[secret?ch.secret:ch.hearts[n]]});
+    if(!secret&&left()===0&&!open){open=true;for(let yy=0;yy<H;yy++)for(let xx=0;xx<W;xx++)if('bG'.includes(M[yy][xx]))drawTile(xx,yy);
+      SFX.play('gate');await card({icon:prince?PRINCE:(P.ch===0?PRINCE:GATE),label:'BUKAS NA ANG DAAN',title:'Nakuha mo lahat!',lines:[ch.open],ok:'Tara na',sfx:'gate'})}
+    return}
+  if(c==='G'&&open){clearInterval(walkT);return finishChapter()}
+  if(prince&&(bumped||Math.abs(x-prince.x)+Math.abs(y-prince.y)===1)){clearInterval(walkT);
+    if(!open)return card({icon:PRINCE,label:'PRINCE PAUL',title:'Sandali lang…',lines:[D.princeWait],ok:'Sige, kukunin ko'});
+    return finale()}
+}
+async function finishChapter(){
+  const ch=D.chapters[P.ch];busy=true;hearts(3);
+  await card({icon:STAR,label:'ACHIEVEMENT UNLOCKED',title:ch.ach.title,lines:[ch.ach.text],ok:'Susunod',sfx:'gate'});
+  await catchGame();startChapter(P.ch+1);
+}
+async function finale(){
+  P.done=true;save();busy=true;hearts(8);const iv=setInterval(()=>hearts(2),1400);
+  await card({icon:PRINCESS+PRINCE,duo:true,label:'ANG HULING LIHAM',title:D.finale.title,lines:D.finale.lines,ok:'💜 Mahal din kita',sfx:'win'});
+  clearInterval(iv);hearts(5);openBook();
+}
+/* ---------- catch the hearts ---------- */
+function catchGame(){return new Promise(res=>{busy=true;const o=$('#catch'),sky=$('#sky'),need=8;let got=0,stop=false;
+  $('#cTag').textContent=D.catchIntro;sky.innerHTML='';$('#ccount').textContent='0 / '+need;o.classList.add('on');
+  const spawn=()=>{if(stop)return;const b=el('button');b.type='button';b.innerHTML=HEART;b.style.left=(4+Math.random()*78)+'%';b.setAttribute('aria-label','Puso');
+    const hit=()=>{if(b.dataset.x||stop)return;b.dataset.x=1;got++;SFX.play('pop');Arcade.burstAt(b,['#ff4d6d','#ffc2e0'],14);b.remove();$('#ccount').textContent=got+' / '+need;
+      if(got>=need){stop=true;clearInterval(iv);sky.innerHTML='';o.classList.remove('on');hearts(3);card({icon:HEART,label:'NASALO!',title:need+' na puso',lines:[D.catchDone],ok:'Susunod na kabanata',sfx:'good'}).then(res)}};
+    b.onpointerdown=hit;b.onclick=hit;b.addEventListener('animationend',()=>b.remove());sky.append(b)};
+  spawn();const iv=setInterval(spawn,650)})}
+/* ---------- book of letters ---------- */
+function openBook(){const l=$('#bList');l.innerHTML='';
+  if(!P.got.length)l.append(el('p','tag','Wala pang liham. Kunin ang mga puso sa mapa!'));
+  D.chapters.forEach((ch,ci)=>{ch.hearts.forEach((t,i)=>{if(P.got.includes(ci+'-'+i)){const e=el('div','e');e.append(el('b',null,ch.title+' · Liham '+(i+1)),t);l.append(e)}});
+    if(ch.secret&&P.got.includes(ci+'-s')){const e=el('div','e');e.append(el('b',null,ch.title+' · Lihim na puso'),ch.secret);l.append(e)}});
+  if(P.done){const e=el('div','e');e.append(el('b',null,D.finale.title),D.finale.lines.join(' '));l.append(e)}
+  $('#book').classList.add('on')}
+$('#bBook').onclick=()=>{if(D)openBook()};$('#bClose').onclick=()=>$('#book').classList.remove('on');
+$('#bReset').onclick=function(){if(this.dataset.sure){delete this.dataset.sure;this.textContent='Ulitin';P={ch:0,got:[],done:false};save();startChapter(0)}
+  else{this.dataset.sure=1;this.textContent='Sigurado?';setTimeout(()=>{delete this.dataset.sure;this.textContent='Ulitin'},2500)}};
+document.querySelectorAll('#pad button').forEach(b=>{const [dx,dy]=b.dataset.d.split(',').map(Number);b.onclick=()=>move(dx,dy)});
+addEventListener('keydown',e=>{const d={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0],w:[0,-1],s:[0,1],a:[-1,0],d:[1,0]}[e.key];
+  if(d&&D&&$('#play').classList.contains('on')&&!/INPUT/.test(document.activeElement.tagName)){e.preventDefault();move(d[0],d[1])}});
+$('#pw').focus();
+</script>
+</body>
+</html>
