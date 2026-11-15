@@ -2,13 +2,13 @@
 <html lang="tl">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwglaiyi';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{})</script>
+<script data-arcade-version>window.AV='mwhcln50';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{})</script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Princess Lizzy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwglaiyi">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwhcln50">
 <style>
 :root{--bg:#1a0b1e;--panel:#3a1638;--panel2:#260d26;--edge:#c8508c;--accent:#ff5fa2;--accent-d:#8a2356;--accent-l:#ffc2e0;
   --alt:#8a5cf0;--alt-d:#45288a;--alt-l:#d2c2ff;--dim:#e0a8c8;--hi:#ffc2e0;--gold:#ffd66b}
@@ -70,6 +70,40 @@ h1.title{text-shadow:4px 4px 0 var(--accent),8px 8px 0 #000}
 #sky button svg{width:100%;height:100%;filter:drop-shadow(2px 2px 0 #000)}
 @keyframes rise{to{bottom:110%}}
 #ccount{font-family:'Press Start 2P',monospace;font-size:12px;color:var(--gold);margin-top:10px}
+/* ---- story cutscenes ---- */
+#cine{background:#06030ef5}
+.cbox{width:min(100%,600px)}
+#cst{position:relative;width:100%;aspect-ratio:16/11;overflow:hidden;border:4px solid #000;box-shadow:0 0 0 4px var(--edge),8px 8px 0 #000;background:#0b1030}
+#ccap{min-height:104px;margin:16px 0 10px;padding:12px;background:var(--panel2);border:3px solid #000;box-shadow:inset 0 0 0 2px var(--edge);font-size:23px;line-height:1.1}
+.cbox .row{justify-content:space-between}
+.a{position:absolute}.a svg{width:100%;height:auto;display:block}
+#cst.night{background:linear-gradient(#0b1030 0 55%,#1c2f78)}
+#cst.cyc{background:#0b1030;animation:cyc 4s linear infinite}@keyframes cyc{0%,100%{background-color:#0b1030}50%{background-color:#5aa0e0}}
+#cst.day{background:#7fc8ff}#cst.storm{background:#39404f}#cst.dawn{background:linear-gradient(#ff9a6b,#ffc2e0 55%,#ffe9a8)}
+.star{width:1%;aspect-ratio:1;background:#fff;animation:tw 1.6s steps(2) infinite}@keyframes tw{50%{opacity:.2}}
+.sea{left:0;right:0;bottom:0;height:22%;background:#16306a;background-image:repeating-linear-gradient(0deg,#ffffff22 0 3px,transparent 3px 12px);animation:tide 2s steps(4) infinite}
+.isle{bottom:14%;height:10%;background:#3f8a4e;box-shadow:inset 0 4px 0 #6fc27a,0 0 0 3px #000}
+.ground{left:0;right:0;bottom:0;height:22%;background:#3f8a4e;box-shadow:inset 0 5px 0 #6fc27a}
+.ground.dark{background:#2c3340;box-shadow:inset 0 5px 0 #4a5568}.ground.lav{background:#7a5aa0;box-shadow:inset 0 5px 0 #a98ad0}
+.bob{animation:pbob .8s steps(2) infinite}
+.fly{animation:fly 2.4s linear infinite}@keyframes fly{0%{left:66%;top:48%;opacity:0}10%{opacity:1}50%{left:45%;top:14%}90%{opacity:1}100%{left:24%;top:48%;opacity:0}}
+.fly.back{animation-direction:reverse;animation-delay:1.2s}
+.orbit{left:15%;top:-38%;width:70%;aspect-ratio:1;animation:spin 4s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.grow{animation:grow 4s steps(12) infinite}@keyframes grow{0%{transform:scale(.2);opacity:.3}80%,100%{transform:scale(1.3);opacity:1}}
+.up{animation:upf 2.4s linear infinite}@keyframes upf{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-260%);opacity:0}}
+.walk{animation:walk 2.4s steps(10) forwards}@keyframes walk{from{left:6%}to{left:19%}}
+.walk2{animation:walk2 3.2s steps(14) forwards}@keyframes walk2{from{left:2%}to{left:24%}}
+.walk3{animation:walk3 3s steps(14) forwards}@keyframes walk3{from{left:-12%}to{left:38%}}
+.meetL{animation:meetL 2.2s steps(12) forwards}@keyframes meetL{from{left:-12%}to{left:37%}}
+.meetR{animation:meetR 2.2s steps(12) forwards}@keyframes meetR{from{left:100%}to{left:51%}}
+.pop{animation:popc .5s steps(5) backwards}@keyframes popc{0%{transform:scale(0)}70%{transform:scale(1.4)}}
+.cross{animation:cross 2.5s linear infinite}@keyframes cross{0%{left:34%;opacity:0}15%,85%{opacity:1}100%{left:61%;opacity:0}}
+.half{top:0;bottom:0;width:50%}.hl{left:0;background:#5a2350;box-shadow:inset -3px 0 0 #000}.hr{right:0;background:#1f2f6a}
+.flash{inset:0;background:#fff;opacity:0;animation:flash 3s steps(1) infinite}@keyframes flash{0%,6%{opacity:.75}3%,7%,100%{opacity:0}}
+.rainfx{inset:0;background:repeating-linear-gradient(105deg,transparent 0 14px,#bfe3ff55 14px 16px);background-size:60px 60px;animation:rain .35s linear infinite}
+.sunrise{animation:sunrise 3.5s steps(14) forwards}@keyframes sunrise{from{bottom:6%}to{bottom:58%}}
+.petal{width:1.6%;aspect-ratio:1;background:#ff8fc0;top:-4%;animation:petal 3.2s linear infinite}@keyframes petal{to{top:104%;transform:translateX(40px)}}
+.ttl{left:4%;right:4%;top:10%;text-align:center;font-family:'Press Start 2P',monospace;font-size:clamp(11px,3.4vw,19px);line-height:1.6;color:var(--gold);text-shadow:3px 3px 0 #000;animation:popc .6s steps(6) backwards;animation-delay:1.2s}
 </style>
 </head>
 <body>
@@ -89,16 +123,17 @@ h1.title{text-shadow:4px 4px 0 var(--accent),8px 8px 0 #000}
   <div id="tip">I-tap ang mapa o gamitin ang mga arrow para maglakad.</div>
   <div id="ctl2">
     <div id="pad"><button class="u" data-d="0,-1" aria-label="Taas">▲</button><button class="l" data-d="-1,0" aria-label="Kaliwa">◀</button><button class="d" data-d="0,1" aria-label="Baba">▼</button><button class="r" data-d="1,0" aria-label="Kanan">▶</button></div>
-    <div id="side"><button class="primary" id="bBook">Mga Liham (0)</button><span class="row"><button class="small" id="bMus" title="Music">♪</button><button class="small" id="bSnd" title="Sound">🔊</button><button class="small" id="bReset">Ulitin</button></span><button class="small" type="button" onclick="location.href='../'">&lt; Back to Arcade</button></div>
+    <div id="side"><button class="primary" id="bBook">Mga Liham (0)</button><span class="row"><button class="small" id="bMus" title="Music">♪</button><button class="small" id="bSnd" title="Sound">🔊</button><button class="small" id="bReset">Ulitin</button><button class="small" type="button" id="bStory">Kuwento</button></span><button class="small" type="button" onclick="location.href='../'">&lt; Back to Arcade</button></div>
   </div>
 </section>
 
+<div class="overlay" id="cine"><div class="cbox"><div id="cst"></div><div id="ccap"></div><div class="row"><button class="small" type="button" id="cSkip">Laktawan</button><button class="primary" type="button" id="cNext">Susunod</button></div></div></div>
 <div class="overlay" id="msg"><div class="card"><div class="ic" id="mIc"></div><div class="lb" id="mLb"></div><h2 id="mT"></h2><div class="tx" id="mTx"></div><button class="primary big" id="mOk"></button></div></div>
 <div class="overlay" id="book"><div class="card wide"><h2>Mga Liham ni Paul</h2><div id="bList"></div><button class="primary big" id="bClose">Isara</button></div></div>
 <div class="overlay" id="catch"><div class="card"><h2>Saluhin ang mga puso!</h2><p class="tag" id="cTag" style="margin:0"></p><div id="sky"></div><div id="ccount"></div></div></div>
 
-<script src="../shared/arcade.js?v=mwglaiyi"></script>
-<script src="data.js?v=mwglaiyi"></script>
+<script src="../shared/arcade.js?v=mwhcln50"></script>
+<script src="data.js?v=mwhcln50"></script>
 <script>
 const {$,el,sprite,SFX,MUSIC}=Arcade;
 const PRINCESS=sprite(["...y.yy.y...","...yyyyyy...","..kTTTTTTk..",".kTssssssTk.",".kTskssksTk.",".kTssssssTk.",".kTTsrrsTTk.","..kTmmmmTk..","..kmmwwmmk..",".kmmmmmmmmk.",".kmmmmmmmmk.","..kkkkkkkk.."]);
@@ -150,8 +185,8 @@ $('#lf').onsubmit=async e=>{e.preventDefault();const inp=$('#pw'),pw=inp.value.t
   SFX.play('gate');Arcade.burst(innerWidth/2,innerHeight/2,['#ff5fa2','#ffd66b','#ffffff'],50);
   try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.got))P={ch:Math.min(3,Math.max(0,s.ch|0)),got:s.got.filter(x=>typeof x==='string'),done:!!s.done}}catch(e2){}
   document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id==='play'));
-  if(!P.got.length&&!P.ch)await card({icon:PRINCESS+PRINCE,duo:true,label:'ISANG LIHAM',title:D.intro.title,lines:D.intro.lines,ok:'Simulan ang adventure'});
-  startChapter(P.ch);
+  if(!P.got.length&&!P.ch){await cine(introPanels());await card({icon:PRINCESS+PRINCE,duo:true,label:'ISANG LIHAM',title:D.intro.title,lines:D.intro.lines,ok:'Simulan ang adventure'});await enterChapter(0)}
+  else startChapter(P.ch);
 };
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}};
 
@@ -163,6 +198,50 @@ function card({icon,duo,label,title,lines,ok,sfx}){
     b.onclick=()=>{o.classList.remove('on');busy=false;res()}});
 }
 function hearts(n){for(let k=0;k<n;k++)setTimeout(()=>Arcade.burst(innerWidth*(.2+.6*Math.random()),innerHeight*(.25+.4*Math.random()),['#ff5fa2','#ff4d6d','#ffc2e0','#ffd66b'],36),k*320)}
+
+/* ---------- story cutscenes (pictures are public; the captions are encrypted with the letters) ---------- */
+const TOWER=sprite(["..k.kk.k..","..kmkkmk..","..kmmmmk..","..kmmmmk..","..kmkkmk..","..kmkymk..","..kmkkmk..","..kmmmmk..","..kmmmmk..","..kmmmmk..",".kkmmmmkk.",".kmmkkmmk.",".kmmkkmmk.",".kkkkkkkk."]);
+const CASTLE=sprite(["kk.kk....kk.kk","kuukk....kkuuk","kuuk..kk..kuuk","kuuk.kuuk.kuuk","kuukkkuukkkuuk","kuuuuuuuuuuuuk","kuuuykuukyuuuk","kuuuuuuuuuuuuk","kuuuukkkkuuuuk","kuuuukTTkuuuuk","kuuuukTTkuuuuk","kkkkkkkkkkkkkk"]);
+const MOON=sprite(["..wwww..",".wwwwww.","wwwqwwww","wwwwwwqw","wqwwwwww","wwwwqwww",".wwwwww.","..wwww.."]);
+const SUN=sprite(["..yyyy..",".yyyyyy.","yyyyyyyy","yyyoyyyy","yyyyyyyy","yyyyyoyy",".yyyyyy.","..yyyy.."]);
+const PHONE=sprite(["kkkkk","kbbbk","kbbbk","kbrbk","kbbbk","kbbbk","kkwkk","kkkkk"]);
+const UMBRELLA=sprite(["....kkkk....","..kkrrrrkk..",".krrrrrrrrk.","krrrrrrrrrrk","kkrkkrrkkrkk",".....kk.....",".....kk.....",".....kk.....",".....kk.....","....kk......"]);
+const A=(st,cls,html,css)=>{const d=el('div','a '+(cls||''));if(html)d.innerHTML=html;if(css)d.style.cssText=css;st.append(d);return d};
+const stars=st=>{for(let i=0;i<26;i++)A(st,'star','',`left:${Math.random()*98}%;top:${Math.random()*50}%;animation-delay:${Math.random()*2}s`)};
+const petals=st=>{for(let i=0;i<12;i++)A(st,'petal','',`left:${Math.random()*96}%;animation-delay:${Math.random()*3.2}s`)};
+function kingdoms(st){stars(st);A(st,'sea');A(st,'isle','','left:0;width:32%');A(st,'isle','','right:0;width:32%');
+  A(st,'',TOWER,'left:4%;bottom:22%;width:12%');A(st,'',CASTLE,'right:3%;bottom:22%;width:21%');
+  return{her:A(st,'bob',PRINCESS,'left:18%;bottom:22%;width:10%'),him:A(st,'bob',PRINCE,'right:25%;bottom:22%;width:10%')}}
+const introPanels=()=>{const C=D.cine;return[
+  {bg:'night',cap:C.intro[0],build:st=>{kingdoms(st)}},
+  {bg:'night',cap:C.intro[1],build:st=>{kingdoms(st);A(st,'fly',ENVELOPE,'width:8%')}},
+  {bg:'cyc',cap:C.intro[2],build:st=>{A(st,'orbit','<div class="a" style="left:0;top:43%;width:14%">'+SUN+'</div><div class="a" style="right:0;top:43%;width:14%">'+MOON+'</div>');kingdoms(st);
+    A(st,'fly',ENVELOPE,'width:8%');A(st,'fly back',ENVELOPE,'width:8%');A(st,'grow',HEART,'left:44%;top:34%;width:12%')}},
+  {bg:'night',cap:C.intro[3],build:st=>{kingdoms(st);A(st,'bob',MOON,'left:42%;top:8%;width:16%');A(st,'up',HEART,'left:20%;bottom:42%;width:5%');A(st,'up',HEART,'right:27%;bottom:42%;width:5%;animation-delay:.9s')}},
+  {bg:'night',cap:C.intro[4],last:'Simulan',build:st=>{const k=kingdoms(st);k.her.className='a walk';A(st,'ttl').textContent=C.title}}]};
+const chPanel=n=>{const C=D.cine;return[
+  {bg:'',cap:C.ch[0],build:st=>{A(st,'half hl');A(st,'half hr');A(st,'bob',PRINCESS,'left:12%;bottom:12%;width:18%');A(st,'',PHONE,'left:31%;bottom:22%;width:6%');
+    A(st,'bob',PRINCE,'right:12%;bottom:12%;width:18%');A(st,'',PHONE,'right:31%;bottom:22%;width:6%');for(let i=0;i<5;i++)A(st,'cross',HEART,`width:5%;top:${22+i%2*9}%;animation-delay:${i*.5}s`)}},
+  {bg:'day',cap:C.ch[1],build:st=>{A(st,'ground');A(st,'',TREE,'left:3%;bottom:20%;width:15%');A(st,'',TREE,'right:3%;bottom:20%;width:15%');A(st,'',SUN,'right:10%;top:8%;width:11%');
+    A(st,'meetL',PRINCESS,'bottom:20%;width:12%');A(st,'meetR',PRINCE,'bottom:20%;width:12%');A(st,'pop',HEART,'left:45%;bottom:50%;width:10%;animation-delay:2.3s')}},
+  {bg:'storm',cap:C.ch[2],build:st=>{A(st,'flash');A(st,'ground dark');A(st,'',UMBRELLA,'left:35%;bottom:36%;width:30%');A(st,'',PRINCESS,'left:37%;bottom:20%;width:12%');A(st,'',PRINCE,'left:51%;bottom:20%;width:12%');A(st,'rainfx')}},
+  {bg:'dawn',cap:C.ch[3],build:st=>{A(st,'sunrise',SUN,'left:42%;width:16%');A(st,'ground lav');A(st,'',CASTLE,'left:38%;bottom:20%;width:30%');A(st,'walk2',PRINCESS,'bottom:20%;width:11%');petals(st)}}][n]};
+const endPanels=()=>{const C=D.cine,base=st=>{A(st,'ground lav');A(st,'',CASTLE,'left:55%;bottom:20%;width:34%');petals(st)};return[
+  {bg:'dawn',cap:C.end[0],build:st=>{base(st);A(st,'bob',PRINCE,'left:52%;bottom:20%;width:12%');A(st,'walk3',PRINCESS,'bottom:20%;width:12%')}},
+  {bg:'dawn',cap:C.end[1],build:st=>{base(st);A(st,'',PRINCESS,'left:38%;bottom:20%;width:12%');A(st,'bob',PRINCE,'left:52%;bottom:20%;width:12%');A(st,'pop',FLOWER,'left:48%;bottom:26%;width:5%;animation-delay:.8s');A(st,'pop',HEART,'left:45%;bottom:52%;width:10%;animation-delay:1.8s')}},
+  {bg:'night',cap:C.end[2],fire:true,last:'Basahin ang huling liham',build:st=>{stars(st);A(st,'ground lav');A(st,'',CASTLE,'left:33%;bottom:20%;width:34%');A(st,'bob',PRINCESS,'left:37%;bottom:20%;width:13%');A(st,'bob',PRINCE,'left:50%;bottom:20%;width:13%');
+    [18,34,60,76].forEach((x,i)=>A(st,'up',HEART,`left:${x}%;bottom:44%;width:6%;animation-delay:${i*.6}s`))}}]};
+function cine(panels){return new Promise(res=>{busy=true;const o=$('#cine'),st=$('#cst'),cap=$('#ccap');let i=-1,ty=0,fw=0,full=true,txt='';
+  const end=()=>{clearInterval(ty);clearInterval(fw);o.classList.remove('on');st.innerHTML='';res()};
+  const show=()=>{i++;clearInterval(ty);clearInterval(fw);if(i>=panels.length)return end();const p=panels[i];st.className=p.bg||'';st.innerHTML='';p.build(st);
+    if(p.fire){hearts(2);fw=setInterval(()=>hearts(1),800)}
+    $('#cNext').textContent=(i===panels.length-1?(p.last||'Tuloy'):'Susunod')+' ▶';
+    let n=0;txt=p.cap||'';full=false;cap.textContent='';SFX.play('letter');
+    ty=setInterval(()=>{n+=2;cap.textContent=txt.slice(0,n);if(n>=txt.length){clearInterval(ty);full=true}},35)};
+  $('#cNext').onclick=()=>{if(!full){clearInterval(ty);cap.textContent=txt;full=true}else show()};
+  $('#cSkip').onclick=end;o.classList.add('on');show()})}
+async function enterChapter(n){await cine([chPanel(n)]);startChapter(n)}
+$('#bStory').onclick=()=>{if(D&&!busy)cine(introPanels()).then(()=>{busy=false})};
 
 /* ---------- map ---------- */
 const at=(x,y)=>M[y]&&M[y][x];
@@ -225,10 +304,10 @@ async function arrive(bumped){
 async function finishChapter(){
   const ch=D.chapters[P.ch];busy=true;hearts(3);
   await card({icon:STAR,label:'ACHIEVEMENT UNLOCKED',title:ch.ach.title,lines:[ch.ach.text],ok:'Susunod',sfx:'gate'});
-  await catchGame();startChapter(P.ch+1);
+  await catchGame();await enterChapter(P.ch+1);
 }
 async function finale(){
-  P.done=true;save();busy=true;hearts(8);const iv=setInterval(()=>hearts(2),1400);
+  P.done=true;save();busy=true;await cine(endPanels());hearts(8);const iv=setInterval(()=>hearts(2),1400);
   await card({icon:PRINCESS+PRINCE,duo:true,label:'ANG HULING LIHAM',title:D.finale.title,lines:D.finale.lines,ok:'💜 Mahal din kita',sfx:'win'});
   clearInterval(iv);hearts(5);openBook();
 }
