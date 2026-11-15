@@ -2,13 +2,13 @@
 <html lang="tl">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwhe48st';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{})</script>
+<script data-arcade-version>window.AV='mwhe8g8m';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{})</script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Princess Lizzy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwhe48st">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwhe8g8m">
 <style>
 :root{--bg:#1a0b1e;--panel:#3a1638;--panel2:#260d26;--edge:#c8508c;--accent:#ff5fa2;--accent-d:#8a2356;--accent-l:#ffc2e0;
   --alt:#8a5cf0;--alt-d:#45288a;--alt-l:#d2c2ff;--dim:#e0a8c8;--hi:#ffc2e0;--gold:#ffd66b}
@@ -79,6 +79,15 @@ h1.title{text-shadow:4px 4px 0 var(--accent),8px 8px 0 #000}
 #side .row button{flex:1 1 auto}
 #side .row2 button{flex:1 1 40%}
 @media(max-width:480px){#ctl2{gap:8px}#pad{grid-template-columns:repeat(3,40px);grid-template-rows:repeat(2,38px)}#bBook{font-size:9px;padding:9px 6px}#side button.small{font-size:8px;padding:6px 5px}}
+/* ---- top-bar menu ---- */
+#hud{gap:10px}#hud .ti{flex:1;min-width:0}
+#bMenuL{flex:none;white-space:nowrap}#bMenuL b{font-weight:400;background:var(--gold);color:#000;padding:1px 5px;margin-left:4px}
+#ctl2{justify-content:center}
+#pad{grid-template-columns:repeat(3,56px)!important;grid-template-rows:repeat(2,50px)!important;gap:6px}#pad button{font-size:16px}
+#menu .card{max-height:94dvh;overflow:auto}
+#menu #side{display:flex;flex-direction:column;gap:10px;align-items:stretch}
+#menu #side button{width:100%;font-size:11px!important;padding:13px 8px!important}
+#menu #side .row,#menu #side .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 /* ---- story cutscenes ---- */
 #cine{background:#06030ef5}
 .cbox{width:min(100%,600px)}
@@ -127,22 +136,23 @@ h1.title{text-shadow:4px 4px 0 var(--accent),8px 8px 0 #000}
 </form></section>
 
 <section id="play" class="screen">
-  <div id="hud" class="panel"><div class="ti" id="cti"></div><div class="hc" id="hc"></div></div>
+  <div id="hud" class="panel"><div class="ti" id="cti"></div><div class="hc" id="hc"></div><button class="small go" type="button" id="bMenuL">Menu <b id="mcount">0</b></button></div>
   <div id="mapw"><div id="map"></div></div>
-  <div id="tip">I-tap ang mapa o gamitin ang mga arrow para maglakad.</div>
+  <div id="tip">I-tap ang mapa o gamitin ang mga arrow. Nasa MENU ang mga liham mo.</div>
   <div id="ctl2">
     <div id="pad"><button class="u" data-d="0,-1" aria-label="Taas">▲</button><button class="l" data-d="-1,0" aria-label="Kaliwa">◀</button><button class="d" data-d="0,1" aria-label="Baba">▼</button><button class="r" data-d="1,0" aria-label="Kanan">▶</button></div>
     <div id="side"><button class="primary" id="bBook">Mga Liham (0)</button><span class="row"><button class="small" id="bMus" title="Music">♪</button><button class="small" id="bSnd" title="Sound">🔊</button><button class="small" id="bReset">Ulitin</button><button class="small" type="button" id="bStory">Kuwento</button></span><button class="small" type="button" onclick="location.href='../'">&lt; Back to Arcade</button></div>
   </div>
 </section>
 
+<div class="overlay" id="menu"><div class="card"><h2>Menu</h2><div id="menuBox"></div><button class="primary big" type="button" id="mClose">Isara</button></div></div>
 <div class="overlay" id="cine"><div class="cbox"><div id="cst"></div><div id="ccap"></div><div class="row"><button class="small" type="button" id="cSkip">Laktawan</button><button class="primary" type="button" id="cNext">Susunod</button></div></div></div>
 <div class="overlay" id="msg"><div class="card"><div class="ic" id="mIc"></div><div class="lb" id="mLb"></div><h2 id="mT"></h2><div class="tx" id="mTx"></div><button class="primary big" id="mOk"></button></div></div>
 <div class="overlay" id="book"><div class="card wide"><h2>Mga Liham ni Paul</h2><div id="bList"></div><button class="primary big" id="bClose">Isara</button></div></div>
 <div class="overlay" id="catch"><div class="card"><h2>Saluhin ang mga puso!</h2><p class="tag" id="cTag" style="margin:0"></p><div id="sky"></div><div id="ccount"></div></div></div>
 
-<script src="../shared/arcade.js?v=mwhe48st"></script>
-<script src="data.js?v=mwhe48st"></script>
+<script src="../shared/arcade.js?v=mwhe8g8m"></script>
+<script src="data.js?v=mwhe8g8m"></script>
 <script>
 const {$,el,sprite,SFX,MUSIC}=Arcade;
 let PRINCESS=sprite(["...y.yy.y...","...yyyyyy...","..kTTTTTTk..",".kTssssssTk.",".kTskssksTk.",".kTssssssTk.",".kTTsrrsTTk.","..kTmmmmTk..","..kmmwwmmk..",".kmmmmmmmmk.",".kmmmmmmmmk.","..kkkkkkkk.."]);
@@ -273,7 +283,7 @@ function drawTile(x,y){const t=tiles[y*W+x],c=M[y][x];t.className='t';t.innerHTM
 }
 function hud(){const c=D.chapters[P.ch],ti=$('#cti');ti.innerHTML='';ti.append(c.title,el('small',null,c.sub));
   const total=ids.filter(id=>!id.endsWith('s')).length,hc=$('#hc');hc.innerHTML=HEART;hc.append((total-left())+'/'+total);
-  $('#bBook').textContent='Mga Liham ('+P.got.length+')'}
+  $('#bBook').textContent='Mga Liham ('+P.got.length+')';$('#mcount').textContent=P.got.length}
 function startChapter(n){
   P.ch=n;save();clearInterval(walkT);M=MAPS[n].map(r=>r.split(''));ids=[];goal=prince=null;let hi=0;
   const map=$('#map');map.innerHTML='';tiles=[];$('#mapw').className=TH[n].cls;
@@ -346,8 +356,13 @@ $('#bReset').onclick=function(){if(this.dataset.sure){delete this.dataset.sure;t
 document.querySelectorAll('#pad button').forEach(b=>{const [dx,dy]=b.dataset.d.split(',').map(Number);b.onclick=()=>move(dx,dy)});
 addEventListener('keydown',e=>{const d={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0],w:[0,-1],s:[0,1],a:[-1,0],d:[1,0]}[e.key];
   if(d&&D&&$('#play').classList.contains('on')&&!/INPUT/.test(document.activeElement.tagName)){e.preventDefault();move(d[0],d[1])}});
+// the menu: every button except the arrow pad lives in a panel opened from the top bar
+$('#menuBox').append($('#side'));
+$('#bMenuL').onclick=()=>{if(!D||busy)return;$('#bMenuL').classList.remove('go');$('#menu').classList.add('on')};
+$('#mClose').onclick=()=>$('#menu').classList.remove('on');
+$('#side').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&['bBook','bWard','bOw','bStory'].includes(b.id))$('#menu').classList.remove('on')},true);
 $('#pw').focus();
 </script>
-<script src="extras.js?v=mwhe48st"></script>
+<script src="extras.js?v=mwhe8g8m"></script>
 </body>
 </html>
