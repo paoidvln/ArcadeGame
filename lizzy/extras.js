@@ -152,11 +152,50 @@ function replyBox(){return new Promise(res=>{busy=true;const R=D.reply;$('#rt').
     try{await navigator.clipboard.writeText(text);$('#rmsg').textContent=R.copied;$('#rskip').textContent='Tapos na'}
     catch(e){$('#rmsg').textContent='Piliin at kopyahin ang sinulat mo, tapos ipadala kay Paul.'}}})}
 
+/* ---------- the last scene: light, a pixel portrait of the two of them, thank you ---------- */
+document.head.insertAdjacentHTML('beforeend',`<style>
+#fin{background:#000;overflow:hidden;transition:background 1.2s}#fin.lit{background:#fff4dc}
+#fin .glow{position:absolute;left:50%;top:44%;width:24px;height:24px;margin:-12px;background:radial-gradient(circle,#fffdf5 0,#fff1cf 40%,#ffd9ec 62%,transparent 72%);animation:finglow 3.4s ease-in forwards}
+@keyframes finglow{0%{transform:scale(0);opacity:0}12%{opacity:1}100%{transform:scale(260);opacity:1}}
+.finbox{position:relative;z-index:2;text-align:center;width:min(92vw,460px);max-height:96dvh;overflow:auto;opacity:0;transition:opacity 2.6s}.finbox.in{opacity:1}
+.frame{border:4px solid #000;box-shadow:0 0 0 4px #ffd66b,0 0 0 8px #000;background:#2a1a12;margin:10px auto 22px;width:min(100%,400px)}
+.frame canvas{display:block;width:100%;height:auto;image-rendering:pixelated}
+.frame .duo{display:flex;justify-content:center;gap:4%;padding:8% 6% 0;background:linear-gradient(#ffc2e0,#ffe9a8)}.frame .duo svg{width:44%;height:auto}
+#fint{font-family:'Press Start 2P',monospace;font-size:clamp(12px,4vw,19px);line-height:1.6;color:#7a1f52;text-shadow:2px 2px 0 #ffd66b;min-height:1.7em;margin:0 0 10px}
+#finl{font-size:23px;line-height:1.1;color:#3a1638;margin:0 0 10px}#finc2{font-family:'Press Start 2P',monospace;font-size:8px;line-height:1.6;color:#8a4a72;margin:0}
+#finl,#finc2,#finb{opacity:0;transition:opacity 1.6s}#finl.in,#finc2.in,#finb.in{opacity:1}
+#finb{margin-top:16px}
+.spark{position:absolute;z-index:1;width:6px;height:6px;background:#ffd66b;animation:tw 1.3s steps(2) infinite}
+.fh{position:absolute;z-index:1;bottom:-40px;width:26px;animation:rise 6s linear infinite}.fh svg{width:100%;height:auto;display:block}
+</style>`);
+document.body.insertAdjacentHTML('beforeend','<div class="overlay" id="fin"></div>');
+function pixelize(im,cv,cfg){const [cx,cy,cw,ch]=cfg.crop||[0,0,1,1],sx=cx*im.naturalWidth,sy=cy*im.naturalHeight,sw=cw*im.naturalWidth,sh=ch*im.naturalHeight,Wp=cfg.px||96,Hp=Math.round(Wp*sh/sw);
+  cv.width=Wp;cv.height=Hp;const x=cv.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(im,sx,sy,sw,sh,0,0,Wp,Hp);
+  const d=x.getImageData(0,0,Wp,Hp),p=d.data,L=7; // stronger contrast, then a small fixed number of shades per channel = pixel-art look
+  for(let i=0;i<p.length;i+=4)for(let k=0;k<3;k++){let v=(p[i+k]-128)*1.18+134;v=Math.max(0,Math.min(255,v));p[i+k]=Math.round(v/255*L)/L*255}
+  x.putImageData(d,0,0)}
+function thanksScene(){return new Promise(res=>{busy=true;const T=D.thanks||{title:'Thank you for playing',line:'',credit:''},o=$('#fin');const timers=[];
+  o.innerHTML='<div class="glow"></div><div class="finbox"><div class="frame" id="finf"></div><h2 id="fint"></h2><p id="finl"></p><p id="finc2"></p><div id="finb"><button class="primary big" type="button" id="finok">💜 Tapos</button></div></div>';
+  o.classList.add('on');$('#finl').textContent=T.line;$('#finc2').textContent=T.credit;
+  const later=(f,ms)=>timers.push(setTimeout(f,ms));
+  const done=()=>{timers.forEach(clearTimeout);o.classList.remove('on','lit');o.innerHTML='';busy=false;res()};$('#finok').onclick=done;
+  const reveal=()=>{o.classList.add('lit');$('.finbox').classList.add('in');SFX.play('gate');
+    for(let i=0;i<18;i++){const s=el('div','spark');s.style.cssText=`left:${Math.random()*96}%;top:${Math.random()*92}%;animation-delay:${Math.random()*1.3}s`;o.append(s)}
+    for(let i=0;i<7;i++){const h=el('div','fh');h.innerHTML=HEART;h.style.cssText=`left:${4+Math.random()*88}%;animation-delay:${i*.85}s`;o.append(h)}
+    later(()=>{let n=0;const t=T.title,iv=setInterval(()=>{$('#fint')?($('#fint').textContent=t.slice(0,++n)):clearInterval(iv);if(n>=t.length)clearInterval(iv)},70);timers.push(iv);SFX.play('win')},2400);
+    later(()=>$('#finl').classList.add('in'),2400+T.title.length*70+500);
+    later(()=>$('#finc2').classList.add('in'),2400+T.title.length*70+2200);
+    later(()=>$('#finb').classList.add('in'),2400+T.title.length*70+3600)};
+  const drawn=()=>{$('#finf').innerHTML='<div class="duo">'+PRINCESS+PRINCE+'</div>'};
+  if(D.photo&&D.photo.src){const cv=document.createElement('canvas'),im=new Image();im.onload=()=>{try{pixelize(im,cv,D.photo);$('#finf').append(cv)}catch(e){drawn()}};im.onerror=drawn;im.src=D.photo.src}else drawn();
+  later(reveal,3000)})}
+
 /* ---------- book extras + keepsake image ---------- */
 const dailySeen=()=>D.daily.slice(0,Math.min((P.days||[]).length,D.daily.length));
 function bookExtras(l){dailySeen().forEach((t,i)=>{const e=el('div','e');e.append(el('b',null,'Araw '+(i+1)),t);l.append(e)});
   (P.ow||[]).forEach(i=>{const o=D.openWhen[i];if(!o)return;const e=el('div','e');e.append(el('b',null,o.when),o.lines.join(' '));l.append(e)});
-  if(P.done){const b=el('button','big','Sumulat kay Paul');b.type='button';b.onclick=()=>{$('#book').classList.remove('on');replyBox()};l.append(b)}}
+  if(P.done){const b=el('button','big','Sumulat kay Paul');b.type='button';b.onclick=()=>{$('#book').classList.remove('on');replyBox()};
+    const w=el('button','big','Panoorin ang wakas');w.type='button';w.onclick=()=>{$('#book').classList.remove('on');thanksScene()};l.append(b,w)}}
 function letterItems(){const out=[];D.chapters.forEach((ch,ci)=>{ch.hearts.forEach((t,i)=>{if(P.got.includes(ci+'-'+i))out.push([ch.title+' · Liham '+(i+1),t])});
     if(ch.secret&&P.got.includes(ci+'-s'))out.push([ch.title+' · Lihim na puso',ch.secret])});
   if(P.done)out.push([D.finale.title,D.finale.lines.join(' ')]);dailySeen().forEach((t,i)=>out.push(['Araw '+(i+1),t]));
