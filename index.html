@@ -2,12 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwht9ep2';fetch('./version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{})</script>
+<script data-arcade-version>window.AV='mwhugitq';fetch('./version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{})</script>
+<link data-pwa rel="manifest" href="./manifest.webmanifest">
+<meta data-pwa name="theme-color" content="#1a1030">
+<meta data-pwa name="mobile-web-app-capable" content="yes">
+<meta data-pwa name="apple-mobile-web-app-capable" content="yes">
+<meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
+<link data-pwa rel="apple-touch-icon" href="./icons/apple-180.png">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pixel Arcade</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="shared/arcade.css?v=mwht9ep2">
+<link rel="stylesheet" href="shared/arcade.css?v=mwhugitq">
 <style>
 :root{--bg:#0d0b1f;--panel:#1a1740;--panel2:#110f2c;--edge:#4b46b0}
 main{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:28px 16px 60px}
@@ -59,7 +65,7 @@ a.gcard.rise{animation-name:pop}
   </form>
 </section>
 <main id="main" hidden>
-  <div class="bar"><button class="small" id="bMus" title="Music on/off">♪</button><button class="small" id="bSnd" title="Sound effects on/off">🔊</button></div>
+  <div class="bar"><button class="small go" id="bInst" type="button" style="display:none">Install app</button><button class="small" id="bMus" title="Music on/off">♪</button><button class="small" id="bSnd" title="Sound effects on/off">🔊</button></div>
   <h1 class="title" aria-label="Pixel Arcade">PIXEL ARCADE</h1>
   <p class="credit" id="credit" aria-label="Created by J.P. Ibarreta"></p>
   <p class="tag rise" id="hello" style="--d:1.7s"></p>
@@ -71,7 +77,7 @@ a.gcard.rise{animation-name:pop}
   <div class="ph rise" style="--d:2.1s">Games</div>
   <div class="games" id="games"></div>
 </main>
-<script src="shared/arcade.js?v=mwht9ep2"></script>
+<script src="shared/arcade.js?v=mwhugitq"></script>
 <script>
 const {el,sprite,SFX,MUSIC}=Arcade;
 const GAMES=[
@@ -107,6 +113,14 @@ else{gate.hidden=false;gi.focus();
 Arcade.initFx(['#ffffff','#7df9ff','#e0409a','#ffd66b']);
 MUSIC.set({bpm:120,arp:'triangle',ch:[[48,60,64,67],[45,57,60,64],[41,53,57,60],[43,55,59,62]],
   mel:[72,0,76,79,0,76,72,0, 69,0,72,76,0,72,69,0, 65,0,69,72,0,77,76,72, 74,0,71,67,0,71,74,0]});
+// "Install app": Android/desktop Chrome offer a real install prompt; on iPhone we can only explain the steps
+(function(){const bi=document.getElementById('bInst');let ev=null;
+  const alone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;if(alone)return;
+  addEventListener('beforeinstallprompt',e=>{e.preventDefault();ev=e;bi.style.display=''});
+  addEventListener('appinstalled',()=>{bi.style.display='none'});
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);if(ios)bi.style.display='';
+  bi.onclick=()=>{if(ev){ev.prompt();ev.userChoice.then(()=>{ev=null;bi.style.display='none'})}
+    else if(ios){const h=document.getElementById('hello');h.textContent='To install: tap Share, then "Add to Home Screen".'}}})();
 const bm=document.getElementById('bMus'),bs=document.getElementById('bSnd');
 bm.classList.toggle('off',!MUSIC.on);bm.onclick=()=>bm.classList.toggle('off',!MUSIC.toggle());
 bs.textContent=SFX.muted?'🔇':'🔊';bs.onclick=()=>bs.textContent=SFX.toggle()?'🔇':'🔊';
