@@ -87,3 +87,9 @@ details{font-size:19px;color:var(--dim)}summary{font-family:'Press Start 2P',mon
 @media(max-width:719px){.pcards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.pcard{padding:8px}.pcard .av{gap:2px}.pcard .av button{padding:6px 7px}.pcard input{font-size:19px;padding:5px 6px}.sw b{width:18px;height:18px}}
 @media(max-width:340px){.pcard .pic{width:40px;height:40px}}
 @media(max-width:350px){.seg button{font-size:7px}}
+/* ---- top-bar menu ---- */
+#gmenu .card{max-height:94dvh;overflow:auto}
+#gmBox{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#gmBox button{margin:0;width:100%;font-size:11px;padding:13px 8px}
+#gmBox details{grid-column:1/-1;text-align:left}
+@media(max-width:719px){#game.on{display:flex;flex-direction:column;gap:10px}#game aside{display:contents}#game .top{order:-1}}

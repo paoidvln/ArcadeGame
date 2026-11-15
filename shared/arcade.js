@@ -335,6 +335,21 @@ function run(game){
     net.iv=setInterval(()=>{if(net.peer===peer&&net.seat>=0&&Date.now()-seen>15000)fail('Lost connection to the host.')},3000);
     peer.on('error',e=>{clearTimeout(to);fail(e.type==='peer-unavailable'?'No room with that code.':null)});
   }
+
+  /* ----- top-bar menu: every in-game button except the game controls lives in one panel ----- */
+  (function(){const top=document.querySelector('#game .top');if(!top)return;const span=top.querySelector('span:last-child');
+    const ov=document.createElement('div');ov.className='overlay';ov.id='gmenu';
+    ov.innerHTML='<div class="card"><h2>Menu</h2><div id="gmBox"></div><button class="big" type="button" id="gmArcade">&lt; Back to Arcade</button><button class="primary big" type="button" id="gmClose">Close</button></div>';
+    document.body.append(ov);const box=ov.querySelector('#gmBox');
+    [...span.querySelectorAll('button')].forEach(b=>{b.classList.remove('small');box.append(b)});
+    const quit=box.querySelector('#bMenu');if(quit)quit.textContent='Main menu';
+    const how=document.querySelector('#game details');if(how){const wrap=how.parentElement;box.append(how);if(wrap&&wrap.classList.contains('panel'))wrap.remove()}
+    span.innerHTML='';const mb=document.createElement('button');mb.className='small';mb.type='button';mb.id='bGMenu';mb.textContent='Menu';span.append(mb);
+    const close=()=>ov.classList.remove('on');mb.onclick=()=>ov.classList.add('on');ov.querySelector('#gmClose').onclick=close;
+    ov.querySelector('#gmArcade').onclick=()=>{location.href='../'};
+    box.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&(b.id==='bMenu'||(b.id==='bRestart'&&b.dataset.sure)))close()},true);
+  })();
+  
   const m=location.hash.match(/room=([A-Za-z0-9]{5})/);
   if(m){drawOnline();show('online');$('#oCode').value=m[1].toUpperCase()}
   // test hooks

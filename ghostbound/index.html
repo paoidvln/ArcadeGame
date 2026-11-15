@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwhe8g8m';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{})</script>
+<script data-arcade-version>window.AV='mwheckcd';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{})</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Ghostbound</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -282,6 +282,12 @@ details{font-size:19px}summary{font-family:'Press Start 2P';font-size:9px}
 @media(max-width:719px){.pcards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.pcard{padding:8px}.pcard .av{gap:2px}.pcard .av button{padding:6px 7px}.pcard input{font-size:19px;padding:5px 6px}.sw b{width:18px;height:18px}}
 @media(max-width:340px){.pcard .pic{width:40px;height:40px}}
 @media(max-width:350px){.seg button{font-size:7px}}
+/* ---- top-bar menu ---- */
+#gmenu .card{max-height:94dvh;overflow:auto}
+#gmBox{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#gmBox button{margin:0;width:100%;font-size:11px;padding:13px 8px}
+#gmBox details{grid-column:1/-1;text-align:left}
+@media(max-width:719px){#game.on{display:flex;flex-direction:column;gap:10px}#game aside{display:contents}#game .top{order:-1}}
 </style>
 </head>
 <body>
@@ -863,6 +869,20 @@ $('#bMus').classList.toggle('off',!MUSIC.on);$('#bMus').onclick=function(){this.
 $('#bSnd').textContent=SFX.muted?'🔇':'🔊';$('#bSnd').onclick=function(){this.textContent=SFX.toggle()?'🔇':'🔊'};
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('button')&&e.target.id!=='bSnd')SFX.play('click')});
 $('#bMenu').onclick=$('#bEndMenu').onclick=$('#bLeaveLobby').onclick=leave;
+/* ----- top-bar menu: every in-game button except the game controls lives in one panel ----- */
+(function(){const top=document.querySelector('#game .top');if(!top)return;const span=top.querySelector('span:last-child');
+  const ov=document.createElement('div');ov.className='overlay';ov.id='gmenu';
+  ov.innerHTML='<div class="card"><h2>Menu</h2><div id="gmBox"></div><button class="big" type="button" id="gmArcade">&lt; Back to Arcade</button><button class="primary big" type="button" id="gmClose">Close</button></div>';
+  document.body.append(ov);const box=ov.querySelector('#gmBox');
+  [...span.querySelectorAll('button')].forEach(b=>{b.classList.remove('small');box.append(b)});
+  const quit=box.querySelector('#bMenu');if(quit)quit.textContent='Main menu';
+  const how=document.querySelector('#game details');if(how){const wrap=how.parentElement;box.append(how);if(wrap&&wrap.classList.contains('panel'))wrap.remove()}
+  span.innerHTML='';const mb=document.createElement('button');mb.className='small';mb.type='button';mb.id='bGMenu';mb.textContent='Menu';span.append(mb);
+  const close=()=>ov.classList.remove('on');mb.onclick=()=>ov.classList.add('on');ov.querySelector('#gmClose').onclick=close;
+  ov.querySelector('#gmArcade').onclick=()=>{location.href='../'};
+  box.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&(b.id==='bMenu'||(b.id==='bRestart'&&b.dataset.sure)))close()},true);
+})();
+
 
 /* ================= online ================= */
 const me={name:'',color:COLORS[0],av:0};
