@@ -2,13 +2,13 @@
 <html lang="tl">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwhpjx7t';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{})</script>
+<script data-arcade-version>window.AV='mwht9ep2';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{})</script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Princess Lizzy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwhpjx7t">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwht9ep2">
 <style>
 :root{--bg:#1a0b1e;--panel:#3a1638;--panel2:#260d26;--edge:#c8508c;--accent:#ff5fa2;--accent-d:#8a2356;--accent-l:#ffc2e0;
   --alt:#8a5cf0;--alt-d:#45288a;--alt-l:#d2c2ff;--dim:#e0a8c8;--hi:#ffc2e0;--gold:#ffd66b}
@@ -151,8 +151,8 @@ h1.title{text-shadow:4px 4px 0 var(--accent),8px 8px 0 #000}
 <div class="overlay" id="book"><div class="card wide"><h2>Mga Liham ni Paul</h2><div id="bList"></div><button class="primary big" id="bClose">Isara</button></div></div>
 <div class="overlay" id="catch"><div class="card"><h2>Saluhin ang mga puso!</h2><p class="tag" id="cTag" style="margin:0"></p><div id="sky"></div><div id="ccount"></div></div></div>
 
-<script src="../shared/arcade.js?v=mwhpjx7t"></script>
-<script src="data.js?v=mwhpjx7t"></script>
+<script src="../shared/arcade.js?v=mwht9ep2"></script>
+<script src="data.js?v=mwht9ep2"></script>
 <script>
 const {$,el,sprite,SFX,MUSIC}=Arcade;
 let PRINCESS=sprite(["...y.yy.y...","...yyyyyy...","..kTTTTTTk..",".kTssssssTk.",".kTskssksTk.",".kTssssssTk.",".kTTsrrsTTk.","..kTmmmmTk..","..kmmwwmmk..",".kmmmmmmmmk.",".kmmmmmmmmk.","..kkkkkkkk.."]);
@@ -297,7 +297,7 @@ function startChapter(n){
   for(let y=0;y<H;y++)for(let x=0;x<W;x++)drawTile(x,y);
   meEl=el('div');meEl.id='me';meEl.innerHTML=PRINCESS;map.append(meEl);place(meEl,pos.x,pos.y);
   const who=prince||(n===0?goal:null);if(who){const he=el('div');he.id='he';he.innerHTML=PRINCE;map.append(he);place(he,who.x,who.y)}
-  hud();spawnPet();busy=false;
+  hud();spawnPet();polish();busy=false;
 }
 // which heart is at (x,y): hearts are numbered in reading order
 function heartId(x,y){let k=0;const src=MAPS[P.ch];for(let yy=0;yy<H;yy++)for(let xx=0;xx<W;xx++)if(src[yy][xx]==='h'){if(xx===x&&yy===y)return P.ch+'-'+k;k++}return null}
@@ -310,8 +310,8 @@ function tap(x,y){if(busy)return;MUSIC.kick();let p=walkable(x,y)?path(x,y):null
     if(p&&!p.length){arrive();return}}
   if(!p||!p.length){if(!open&&goal&&Math.abs(x-goal.x)+Math.abs(y-goal.y)<=2)SFX.play('deny');return}
   clearInterval(walkT);let i=0;walkT=setInterval(()=>{if(busy||i>=p.length){clearInterval(walkT);return}stepTo(p[i][0],p[i][1]);i++;if(i>=p.length)clearInterval(walkT)},150)}
-function move(dx,dy){if(busy)return;clearInterval(walkT);const nx=pos.x+dx,ny=pos.y+dy;if(walkable(nx,ny))stepTo(nx,ny);else if(at(nx,ny)==='N')arrive(true);else SFX.play('deny')}
-function stepTo(x,y){petFollow(pos);pos={x,y};place(meEl,x,y);SFX.play('step');arrive()}
+function move(dx,dy){if(busy)return;clearInterval(walkT);const nx=pos.x+dx,ny=pos.y+dy;if(walkable(nx,ny))stepTo(nx,ny);else if(at(nx,ny)==='N')arrive(true);else{SFX.play('deny');bump()}}
+function stepTo(x,y){const pv=pos;petFollow(pos);pos={x,y};place(meEl,x,y);SFX.play('step');arrive();onStep(pv)}
 async function arrive(bumped){
   const {x,y}=pos,c=M[y][x],ch=D.chapters[P.ch];
   if(c==='h'||c==='s'){clearInterval(walkT);const secret=c==='s',id=secret?P.ch+'-s':heartId(x,y),n=secret?null:+id.split('-')[1];
@@ -363,6 +363,6 @@ $('#mClose').onclick=()=>$('#menu').classList.remove('on');
 $('#side').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&['bBook','bWard','bOw','bStory'].includes(b.id))$('#menu').classList.remove('on')},true);
 $('#pw').focus();
 </script>
-<script src="extras.js?v=mwhpjx7t"></script>
+<script src="extras.js?v=mwht9ep2"></script>
 </body>
 </html>

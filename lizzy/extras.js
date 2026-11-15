@@ -213,3 +213,73 @@ async function keepsake(){const items=letterItems();if(!items.length){SFX.play('
   return new Promise(r=>c.toBlob(bl=>{const a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download='mga-liham-ni-paul.png';document.body.append(a);a.click();a.remove();
     setTimeout(()=>URL.revokeObjectURL(a.href),5000);r({w:c.width,h:c.height,items:items.length,bytes:bl.size})},'image/png'))}
 $('#bKeep').onclick=()=>keepsake();
+
+/* ---------- in-map polish: drifting lights, a waving prince, speech bubbles, footsteps ---------- */
+document.head.insertAdjacentHTML('beforeend',`<style>
+#amb{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:2}
+#amb i{position:absolute;display:block}
+.ff{width:1.2%;aspect-ratio:1;background:#ffe98a;box-shadow:0 0 6px 2px #ffe98a99;animation:ffd var(--d) ease-in-out infinite alternate,ffb 1.4s steps(2) infinite;animation-delay:var(--w)}
+@keyframes ffd{to{transform:translate(var(--x),var(--y))}}@keyframes ffb{50%{opacity:.15}}
+.bf{width:2.6%;aspect-ratio:2/1;animation:ffd var(--d) ease-in-out infinite alternate;animation-delay:var(--w)}
+.bf b{display:block;width:100%;height:100%;background:linear-gradient(90deg,currentColor 0 40%,#0000 40% 60%,currentColor 60%);animation:flap .3s steps(2) infinite}
+@keyframes flap{50%{transform:scaleX(.35)}}
+.spk{width:1%;aspect-ratio:1;background:#fff;animation:tw 1.6s steps(2) infinite}
+.fl2{top:-4%;width:1.6%;aspect-ratio:1;animation:fl2 var(--d) linear infinite;animation-delay:var(--w)}
+@keyframes fl2{to{top:104%;transform:translateX(var(--x))}}
+.hu{width:3.5%;bottom:-6%;opacity:.7;animation:hu var(--d) linear infinite;animation-delay:var(--w)}.hu svg{width:100%;height:auto;display:block}
+@keyframes hu{to{bottom:106%}}
+@media(prefers-reduced-motion:reduce){#amb{display:none}}
+.bub{position:absolute;z-index:5;transform:translate(-50%,-100%);margin-top:-4px;background:#fff;color:#000;border:3px solid #000;padding:3px 7px;font:18px/1 VT323,monospace;
+  max-width:62%;width:max-content;text-align:center;pointer-events:none;box-shadow:3px 3px 0 #0008;animation:bubin .25s steps(3) backwards}
+.bub::after{content:"";position:absolute;left:calc(50% - 4px + var(--tx,0px));bottom:-9px;width:8px;height:6px;background:#fff;border:3px solid #000;border-top:0;box-sizing:border-box}
+.bub.below{transform:translate(-50%,0);margin-top:4px}.bub.below::after{bottom:auto;top:-9px;border:3px solid #000;border-bottom:0}
+@keyframes bubin{0%{opacity:0;margin-top:6px}}
+.dust{position:absolute;z-index:1;width:3%;aspect-ratio:1;background:#fff8;pointer-events:none;animation:dust .32s steps(3) forwards}
+@keyframes dust{to{transform:translateY(-60%) scale(1.8);opacity:0}}
+#me.fl svg{transform:scaleX(-1)}
+#me.bmp{animation:nope .25s steps(4)}
+#he svg{position:absolute;left:0;top:0}#he svg:nth-child(2){visibility:hidden}
+#he.wave svg:nth-child(1){animation:wvA .5s steps(1) infinite}#he.wave svg:nth-child(2){animation:wvB .5s steps(1) infinite}
+@keyframes wvA{50%{visibility:hidden}}@keyframes wvB{50%{visibility:visible}}
+</style>`);
+const PRINCE_WAVE=sprite(["...y.yy.y...","...yyyyyy...","...kTTTTk...","..kTssssTk..","..kskssksk..","..kssssssk..","...ksrrsk.ks","..kuuyyuukuk",".kuuuyyuuuk.",".ksuuuuuuk..","..kuukkuuk..","..kkk..kkk.."]);
+const rnd2=(a,b)=>a+Math.random()*(b-a),pick=a=>a&&a.length?a[Math.floor(Math.random()*a.length)]:'';
+let polT=0,lastAct=0,petPos=null,heNear=false,saidLast=false,bumpAt=0;
+function ambient(n){const a=el('div');a.id='amb';$('#map').append(a);
+  const add=(cls,css,html)=>{const i=document.createElement('i');i.className=cls;i.style.cssText=css;if(html)i.innerHTML=html;a.append(i)};
+  const flies=k=>{for(let j=0;j<k;j++)add('ff',`left:${rnd2(4,94)}%;top:${rnd2(2,95)}%;--x:${rnd2(-40,40)}px;--y:${rnd2(-30,30)}px;--d:${rnd2(2.5,5)}s;--w:${-rnd2(0,4)}s`)};
+  const fall=(k,cols)=>{for(let j=0;j<k;j++)add('fl2',`left:${rnd2(0,96)}%;background:${cols[j%cols.length]};--d:${rnd2(4,8)}s;--w:${-rnd2(0,8)}s;--x:${rnd2(-30,30)}px`)};
+  const flutter=k=>{for(let j=0;j<k;j++)add('bf',`left:${rnd2(8,88)}%;top:${rnd2(10,85)}%;--x:${rnd2(-70,70)}px;--y:${rnd2(-50,50)}px;--d:${rnd2(4,7)}s;--w:${-rnd2(0,5)}s;color:${['#ffc2e0','#fff','#ffd66b'][j%3]}`,'<b></b>')};
+  if(n===0)flies(12);
+  if(n===1)flutter(5);
+  if(n===3){flutter(3);for(let j=0;j<8;j++)add('spk',`left:${rnd2(2,96)}%;top:${rnd2(1,16)}%;animation-delay:${-rnd2(0,2)}s`)}
+  if(n===4)fall(14,['#ff5fa2','#ffd66b','#8a5cf0','#6fe0ff','#fff']);
+  if(n===5){flies(8);for(let j=0;j<5;j++)add('hu',`left:${rnd2(4,92)}%;--d:${rnd2(6,10)}s;--w:${-rnd2(0,10)}s`,HEART)}
+  if(n===6)fall(12,['#ff8fc0','#ffc2e0']);
+}
+// a small speech bubble over tile (x,y); one per speaker
+function bubble(who,x,y,text,ms){const map=$('#map');map.querySelectorAll('.bub[data-w="'+who+'"]').forEach(b=>b.remove());if(!text)return;
+  const b=el('div','bub',text);b.dataset.w=who;const c=(x+.5)/W*100,cl=Math.min(74,Math.max(26,c));
+  b.style.left=cl+'%';b.style.setProperty('--tx',((c-cl)/100*map.clientWidth)+'px');
+  if(y<1){b.classList.add('below');b.style.top=((y+1)/H*100)+'%'}else b.style.top=(y/H*100)+'%';
+  map.append(b);setTimeout(()=>b.remove(),ms||2400)}
+const BB=()=>(D&&D.bubbles)||{};
+function polish(){const n=P.ch,he=$('#he');clearInterval(polT);ambient(n);heNear=saidLast=false;petPos=null;lastAct=Date.now();
+  if(he)he.innerHTML=PRINCE+PRINCE_WAVE;
+  setTimeout(()=>{if(P.ch===n&&!busy&&!document.querySelector('.overlay.on'))bubble('me',pos.x,pos.y,(BB().start||[])[n],3200)},700);
+  polT=setInterval(()=>{if(busy||document.hidden||document.querySelector('.overlay.on')){lastAct=Date.now();return}
+    if(Date.now()-lastAct<10000)return;lastAct=Date.now();
+    if(petEl&&petPos&&Math.random()<.35)bubble('pet',petPos.x,petPos.y,look().p===1?BB().cat:BB().dog,1800);
+    else bubble('me',pos.x,pos.y,pick(BB().idle),2800)},1000)}
+function onStep(prev){lastAct=Date.now();petPos=prev;const map=$('#map');
+  if(pos.x!==prev.x)meEl.classList.toggle('fl',pos.x<prev.x);
+  const d=el('div','dust');d.style.left=((prev.x+.5)/W*100-1.5)+'%';d.style.top=((prev.y+.8)/H*100)+'%';map.append(d);setTimeout(()=>d.remove(),340);
+  bubble('me');bubble('pet');
+  const who=prince||(P.ch===0?goal:null),he=$('#he');
+  if(who&&he){const near=Math.abs(pos.x-who.x)+Math.abs(pos.y-who.y)<=(prince?3:4);
+    if(near&&!heNear&&!busy)bubble('he',who.x,who.y,open?BB().come:BB().wait,2600);
+    heNear=near;he.classList.toggle('wave',near)}
+  if(!busy&&!saidLast&&left()===1){saidLast=true;bubble('me',pos.x,pos.y,BB().last,2200)}
+}
+function bump(){lastAct=Date.now();meEl.classList.remove('bmp');void meEl.offsetWidth;meEl.classList.add('bmp');
+  if(Date.now()-bumpAt>2500){bumpAt=Date.now();bubble('me',pos.x,pos.y,pick(BB().bump),1200)}}
