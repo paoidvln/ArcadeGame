@@ -143,6 +143,11 @@ function replyBox(){return new Promise(res=>{busy=true;const R=D.reply;$('#rt').
   const close=()=>{P.reply=$('#rtx').value;save();$('#reply').classList.remove('on');busy=false;res()};
   $('#rskip').onclick=close;
   $('#rsend').onclick=async()=>{const v=$('#rtx').value.trim();if(!v){$('#rtx').focus();return}const text=R.prefix+'\n\n'+v;P.reply=v;save();
+    // straight to Paul's Telegram when a bot is set up (token and chat id come from the encrypted data)
+    const T=D.telegram;if(T&&T.token&&T.chat){const b=$('#rsend');b.disabled=true;b.textContent='Ipinapadala…';let ok=false;
+      try{const r=await fetch('https://api.telegram.org/bot'+T.token+'/sendMessage',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({chat_id:T.chat,text})});ok=r.ok&&(await r.json()).ok}catch(e){}
+      b.disabled=false;b.textContent='Ipadala kay Paul';
+      if(ok){SFX.play('good');hearts(3);$('#rmsg').textContent=R.sent||'Naipadala na!';$('#rskip').textContent='Tapos na';return}}
     try{if(navigator.share){await navigator.share({text});return close()}}catch(e){if(e&&e.name==='AbortError')return}
     try{await navigator.clipboard.writeText(text);$('#rmsg').textContent=R.copied;$('#rskip').textContent='Tapos na'}
     catch(e){$('#rmsg').textContent='Piliin at kopyahin ang sinulat mo, tapos ipadala kay Paul.'}}})}
