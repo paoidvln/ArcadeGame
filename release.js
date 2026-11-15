@@ -10,7 +10,7 @@ for (const [file, base] of pages) {
   let s = fs.readFileSync(f, 'utf8');
   s = s.replace(/\n?<script data-arcade-version>[\s\S]*?<\/script>/, '');
   s = s.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n' + snippet(base));
-  s = s.replace(/((?:shared\/arcade\.(?:css|js))|(?:"data\.js))(\?v=[a-z0-9]+)?/g, (m, a) => a + '?v=' + v);
+  s = s.replace(/((?:shared\/arcade\.(?:css|js))|(?:"(?:data|extras)\.js))(\?v=[a-z0-9]+)?/g, (m, a) => a + '?v=' + v);
   fs.writeFileSync(f, s);
 }
 fs.writeFileSync(path.join(__dirname, 'version.json'), JSON.stringify({ v }) + '\n');
