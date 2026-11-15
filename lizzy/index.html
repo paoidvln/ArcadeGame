@@ -2,13 +2,13 @@
 <html lang="tl">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwhdtini';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{})</script>
+<script data-arcade-version>window.AV='mwhe2cil';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{})</script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Princess Lizzy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwhdtini">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwhe2cil">
 <style>
 :root{--bg:#1a0b1e;--panel:#3a1638;--panel2:#260d26;--edge:#c8508c;--accent:#ff5fa2;--accent-d:#8a2356;--accent-l:#ffc2e0;
   --alt:#8a5cf0;--alt-d:#45288a;--alt-l:#d2c2ff;--dim:#e0a8c8;--hi:#ffc2e0;--gold:#ffd66b}
@@ -70,6 +70,15 @@ h1.title{text-shadow:4px 4px 0 var(--accent),8px 8px 0 #000}
 #sky button svg{width:100%;height:100%;filter:drop-shadow(2px 2px 0 #000)}
 @keyframes rise{to{bottom:110%}}
 #ccount{font-family:'Press Start 2P',monospace;font-size:12px;color:var(--gold);margin-top:10px}
+/* ---- controls must fit narrow phones ---- */
+#ctl2{align-items:flex-start}
+#pad{flex:none}
+#side{flex:1 1 0;min-width:0}
+#side button{min-width:0;white-space:normal;overflow-wrap:anywhere}
+#side .row,#side .row2{flex-wrap:wrap;gap:6px}
+#side .row button{flex:1 1 auto}
+#side .row2 button{flex:1 1 40%}
+@media(max-width:480px){#ctl2{gap:8px}#pad{grid-template-columns:repeat(3,40px);grid-template-rows:repeat(2,38px)}#bBook{font-size:9px;padding:9px 6px}#side button.small{font-size:8px;padding:6px 5px}}
 /* ---- story cutscenes ---- */
 #cine{background:#06030ef5}
 .cbox{width:min(100%,600px)}
@@ -132,8 +141,8 @@ h1.title{text-shadow:4px 4px 0 var(--accent),8px 8px 0 #000}
 <div class="overlay" id="book"><div class="card wide"><h2>Mga Liham ni Paul</h2><div id="bList"></div><button class="primary big" id="bClose">Isara</button></div></div>
 <div class="overlay" id="catch"><div class="card"><h2>Saluhin ang mga puso!</h2><p class="tag" id="cTag" style="margin:0"></p><div id="sky"></div><div id="ccount"></div></div></div>
 
-<script src="../shared/arcade.js?v=mwhdtini"></script>
-<script src="data.js?v=mwhdtini"></script>
+<script src="../shared/arcade.js?v=mwhe2cil"></script>
+<script src="data.js?v=mwhe2cil"></script>
 <script>
 const {$,el,sprite,SFX,MUSIC}=Arcade;
 let PRINCESS=sprite(["...y.yy.y...","...yyyyyy...","..kTTTTTTk..",".kTssssssTk.",".kTskssksTk.",".kTssssssTk.",".kTTsrrsTTk.","..kTmmmmTk..","..kmmwwmmk..",".kmmmmmmmmk.",".kmmmmmmmmk.","..kkkkkkkk.."]);
@@ -339,6 +348,6 @@ addEventListener('keydown',e=>{const d={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft
   if(d&&D&&$('#play').classList.contains('on')&&!/INPUT/.test(document.activeElement.tagName)){e.preventDefault();move(d[0],d[1])}});
 $('#pw').focus();
 </script>
-<script src="extras.js?v=mwhdtini"></script>
+<script src="extras.js?v=mwhe2cil"></script>
 </body>
 </html>
