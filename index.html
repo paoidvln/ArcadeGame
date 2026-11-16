@@ -2,18 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwj1b82f';fetch('./version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{})</script>
+<script data-arcade-version>window.AV='mwj1gr30';fetch('./version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
 <link data-pwa rel="manifest" href="./manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="./icons/apple-180.png">
+<link data-pwa rel="stylesheet" href="./shared/wand.css?v=mwj1gr30">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pixel Arcade</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="shared/arcade.css?v=mwj1b82f">
+<link rel="stylesheet" href="shared/arcade.css?v=mwj1gr30">
 <style>
 :root{--bg:#0d0b1f;--panel:#1a1740;--panel2:#110f2c;--edge:#4b46b0}
 main{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:28px 16px 60px}
@@ -30,6 +31,9 @@ a.gcard:hover .art{animation:pbob .5s steps(2) infinite}
 .me{display:grid;grid-template-columns:260px 1fr;gap:18px;align-items:center;margin-bottom:26px}
 .me p{margin:0 0 8px;color:var(--dim)}
 .bar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px}
+.srow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;padding:10px;background:var(--panel2);border:3px solid #000;box-shadow:inset 0 0 0 2px var(--edge);font-size:22px;text-align:left}
+.srow small{display:block;font-size:16px;color:var(--dim,#a9a4d8);line-height:1.1}
+.srow button{flex:none;min-width:64px;margin:0}.srow button.off{opacity:.6}
 @media(max-width:640px){.me{grid-template-columns:1fr}}
 .credit{text-align:center;font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.6;color:var(--gold);text-shadow:2px 2px 0 #000;margin:0 0 18px;min-height:16px}
 .credit i{font-style:normal;animation:blink .7s steps(2) infinite}@keyframes blink{50%{opacity:0}}
@@ -65,7 +69,7 @@ a.gcard.rise{animation-name:pop}
   </form>
 </section>
 <main id="main" hidden>
-  <div class="bar"><button class="small go" id="bInst" type="button" style="display:none">Install app</button><button class="small" id="bMus" title="Music on/off">♪</button><button class="small" id="bSnd" title="Sound effects on/off">🔊</button></div>
+  <div class="bar"><button class="small go" id="bInst" type="button" style="display:none">Install app</button><button class="small" id="bSet" type="button">⚙ Settings</button></div>
   <h1 class="title" aria-label="Pixel Arcade">PIXEL ARCADE</h1>
   <p class="credit" id="credit" aria-label="Created by J.P. Ibarreta"></p>
   <p class="tag rise" id="hello" style="--d:1.7s"></p>
@@ -77,7 +81,14 @@ a.gcard.rise{animation-name:pop}
   <div class="ph rise" style="--d:2.1s">Games</div>
   <div class="games" id="games"></div>
 </main>
-<script src="shared/arcade.js?v=mwj1b82f"></script>
+<div class="overlay" id="set"><div class="card"><h2>Settings</h2>
+  <div class="srow"><span>Music</span><button class="small" type="button" id="bMus"></button></div>
+  <div class="srow"><span>Sound effects</span><button class="small" type="button" id="bSnd"></button></div>
+  <div class="srow"><span>Magic wand cursor</span><button class="small" type="button" id="bWand"></button></div>
+  <div class="srow"><span>Forget my player<small>Clears your name, avatar and colour on this device.</small></span><button class="small" type="button" id="bForget">Reset</button></div>
+  <p class="tag" id="sVer" style="margin:6px 0 12px"></p>
+  <button class="primary big" type="button" id="sClose">Close</button></div></div>
+<script src="shared/arcade.js?v=mwj1gr30"></script>
 <script>
 const {el,sprite,SFX,MUSIC}=Arcade;
 const GAMES=[
@@ -121,9 +132,17 @@ MUSIC.set({bpm:120,arp:'triangle',ch:[[48,60,64,67],[45,57,60,64],[41,53,57,60],
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);if(ios)bi.style.display='';
   bi.onclick=()=>{if(ev){ev.prompt();ev.userChoice.then(()=>{ev=null;bi.style.display='none'})}
     else if(ios){const h=document.getElementById('hello');h.textContent='To install: tap Share, then "Add to Home Screen".'}}})();
-const bm=document.getElementById('bMus'),bs=document.getElementById('bSnd');
-bm.classList.toggle('off',!MUSIC.on);bm.onclick=()=>bm.classList.toggle('off',!MUSIC.toggle());
-bs.textContent=SFX.muted?'🔇':'🔊';bs.onclick=()=>bs.textContent=SFX.toggle()?'🔇':'🔊';
+// settings panel
+(function(){const g=id=>document.getElementById(id),set=g('set'),onoff=(b,on)=>{b.textContent=on?'ON':'OFF';b.classList.toggle('off',!on)};
+  g('bSet').onclick=()=>{set.classList.add('on');SFX.play('good')};g('sClose').onclick=()=>set.classList.remove('on');
+  set.onclick=e=>{if(e.target===set)set.classList.remove('on')};
+  const bm=g('bMus'),bs=g('bSnd'),bw=g('bWand'),root=document.documentElement;
+  onoff(bm,MUSIC.on);bm.onclick=()=>onoff(bm,MUSIC.toggle());
+  onoff(bs,!SFX.muted);bs.onclick=()=>onoff(bs,!SFX.toggle());
+  onoff(bw,root.classList.contains('wand'));bw.onclick=()=>{const on=root.classList.toggle('wand');try{localStorage.setItem('arcade-wand',on?'1':'0')}catch(e){}onoff(bw,on)};
+  const bf=g('bForget');bf.onclick=()=>{if(bf.dataset.sure){try{localStorage.removeItem('arcade-profile')}catch(e){}location.reload()}
+    else{bf.dataset.sure=1;bf.textContent='Sure?';setTimeout(()=>{delete bf.dataset.sure;bf.textContent='Reset'},2500)}};
+  g('sVer').textContent='Version '+(window.AV||'local')})();
 </script>
 </body>
 </html>
