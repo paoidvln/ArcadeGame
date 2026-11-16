@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script data-arcade-version>window.AV='mwjf38yp';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
+<link data-pwa rel="manifest" href="../manifest.webmanifest">
+<meta data-pwa name="theme-color" content="#1a1030">
+<meta data-pwa name="mobile-web-app-capable" content="yes">
+<meta data-pwa name="apple-mobile-web-app-capable" content="yes">
+<meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
+<link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwjf38yp">
+<script data-pwa defer src="../shared/wand.js?v=mwjf38yp"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Last Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwjf38yp">
+<style>
+:root{--bg:#140b1f;--panel:#2b1a3f;--panel2:#1c1029;--edge:#b0559a;--accent:#e0409a;--accent-d:#7a1f52;--accent-l:#ffa6d6;
+  --alt:#2fb8a6;--alt-d:#12584f;--alt-l:#a6f0e6;--dim:#c9b4d8;--hi:#ffa6d6}
+#lc{width:min(100%,860px);margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.ph2{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--hi);margin-bottom:8px;line-height:1.6}
+#table{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap;padding:16px 10px;background:#3a1f52;border:4px solid #000;box-shadow:inset 0 0 0 4px #2a1540,0 0 0 4px var(--edge),8px 8px 0 #000}
+#tinfo{font-size:21px;line-height:1.15;text-align:left}#tinfo b{font-weight:400;color:var(--gold)}#tinfo .su{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border:3px solid #000;margin-top:4px;color:#fff}
+#tinfo .su svg{width:16px;height:16px}
+.cd{position:relative;flex:none;width:46px;height:64px;border:3px solid #000;box-shadow:inset 0 0 0 2px #ffffffcc,2px 2px 0 #0008;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#fff;font-family:'Press Start 2P',monospace;line-height:1}
+.cd svg{width:15px;height:15px}.cd b{font-weight:400;font-size:15px;text-shadow:2px 2px 0 #0009}.cd b.w{font-size:7px}
+.cd.big{width:74px;height:104px;gap:8px}.cd.big svg{width:26px;height:26px}.cd.big b{font-size:24px}.cd.big b.w{font-size:10px}
+.cd.wild{background:conic-gradient(#2fb8a6 0 25%,#d9a441 0 50%,#8a5cf0 0 75%,#ff7a59 0)}.cd.wild b{background:#000;padding:4px 3px}
+.cd.back{background:#22223a;box-shadow:inset 0 0 0 2px #e0409a,inset 0 0 0 5px #22223a,inset 0 0 0 7px #8a5cf0,2px 2px 0 #0008}
+.cd.mini{width:13px;height:19px;border-width:2px;box-shadow:inset 0 0 0 1px #e0409a}
+.cd.new{animation:drop .3s steps(4) backwards}@keyframes drop{0%{transform:translateY(-16px) rotate(-8deg);opacity:0}}
+#deck{position:relative;flex:none;width:74px;height:104px;min-width:74px;padding:0;margin:0 0 18px;background:none;border:0;box-shadow:none;line-height:0}#deck .cd{position:absolute;left:0;top:0}#deck:not(:disabled) .cd{box-shadow:inset 0 0 0 2px #e0409a,inset 0 0 0 5px #22223a,inset 0 0 0 7px #8a5cf0,0 0 0 3px #ffd66b}#deck span{position:absolute;left:0;right:0;bottom:-20px;font:18px/1 VT323,monospace;color:var(--dim)}
+#hand{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:70px}
+#hand button{padding:0;margin:0;background:none;border:0;box-shadow:none;line-height:0;opacity:.5}
+#hand button.ok{opacity:1;animation:pbob .8s steps(2) infinite}#hand button.ok .cd{box-shadow:inset 0 0 0 2px #fff,0 0 0 3px #ffd66b}
+#hand button.sel .cd{box-shadow:inset 0 0 0 2px #fff,0 0 0 4px #fff}
+#others{display:flex;flex-wrap:wrap;gap:10px 20px;justify-content:center}
+.op{display:flex;align-items:center;gap:6px;font-size:19px}.op .pa{width:26px;height:26px;display:inline-flex}.op .pa svg{width:100%;height:100%}.op .tl{display:flex;gap:2px;flex-wrap:wrap;max-width:170px}.op.cur{color:var(--gold)}
+#choice{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}#choice button{margin:0;display:inline-flex;align-items:center;gap:6px;color:#fff}#choice svg{width:16px;height:16px}
+@media(max-width:719px){.cd{width:40px;height:56px}.cd b{font-size:13px}#table{gap:14px}}
+</style>
+</head>
+<body>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="../shared/arcade.js?v=mwjf38yp"></script>
+<script>
+const {el}=Arcade;
+// A card is {s, v}: s = suit 0..3, or 4 for a wild. v = '1'..'9', S skip, R reverse, D draw two, W wild, F wild draw four.
+const SUITS=[{n:'Gems',c:'#2fb8a6',g:["...k...","..kkk..",".kkkkk.","kkkkkkk",".kkkkk.","..kkk..","...k..."]},
+             {n:'Stars',c:'#d9a441',g:["...k...","...k...","kkkkkkk",".kkkkk.","..kkk..",".kk.kk.","k.....k"]},
+             {n:'Moons',c:'#8a5cf0',g:["..kkk..",".kk....","kk.....","kk.....","kk.....",".kk....","..kkk.."]},
+             {n:'Flames',c:'#ff7a59',g:["...k...","..kk...","..kkk..",".kkkkk.","kkkkkkk","kkkkkkk",".kkkkk."]}];
+const glyph=i=>{let r='';SUITS[i].g.forEach((row,y)=>{for(let x=0;x<7;x++)if(row[x]==='k')r+='<rect x="'+x+'" y="'+y+'" width="1.03" height="1.03" fill="#fff"/>'});return'<svg viewBox="0 0 7 7" shape-rendering="crispEdges" aria-hidden="true">'+r+'</svg>'};
+const LABEL={S:'SKIP',R:'TURN',D:'+2',W:'WILD',F:'+4'},WORDY={S:1,R:1,W:1};
+const cardName=c=>c.s===4?(c.v==='F'?'Wild Draw Four':'Wild'):({S:'Skip',R:'Reverse',D:'Draw Two'}[c.v]||c.v)+' of '+SUITS[c.s].n;
+function cardEl(c,cls){const d=el('span','cd '+(cls||'')+(c.s===4?' wild':''));if(c.s<4){d.style.background=SUITS[c.s].c;d.innerHTML=glyph(c.s)}d.append(el('b',WORDY[c.v]?'w':'',LABEL[c.v]||c.v));return d}
+const back=cls=>el('span','cd back '+(cls||''));
+const topOf=s=>s.pile[s.pile.length-1];
+const fits=(s,c)=>c.s===4||c.s===s.suit||(topOf(s).s!==4&&c.v===topOf(s).v);
+// what the player to move may do with card i: after drawing, only the card just drawn can be played
+const canPlay=(s,seat,i)=>fits(s,s.hands[seat][i])&&(!s.drew||i===s.hands[seat].length-1);
+let CUR=null,CTX=null,pick=-1,seen=-1;
+function viewer(s){if(s.players.every((p,i)=>CTX.controls(i)))return s.turn;return s.players.findIndex((p,i)=>CTX.controls(i))}
+function paint(){const s=CUR;if(!s)return;const v=viewer(s),can=CTX.canAct()&&v===s.turn,t=topOf(s);
+  const tb=document.getElementById('table');tb.innerHTML='';
+  const dk=el('button');dk.id='deck';dk.type='button';dk.append(back('big'),el('span',null,s.deck.length+' left'));dk.disabled=!can||s.drew;dk.title='Draw a card';dk.setAttribute('aria-label','Draw a card');dk.onclick=()=>{pick=-1;CTX.act({k:'d'})};
+  const tc=cardEl(t,'big new'),info=el('div');info.id='tinfo';const su=el('span','su');su.style.background=SUITS[s.suit].c;su.innerHTML=glyph(s.suit);su.append(SUITS[s.suit].n);
+  info.append('Play ',su,el('br'),'or a ',el('b',null,t.s===4?'wild':'matching '+(LABEL[t.v]||t.v)),el('br'),'Order: ',el('b',null,s.players.length<3?'back and forth':s.dir>0?'down the list ▼':'up the list ▲'));
+  tb.append(dk,tc,info);
+  const ot=document.getElementById('others');ot.innerHTML='';s.players.forEach((p,i)=>{if(i===v)return;const o=el('div','op'+(i===s.turn&&!s.over?' cur':'')),pa=el('span','pa'),tl=el('span','tl');pa.innerHTML=CTX.avatar(p);
+    s.hands[i].forEach(()=>tl.append(back('mini')));o.append(pa,p.name+' ('+s.hands[i].length+')',tl);ot.append(o)});
+  const hd=document.getElementById('hand'),ch=document.getElementById('choice');hd.innerHTML='';ch.innerHTML='';
+  document.getElementById('whose').textContent=v<0?'WATCHING':s.players[v].name.toUpperCase()+"'S CARDS";if(v<0)return;
+  s.hands[v].forEach((c,i)=>{const ok=can&&canPlay(s,v,i),b=el('button',(ok?'ok':'')+(pick===i?' sel':''));b.type='button';b.append(cardEl(c));b.disabled=!ok;b.setAttribute('aria-label',cardName(c));
+    b.onclick=()=>{if(c.s===4){pick=pick===i?-1:i;Arcade.SFX.play('click');return paint()}pick=-1;CTX.act({k:'p',i})};hd.append(b)});
+  if(pick>=0&&can&&s.hands[v][pick]&&s.hands[v][pick].s===4)SUITS.forEach((su2,k)=>{const b=el('button');b.type='button';b.style.background=su2.c;b.innerHTML=glyph(k);b.append(su2.n);b.onclick=()=>{const i=pick;pick=-1;CTX.act({k:'p',i,c:k})};ch.append(b)})}
+
+Arcade.run({
+  id:'lastcard',name:'Last Card',title:'LAST CARD',tag:'Match the suit or the number. Skip, reverse, make them draw — and be first to play your last card.',startLabel:'Deal the cards',min:2,max:4,
+  intro:'🃏 Seven cards each. Match the suit or the number on the pile.',
+  bgColors:['#ffffff','#ffa6d6','#2fb8a6','#d9a441'],
+  how:`<p>Everyone gets <b>7 cards</b>. On your turn, play one card that matches the top of the pile by <b>suit</b> (Gems, Stars, Moons, Flames) or by <b>number or symbol</b>. Cards you can play are lit up.</p>
+<p>If you cannot or do not want to play, tap the <b>deck</b> to draw one card. You may play that card if it fits; otherwise press <b>Pass</b>.</p>
+<p><b>SKIP</b> — the next player loses their turn.<br><b>TURN</b> — the order of play reverses. With two players it works like a skip.<br><b>+2</b> — the next player draws two cards and loses their turn.</p>
+<p><b>WILD</b> — play it on anything and choose the suit.<br><b>+4</b> — a wild that also makes the next player draw four cards and lose their turn.</p>
+<p>The first player to play their <b>last card</b> wins.</p>
+<p>On one shared device the screen shows the cards of whoever's turn it is, so the others should look away.</p>`,
+  song:{bpm:126,lead:'square',arp:'triangle',ch:[[45,57,60,64],[50,57,62,65],[43,55,59,62],[48,55,60,64]],
+    mel:[69,0,72,0,76,0,72,69, 74,0,77,0,81,0,77,74, 71,0,74,0,79,0,74,71, 72,0,76,0,79,0,84,0]},
+  sfx:({tone,noise,seq})=>({card:()=>{noise(0,.04,.06,2.4);tone(700,0,.04,'square',.04,500)},drawc:()=>tone(320,0,.07,'triangle',.06,440),skip:()=>seq([660,440],.08,'square',.06),rev:()=>seq([440,554,659,554,440],.05,'triangle',.06),
+    hit:()=>{tone(200,0,.18,'sawtooth',.07,90);noise(0,.15,.05,1.4)},wild:()=>seq([523,659,784,988],.06,'square',.06),last:()=>seq([988,988,1319],.1,'square',.08)}),
+  init(players){const all=[];for(let s=0;s<4;s++){for(let k=0;k<2;k++){for(let v=1;v<=9;v++)all.push({s,v:String(v)});['S','R','D'].forEach(v=>all.push({s,v}))}}
+    for(let k=0;k<4;k++)all.push({s:4,v:'W'});for(let k=0;k<2;k++)all.push({s:4,v:'F'});
+    const deck=Arcade.shuffle(all).slice(),hands=players.map(()=>deck.splice(0,7));let i=deck.findIndex(c=>c.s<4&&c.v>='1'&&c.v<='9');const first=deck.splice(i,1)[0];   // the pile starts on a plain number
+    return{hands,deck,pile:[first],suit:first.s,dir:1,drew:false,why:''}},
+  valid(s,seat,a){const h=s.hands[seat];if(a.k==='d')return!s.drew;if(a.k==='x')return s.drew;
+    return a.k==='p'&&Number.isInteger(a.i)&&a.i>=0&&a.i<h.length&&canPlay(s,seat,a.i)&&(h[a.i].s<4||[0,1,2,3].includes(a.c))},
+  auto(s,i){const h=s.hands[i],idx=h.map((c,k)=>k).filter(k=>canPlay(s,i,k));if(!idx.length)return{k:s.drew?'x':'d'};
+    const k=idx.find(k=>h[k].s<4)??idx[0],cnt=[0,0,0,0];h.forEach((c,j)=>{if(j!==k&&c.s<4)cnt[c.s]++});return{k:'p',i:k,c:cnt.indexOf(Math.max(...cnt))}},
+  async act(s,seat,a,api){const p=s.players[seat],n=s.players.length,step=k=>((seat+s.dir*k)%n+n)%n;
+    const deal=(to,k)=>{let got=0;for(let j=0;j<k;j++){if(!s.deck.length){const keep=s.pile.pop();s.deck=api.shuffle(s.pile).slice();s.pile=[keep];if(s.deck.length)api.log('🔄 The pile is shuffled back into the deck.')}if(!s.deck.length)break;s.hands[to].push(s.deck.pop());got++}return got};
+    if(a.k==='d'){const got=deal(seat,1);s.drew=true;api.log('🂠 '+p.name+(got?' draws a card.':' cannot draw — the deck is empty.'));await api.step(300,{sfx:'drawc'});return}
+    if(a.k==='x'){s.drew=false;s.turn=step(1);api.log('⏭ '+p.name+' passes.');await api.step(350,{sfx:'skip',toast:p.name+' passes'});return}
+    const c=s.hands[seat].splice(a.i,1)[0];s.pile.push(c);s.suit=c.s===4?a.c:c.s;s.drew=false;const left=s.hands[seat].length;
+    api.log('🃏 '+p.name+' plays '+cardName(c)+(c.s===4?' and calls '+SUITS[s.suit].n:'')+'. '+left+' left.',left===1?'hi':'');
+    if(!left){s.over=true;s.winners=[seat];s.why=p.name+' played their last card!';api.log('🏆 '+s.why,'gold');await api.step(700,{sfx:'card'});return}
+    let fx={sfx:c.s===4?'wild':'card'};const vic=s.players[step(1)];
+    if(c.v==='S'){s.turn=step(2);api.log('🚫 '+vic.name+' is skipped.','bad');fx={sfx:'skip',toast:vic.name+' is skipped'}}
+    else if(c.v==='R'){s.dir=-s.dir;if(n===2){s.turn=seat;fx={sfx:'rev',toast:p.name+' plays again'}}else{s.turn=((seat+s.dir)%n+n)%n;fx={sfx:'rev',toast:'Order reversed'}}}
+    else if(c.v==='D'||c.v==='F'){const k=c.v==='D'?2:4,vi=step(1),got=deal(vi,k);s.turn=step(2);api.log('💥 '+vic.name+' draws '+got+' and is skipped.','bad');fx={sfx:'hit',shake:c.v==='F',toast:vic.name+' draws '+got}}
+    else s.turn=step(1);
+    if(left===1){fx.banner={text:'LAST CARD!',sub:p.name+' has one card left'};fx.sfx='last'}
+    await api.step(left===1?900:350,fx)},
+  status:(s,mine)=>s.busy?'…':mine?(s.drew?'Play the card you drew, or pass':'Play a lit card, or tap the deck to draw'):null,
+  score:(s,p)=>s.hands[p.id].length+' cards',
+  badge:(s,p)=>s.hands[p.id].length===1&&!s.over?'⚠ LAST CARD':'',
+  endText:s=>s.why,
+  build(stage){const root=el('div');root.id='lc';const tb=el('div');tb.id='table';const b=el('div','panel'),c=el('div','panel');
+    const ot=el('div');ot.id='others';b.append(ot);const wh=el('div','ph2');wh.id='whose';const hd=el('div');hd.id='hand';const ch=el('div');ch.id='choice';c.append(wh,hd,ch);root.append(tb,b,c);stage.append(root);pick=-1},
+  render(s,ctx,ctl){CUR=s;CTX=ctx;if(s.seq!==seen){seen=s.seq;pick=-1}paint();
+    if(!s.over&&ctx.canAct())ctl.append(s.drew?ctx.button('Pass',{k:'x'},'alt'):ctx.button('Draw a card',{k:'d'},'alt'))}
+});
+</script>
+</body>
+</html>
