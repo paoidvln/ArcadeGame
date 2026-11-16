@@ -1,7 +1,7 @@
 // Pixel Arcade offline cache.
 // Online: every file comes fresh from the network (and a copy is saved). Offline: the saved copy is used.
-const CACHE = 'pixel-arcade-6';
-const CORE = ['./', 'pirates/', 'space/', 'ghostbound/', 'lizzy/', 'world/', 'chess/', 'shared/arcade.css', 'shared/arcade.js', 'shared/wand.css', 'shared/wand.js', 'lizzy/data.js', 'lizzy/extras.js',
+const CACHE = 'pixel-arcade-7';
+const CORE = ['./', 'pirates/', 'space/', 'ghostbound/', 'lizzy/', 'world/', 'chess/', 'tictactoe/', 'dominoes/', 'shared/arcade.css', 'shared/arcade.js', 'shared/wand.css', 'shared/wand.js', 'lizzy/data.js', 'lizzy/extras.js',
   'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png',
   'https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js', 'https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap'];
 // same-site files are saved without their ?v=… so one copy serves every version

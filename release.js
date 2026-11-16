@@ -3,7 +3,7 @@
 // saved an older copy notice the change and reload themselves instead of showing stale files.
 const fs = require('fs'), path = require('path');
 const v = Date.now().toString(36);
-const pages = [['index.html', './'], ['pirates/index.html', '../'], ['space/index.html', '../'], ['ghostbound/index.html', '../'], ['lizzy/index.html', '../'], ['world/index.html', '../'], ['chess/index.html', '../']];
+const pages = [['index.html', './'], ['pirates/index.html', '../'], ['space/index.html', '../'], ['ghostbound/index.html', '../'], ['lizzy/index.html', '../'], ['world/index.html', '../'], ['chess/index.html', '../'], ['tictactoe/index.html', '../'], ['dominoes/index.html', '../']];
 const snippet = base => `<script data-arcade-version>window.AV='${v}';fetch('${base}version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('${base}sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>`;
 // installable app: icon, colours and the offline cache (sw.js) are wired into every page
 const pwa = base => `<link data-pwa rel="manifest" href="${base}manifest.webmanifest">\n<meta data-pwa name="theme-color" content="#1a1030">\n<meta data-pwa name="mobile-web-app-capable" content="yes">\n<meta data-pwa name="apple-mobile-web-app-capable" content="yes">\n<meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">\n<link data-pwa rel="apple-touch-icon" href="${base}icons/apple-180.png">

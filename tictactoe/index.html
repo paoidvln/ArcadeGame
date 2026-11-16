@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script data-arcade-version>window.AV='mwjc6kzh';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
+<link data-pwa rel="manifest" href="../manifest.webmanifest">
+<meta data-pwa name="theme-color" content="#1a1030">
+<meta data-pwa name="mobile-web-app-capable" content="yes">
+<meta data-pwa name="apple-mobile-web-app-capable" content="yes">
+<meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
+<link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwjc6kzh">
+<script data-pwa defer src="../shared/wand.js?v=mwjc6kzh"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tic-Tac-Toe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwjc6kzh">
+<style>
+:root{--bg:#07131c;--panel:#12303f;--panel2:#0b202b;--edge:#2fb8a6;--accent:#ff7a59;--accent-d:#8a3420;--accent-l:#ffc2b0;
+  --alt:#2fb8a6;--alt-d:#12584f;--alt-l:#a6f0e6;--dim:#9cc4cf;--hi:#a6f0e6}
+#ttt{width:min(100%,440px,calc(100dvh - 190px));margin:0 auto;display:flex;flex-direction:column;gap:12px}
+#tally{display:flex;justify-content:space-between;align-items:center;font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.6}
+#tally span{display:flex;align-items:center;gap:6px}#tally svg{width:20px;height:20px}#tally b{font-weight:400;color:var(--gold)}#tally small{color:var(--dim);font-family:VT323,monospace;font-size:19px}
+#grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px;background:#000;border:4px solid #000;box-shadow:0 0 0 4px var(--edge),8px 8px 0 #000}
+.c{aspect-ratio:1;background:var(--panel2);border:0;margin:0;padding:14%;box-shadow:inset 0 0 0 3px #1c4a5c;min-width:0}
+.c:hover:not(:disabled){background:#16404f;border:0;filter:none}.c:disabled{opacity:1;cursor:default}
+.c svg{width:100%;height:100%;display:block;animation:pop .2s steps(4) backwards}
+@keyframes pop{0%{transform:scale(.3)}}
+.c.win{background:#ffd66b;box-shadow:inset 0 0 0 3px #fff}
+.c.dim svg{opacity:.35}
+</style>
+</head>
+<body>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="../shared/arcade.js?v=mwjc6kzh"></script>
+<script>
+const {el}=Arcade,GOAL=3,MAXR=9;
+const LINES=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+const MARK=[["k.....k","kk...kk",".kk.kk.","..kkk..",".kk.kk.","kk...kk","k.....k"],[".kkkkk.","kk...kk","k.....k","k.....k","k.....k","kk...kk",".kkkkk."]];
+const mark=(i,color)=>{let r='';MARK[i].forEach((row,y)=>{for(let x=0;x<7;x++)if(row[x]==='k')r+='<rect x="'+x+'" y="'+y+'" width="1.03" height="1.03" fill="'+color+'"/>'});return'<svg viewBox="0 0 7 7" shape-rendering="crispEdges" aria-hidden="true">'+r+'</svg>'};
+let cells=[];
+const winLine=(b,seat)=>LINES.find(l=>l.every(k=>b[k]===seat));
+Arcade.run({
+  id:'ttt',name:'Tic-Tac-Toe',title:'TIC-TAC-TOE',tag:'Three in a row takes the round. First to '+GOAL+' rounds wins the match.',startLabel:'Start the match',min:2,max:2,
+  intro:'✖ Player 1 is X and starts round 1.',
+  bgColors:['#ffffff','#a6f0e6','#ff7a59','#ffffff'],
+  how:`<p>Take turns placing your mark. <b>Three in a row</b> — across, down or diagonally — wins the round.</p>
+<p>The first player to win <b>${GOAL} rounds</b> wins the match. A full board with no line is a drawn round and nobody scores.</p>
+<p>The loser of a round starts the next one. After a drawn round the other player starts.</p>
+<p>If nobody has ${GOAL} wins after ${MAXR} rounds, the player with more round wins takes the match.</p>`,
+  song:{bpm:132,lead:'square',ch:[[48,60,64,67],[53,60,65,69],[55,62,67,71],[48,60,64,67]],
+    mel:[72,0,76,0,79,0,76,0, 77,0,81,0,84,0,81,0, 79,0,83,0,86,0,83,0, 84,0,79,0,76,0,72,0]},
+  sfx:({tone,seq})=>({place:()=>tone(520,0,.06,'square',.06,780),place2:()=>tone(390,0,.06,'square',.06,260),line:()=>seq([523,659,784,1047],.08,'square',.07),draw:()=>seq([330,294,330],.1,'triangle',.07)}),
+  init:()=>({b:Array(9).fill(-1),wins:[0,0],first:0,line:null,round:1}),
+  valid:(s,seat,a)=>a.k==='p'&&Number.isInteger(a.i)&&a.i>=0&&a.i<9&&s.b[a.i]<0,
+  auto(s,i,api){const free=s.b.map((v,k)=>v<0?k:-1).filter(k=>k>=0),tryFor=who=>free.find(k=>{const c=s.b.slice();c[k]=who;return winLine(c,who)});
+    let k=tryFor(i);if(k===undefined)k=tryFor(1-i);if(k===undefined)k=s.b[4]<0?4:free[api.rnd(free.length)];return{k:'p',i:k}},
+  async act(s,seat,a,api){const p=s.players[seat],q=s.players[1-seat];s.b[a.i]=seat;
+    const nextRound=async first=>{if(s.round>=MAXR){s.over=true;s.winners=s.wins[0]===s.wins[1]?[0,1]:[s.wins[0]>s.wins[1]?0:1];s.why=s.winners.length>1?'Level after '+MAXR+' rounds — the match is a draw.':s.players[s.winners[0]].name+' leads after '+MAXR+' rounds and wins the match.';await api.step(300);return}
+      s.b=Array(9).fill(-1);s.line=null;s.round++;s.first=first;s.turn=first;api.log('Round '+s.round+' — '+s.players[first].name+' starts.');await api.step(200)};
+    const L=winLine(s.b,seat);
+    if(L){s.line=L;s.wins[seat]++;api.log((seat?'⭕ ':'✖ ')+p.name+' wins round '+s.round+'.','good');
+      if(s.wins[seat]>=GOAL){s.over=true;s.winners=[seat];s.why=p.name+' wins the match '+s.wins[seat]+' – '+s.wins[1-seat]+'.';await api.step(900,{sfx:'line'});return}
+      await api.step(1500,{sfx:'line',banner:{text:(seat?'O':'X')+' TAKES THE ROUND',sub:p.name+' '+s.wins[seat]+' – '+s.wins[1-seat]+' '+q.name}});return nextRound(1-seat)}
+    if(s.b.every(v=>v>=0)){api.log('🤝 Round '+s.round+' is a draw.','hi');await api.step(1400,{sfx:'draw',banner:{text:'DRAWN ROUND',sub:'Nobody scores'}});return nextRound(1-s.first)}
+    s.turn=1-seat;await api.step(120,{sfx:seat?'place2':'place'})},
+  status:(s,mine)=>s.busy?'…':mine?'Tap an empty square':null,
+  score:(s,p)=>s.wins[p.id]+' / '+GOAL,
+  badge:(s,p)=>p.id?'⭕':'✖',
+  endText:s=>s.why,
+  build(stage,s,ctx){const root=el('div');root.id='ttt';const tl=el('div');tl.id='tally';const g=el('div');g.id='grid';cells=[];
+    for(let i=0;i<9;i++){const c=el('button','c');c.type='button';c.onclick=()=>ctx.act({k:'p',i});cells.push(c);g.append(c)}root.append(tl,g);stage.append(root)},
+  render(s,ctx){cells.forEach((c,i)=>{const v=s.b[i],was=c.dataset.v;c.className='c'+(s.line&&s.line.includes(i)?' win':s.line?' dim':'');if(was!==String(v)){c.dataset.v=v;c.innerHTML=v<0?'':mark(v,s.players[v].color)}
+      c.disabled=v>=0||!ctx.canAct();c.setAttribute('aria-label','Square '+(i+1)+(v<0?', empty':', '+(v?'O':'X')))});
+    const tl=document.getElementById('tally');tl.innerHTML='';[0,1].forEach(i=>{const sp=el('span');sp.innerHTML=mark(i,s.players[i].color);sp.append(s.players[i].name+' ',el('b',null,s.wins[i]));tl.append(sp);if(!i)tl.append(el('small',null,'Round '+s.round+' of '+MAXR))})}
+});
+</script>
+</body>
+</html>
