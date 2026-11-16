@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwj12kmz';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{})</script>
+<script data-arcade-version>window.AV='mwj1b82f';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{})</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
@@ -389,7 +389,7 @@ const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=nu
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function rnd(n){const lim=Math.floor(4294967296/n)*n,a=new Uint32Array(1);let x;do{crypto.getRandomValues(a);x=a[0]}while(x>=lim);return x%n}
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
-const COLORS=['#ff5d8f','#ffb347','#7dff8a','#b388ff','#4fc3f7','#fff176'];
+const COLORS=['#ff5d8f','#6ff7ff','#ffd66b','#7dffb0','#b796ff','#ff9a3c','#5aa9ff','#f1eaff'];
 const DENS=['Calm — fewer traps','Haunted — classic','Nightmare — traps everywhere'];
 /* ---------- pixel sprites ---------- */
 const PAL={k:'#12081f',w:'#ffffff',s:'#ffd9b3',y:'#ffd66b',r:'#ff4d6d',g:'#7dff8a',p:'#9d6bff',o:'#ff9a3c',n:'#9a9ab0',b:'#6ff7ff',e:'#2b2b3a',m:'#ff5df0',v:'#5b2fd6',G:'#dffcff',x:'#3a2a55'};
