@@ -2,25 +2,29 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwjc6kzh';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
+<script data-arcade-version>window.AV='mwjefn77';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwjc6kzh">
-<script data-pwa defer src="../shared/wand.js?v=mwjc6kzh"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwjefn77">
+<script data-pwa defer src="../shared/wand.js?v=mwjefn77"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pixel Chess</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwjc6kzh">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwjefn77">
 <style>
 :root{--bg:#120c1c;--panel:#2a1f3d;--panel2:#1b1429;--edge:#a9794f;--accent:#c98a2b;--accent-d:#6b4416;--accent-l:#ffd9a0;
   --alt:#8a5cf0;--alt-d:#45288a;--alt-l:#d2c2ff;--dim:#c2b4d8;--hi:#ffd9a0}
 #chess{width:min(100%,560px,calc(100dvh - 150px));display:flex;flex-direction:column;gap:8px;margin:0 auto}
 .caps{min-height:26px;display:flex;flex-wrap:wrap;align-items:center;gap:1px;padding:2px 4px;background:var(--panel2);border:3px solid #000}
+.caps .cl{display:flex;flex-wrap:wrap;align-items:center;gap:1px;min-width:0}
+.clk{margin-left:auto;flex:none;font-family:'Press Start 2P',monospace;font-size:12px;line-height:1;background:#000;color:#fff;padding:6px 8px;border:2px solid #555}
+.clk.run{background:#fbf6ea;color:#000;border-color:var(--gold)}.clk.low{color:#ff5d6e}.clk.run.low{background:#ff5d6e;color:#000}
+.tcr{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:10px;font-size:20px}.tcr button{margin:0;padding:7px 8px;font-size:9px}.tcr button.on{background:var(--accent);box-shadow:inset 0 0 0 2px #fff}
 .caps svg{width:20px;height:20px}.caps b{font-family:'Press Start 2P',monospace;font-weight:400;font-size:8px;color:var(--gold);margin-left:6px}
 #bw{position:relative;border:4px solid #000;box-shadow:0 0 0 4px var(--edge),8px 8px 0 #000}
 #board{display:grid;grid-template-columns:repeat(8,1fr)}
@@ -42,7 +46,7 @@
 </head>
 <body>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="../shared/arcade.js?v=mwjc6kzh"></script>
+<script src="../shared/arcade.js?v=mwjefn77"></script>
 <script>
 const {el}=Arcade;
 /*ENGINE*/
@@ -99,7 +103,8 @@ function pieceSvg(p){if(svgC[p])return svgC[p];const c=col(p)?{k:'#0c0814',a:'#5
   ART[p.toLowerCase()].forEach((row,y)=>{for(let x=0;x<12;x++){const ch=row[x];if(ch!=='.')r+='<rect x="'+x+'" y="'+y+'" width="1.03" height="1.03" fill="'+c[ch]+'"/>'}});
   return svgC[p]='<svg viewBox="0 0 12 12" shape-rendering="crispEdges" aria-hidden="true">'+r+'</svg>'}
 const PN={p:'pawn',n:'knight',b:'bishop',r:'rook',q:'queen',k:'king'};
-let CUR=null,CTX=null,sel=-1,targets=[],pend=null,seen=-1,cells=[],capBox=[null,null],sure=0;
+let CUR=null,CTX=null,sel=-1,targets=[],pend=null,seen=-1,cells=[],capBox=[null,null],clkBox=[null,null],sure=0,lastTc=5,lastT0=0,recvAt=0;
+const TCS=[0,1,3,5,10];   // clock choices in minutes each; 0 = no clock
 const flipped=()=>!!CTX&&CTX.controls(1)&&!CTX.controls(0);       // online, playing black: your pieces at the bottom
 function paint(){const s=CUR;if(!s)return;const fl=flipped();
   cells.forEach((c,k)=>{const i=fl?63-k:k,p=s.b[i],tg=targets.find(m=>m.t===i);
@@ -114,6 +119,13 @@ function tap(k){const s=CUR;if(!s||!CTX.canAct())return;const i=flipped()?63-k:k
   if(sel>=0){const m=targets.find(m=>m.t===i);if(m){if(m.promo){pend={f:sel,t:i};sel=-1;targets=[];return paint()}const a={k:'m',f:sel,t:i};sel=-1;targets=[];CTX.act(a);return paint()}}
   if(s.b[i]&&col(s.b[i])===side&&sel!==i){sel=i;targets=legal(s,i);Arcade.SFX.play('pick')}else{sel=-1;targets=[]}paint()}
 
+// The clock. The host's copy decides; other screens count down from the moment the move reached them.
+function paintClock(){const s=CUR;if(!s||!clkBox[0])return;const fl=flipped(),host=Arcade.run._&&Arcade.run._.S;
+  [0,1].forEach(side=>{const e=clkBox[fl?1-side:side];if(!s.tc){e.style.display='none';return}e.style.display='';const run=side===s.turn&&!!s.t0&&!s.over;
+    const ms=Math.max(0,s.clock[side]-(run?Date.now()-(host?s.t0:recvAt):0)),t=Math.ceil(ms/1000);e.textContent=Math.floor(t/60)+':'+String(t%60).padStart(2,'0');e.className='clk'+(run?' run':'')+(ms<30000?' low':'')})}
+setInterval(()=>{paintClock();const R=Arcade.run._,S=R&&R.S;   // only the host has S: it calls time when a clock reaches zero
+  if(S&&!S.over&&!S.busy&&S.tc&&S.t0&&S.clock[S.turn]-(Date.now()-S.t0)<=0)R.dispatch(S.turn,{k:'flag'})},250);
+
 Arcade.run({
   id:'chess',name:'Pixel Chess',title:'PIXEL CHESS',tag:'The classic duel of kings. Player 1 is White and moves first.',startLabel:'Start the match',min:2,max:2,
   intro:'♟ White moves first. Good luck!',
@@ -122,6 +134,7 @@ Arcade.run({
 <p>All the real rules are in: <b>castling</b> (move the king two squares), <b>en passant</b>, and <b>promotion</b> — when a pawn reaches the far side you choose a queen, rook, bishop or knight.</p>
 <p>You may not leave your own king in check. <b>Checkmate</b> wins the game.</p>
 <p>The game is a <b>draw</b> on stalemate, when neither side has enough pieces to mate, or after 50 moves each with no capture and no pawn move.</p>
+<p><b>Clock:</b> before the first move, White picks the time each player gets — 1, 3, 5 or 10 minutes, or Off. Your clock runs only on your turn, starting after White's first move. If your time runs out, you lose — unless your opponent has only a king left, which is a draw.</p>
 <p>Player 1 plays White. In an online room the host is White.</p>`,
   song:{bpm:84,lead:'triangle',arp:'triangle',ch:[[45,57,60,64],[43,55,59,62],[41,53,57,60],[40,52,56,59]],
     mel:[69,0,72,0,76,0,72,0, 71,0,74,0,79,0,74,0, 69,0,72,0,77,0,72,0, 68,0,71,0,76,0,0,0,
@@ -132,14 +145,20 @@ Arcade.run({
     cap:()=>{tone(180,0,.1,'sawtooth',.07,80);noise(0,.12,.05,1.6)},
     check:()=>seq([880,660,880],.08,'square',.07),
     castle:()=>seq([330,440,330,440],.06,'square',.05)}),
-  init:()=>({b:START.slice(),cast:{K:true,Q:true,k:true,q:true},ep:-1,half:0,last:null,cap:[[],[]],chk:-1,why:''}),
-  valid(s,seat,a){if(a.k==='resign')return true;if(a.k!=='m'||!Number.isInteger(a.f)||!Number.isInteger(a.t)||a.f<0||a.f>63||a.t<0||a.t>63)return false;
+  // clock: tc = minutes each (0 = off), clock = milliseconds left, t0 = when the side to move's clock started (0 = not running), n = moves made
+  init:()=>({b:START.slice(),cast:{K:true,Q:true,k:true,q:true},ep:-1,half:0,last:null,cap:[[],[]],chk:-1,why:'',tc:lastTc,clock:[lastTc*60000,lastTc*60000],t0:0,n:0}),
+  valid(s,seat,a){if(a.k==='resign')return true;if(a.k==='tc')return s.n===0&&seat===0&&TCS.includes(a.m);if(a.k==='flag')return!!(s.tc&&s.t0)&&s.clock[seat]-(Date.now()-s.t0)<=250;if(a.k!=='m'||!Number.isInteger(a.f)||!Number.isInteger(a.t)||a.f<0||a.f>63||a.t<0||a.t>63)return false;
     const p=s.b[a.f];return!!p&&col(p)===seat&&(a.p===undefined||'qrbn'.includes(a.p))&&legal(s,a.f).some(m=>m.t===a.t)},
   auto(s,i,api){const ms=allLegal(s,i);if(!ms.length)return{k:'resign'};const worth=x=>{const p=s.b[x.m.t];return p?VAL[p.toLowerCase()]:x.m.promo?8:0},best=Math.max(...ms.map(worth)),pool=ms.filter(x=>worth(x)===best),x=pool[api.rnd(pool.length)];
     return{k:'m',f:x.f,t:x.m.t,p:'q'}},
   async act(s,seat,a,api){const me=s.players[seat],opp=1-seat,you=s.players[opp];
     if(a.k==='resign'){s.over=true;s.winners=[opp];s.why=me.name+' resigned. '+you.name+' wins.';api.log('🏳️ '+me.name+' resigns.','bad');await api.step(500,{sfx:'bad'});return}
-    const m=legal(s,a.f).find(m=>m.t===a.t),p=s.b[a.f],t=p.toLowerCase(),cap=applyMove(s,a.f,m,a.p);if(cap)s.cap[seat].push(cap);s.last=[a.f,a.t];
+    if(a.k==='tc'){lastTc=a.m;s.tc=a.m;s.clock=[a.m*60000,a.m*60000];api.log(a.m?'⏱ Clock: '+a.m+' minute'+(a.m>1?'s':'')+' each.':'⏱ Clock switched off.');await api.step(100,{sfx:'pick'});return}
+    const flag=async()=>{s.clock[seat]=0;s.over=true;const lone=s.b.filter(x=>x&&col(x)===opp).length===1;s.winners=lone?[0,1]:[opp];
+      s.why=me.name+' ran out of time. '+(lone?you.name+' has only a king left, so the game is a draw.':you.name+' wins.');api.log('⏱ '+s.why,'gold');await api.step(700,{sfx:'bad',banner:{text:"TIME'S UP!",sub:lone?'Draw':you.name+' wins',c:'bad'}})};
+    if(a.k==='flag')return flag();
+    if(s.tc&&s.t0){const left=s.clock[seat]-(Date.now()-s.t0);if(left<=0)return flag();s.clock[seat]=left}
+    const m=legal(s,a.f).find(m=>m.t===a.t),p=s.b[a.f],t=p.toLowerCase(),cap=applyMove(s,a.f,m,a.p);if(cap)s.cap[seat].push(cap);s.last=[a.f,a.t];s.n++;if(s.tc)s.t0=Date.now();
     const chk=attackedBy(s.b,kingSq(s.b,opp),seat),any=allLegal(s,opp).length>0;s.chk=chk?opp:-1;
     const txt=m.castle?(m.castle==='k'?'castles short':'castles long'):PN[t]+' '+name(a.f)+(cap?' takes on ':' to ')+name(a.t)+(m.promo?', promoted to '+PN['qrbn'.includes(a.p)?a.p:'q']:'')+(m.ep?' (en passant)':'');
     api.log((seat?'♟ ':'♙ ')+me.name+': '+txt+(chk&&any?' — check!':''),cap?'hi':'');
@@ -147,14 +166,15 @@ Arcade.run({
       else{s.winners=[0,1];s.why='Stalemate — '+you.name+' has no legal move. The game is a draw.';api.log('🤝 Stalemate. The game is a draw.','hi');await api.step(800,{sfx:'move',banner:{text:'STALEMATE',sub:'The game is a draw'}})}return}
     if(bare(s.b)||s.half>=100){s.over=true;s.winners=[0,1];s.why=s.half>=100?'Draw — 50 moves each without a capture or a pawn move.':'Draw — not enough pieces left to checkmate.';api.log('🤝 '+s.why,'hi');await api.step(800,{sfx:'move',banner:{text:'DRAW',sub:''}});return}
     s.turn=opp;await api.step(260,chk?{sfx:'check',banner:{text:'CHECK!',sub:you.name+"'s king is under attack",c:'bad'}}:{sfx:m.castle?'castle':cap?'cap':'move'})},
-  status:(s,mine)=>s.busy?'…':mine?(s.chk===s.turn?'Your king is in check!':'Tap a piece, then a marked square'):null,
+  status:(s,mine)=>s.busy?'…':mine?(s.chk===s.turn?'Your king is in check!':s.n===0?'Choose a clock, then make the first move':'Tap a piece, then a marked square'):null,
   score:(s,p)=>s.cap[p.id].reduce((a,x)=>a+VAL[x.toLowerCase()],0)+' pts',
   badge:(s,p)=>(p.id?'♟ Black':'♙ White')+(s.chk===p.id&&!s.over?' · CHECK':''),
   endText:s=>s.why,
-  build(stage,s,ctx){const root=el('div');root.id='chess';const top=el('div','caps'),bot=el('div','caps'),bw=el('div');bw.id='bw';const bd=el('div');bd.id='board';cells=[];
+  build(stage,s,ctx){const root=el('div');root.id='chess';const row=()=>{const r=el('div','caps'),c=el('span','cl'),k=el('span','clk');r.append(c,k);return{r,c,k}},T=row(),B=row(),top=T.r,bot=B.r,bw=el('div');bw.id='bw';const bd=el('div');bd.id='board';cells=[];
     for(let k=0;k<64;k++){const c=el('button','sq');c.type='button';c.onclick=()=>tap(k);cells.push(c);bd.append(c)}
-    const pr=el('div');pr.id='promo';pr.append(el('p',null,'PROMOTE TO'),el('div'));bw.append(bd,pr);root.append(top,bw,bot);stage.append(root);capBox=[bot,top];sel=-1;targets=[];pend=null},
-  render(s,ctx,ctl){CUR=s;CTX=ctx;if(s.seq!==seen){seen=s.seq;sel=-1;targets=[];pend=null}paint();
+    const pr=el('div');pr.id='promo';pr.append(el('p',null,'PROMOTE TO'),el('div'));bw.append(bd,pr);root.append(top,bw,bot);stage.append(root);capBox=[B.c,T.c];clkBox=[B.k,T.k];sel=-1;targets=[];pend=null},
+  render(s,ctx,ctl){CUR=s;CTX=ctx;if(s.seq!==seen){seen=s.seq;sel=-1;targets=[];pend=null}if(s.t0!==lastT0){lastT0=s.t0;recvAt=Date.now()}paint();paintClock();
+    if(!s.over&&s.n===0&&s.turn===0&&ctx.canAct()){const r=el('div','tcr');r.append(el('span',null,'Clock'));TCS.forEach(m=>{const b=el('button','small'+(s.tc===m?' on':''),m?m+' min':'Off');b.type='button';b.onclick=()=>ctx.act({k:'tc',m});r.append(b)});ctl.append(r)}
     if(!s.over&&ctx.canAct()){const b=el('button','alt','Resign');b.type='button';b.onclick=()=>{if(Date.now()-sure<2500){sure=0;ctx.act({k:'resign'})}else{sure=Date.now();b.textContent='Sure? Tap again';setTimeout(()=>{if(b.isConnected)b.textContent='Resign'},2500)}};ctl.append(b)}}
 });
 </script>
