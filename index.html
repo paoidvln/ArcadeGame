@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwjefn77';fetch('./version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
+<script data-arcade-version>window.AV='mwjeqd8e';fetch('./version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
 <link data-pwa rel="manifest" href="./manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="./icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="./shared/wand.css?v=mwjefn77">
-<script data-pwa defer src="./shared/wand.js?v=mwjefn77"></script>
+<link data-pwa rel="stylesheet" href="./shared/wand.css?v=mwjeqd8e">
+<script data-pwa defer src="./shared/wand.js?v=mwjeqd8e"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pixel Arcade</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="shared/arcade.css?v=mwjefn77">
+<link rel="stylesheet" href="shared/arcade.css?v=mwjeqd8e">
 <style>
 :root{--bg:#0d0b1f;--panel:#1a1740;--panel2:#110f2c;--edge:#4b46b0}
 main{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:28px 16px 60px}
@@ -40,9 +40,11 @@ a.gcard:hover .art{animation:pbob .5s steps(2) infinite}
 #galBack{position:absolute;left:12px;top:12px;margin:0}
 #planet{width:min(74vw,62vh);height:min(74vw,62vh);image-rendering:pixelated;cursor:pointer;outline:none}
 #galAsk{position:absolute;text-align:center;width:min(360px,calc(100% - 32px))}#galAsk[hidden]{display:none}
-.srow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;padding:10px;background:var(--panel2);border:3px solid #000;box-shadow:inset 0 0 0 2px var(--edge);font-size:22px;text-align:left}
-.srow small{display:block;font-size:16px;color:var(--dim,#a9a4d8);line-height:1.1}
-.srow button{flex:none;min-width:64px;margin:0}.srow button.off{opacity:.6}
+#bSet{width:36px;height:34px;padding:0;font-size:15px;align-self:flex-start}
+#set .card{width:min(340px,100%);padding:14px}#set h2{margin:2px 0 10px;font-size:12px}#set .big{padding:9px;font-size:10px}
+.srow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;padding:6px 8px;background:var(--panel2);border:3px solid #000;box-shadow:inset 0 0 0 2px var(--edge);font-size:19px;line-height:1.05;text-align:left}
+.srow small{display:block;font-size:15px;color:var(--dim,#a9a4d8);line-height:1.1}
+.srow button{flex:none;min-width:52px;margin:0;padding:6px 8px;font-size:9px}.srow button.off{opacity:.6}
 @media(max-width:640px){.me{grid-template-columns:1fr}}
 .credit{text-align:center;font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.6;color:var(--gold);text-shadow:2px 2px 0 #000;margin:0 0 18px;min-height:16px}
 .credit i{font-style:normal;animation:blink .7s steps(2) infinite}@keyframes blink{50%{opacity:0}}
@@ -78,7 +80,7 @@ a.gcard.rise{animation-name:pop}
   </form>
 </section>
 <main id="main" hidden>
-  <div class="bar"><button id="bGal" type="button" aria-label="Open Pixel World" title="Pixel World"><canvas width="44" height="44"></canvas></button><button class="small go" id="bInst" type="button" style="display:none">Install app</button><button class="small" id="bSet" type="button">⚙ Settings</button></div>
+  <div class="bar"><button id="bGal" type="button" aria-label="Open Pixel World" title="Pixel World"><canvas width="44" height="44"></canvas></button><button class="small go" id="bInst" type="button" style="display:none">Install app</button><button class="small" id="bSet" type="button" title="Settings" aria-label="Settings">⚙</button></div>
   <h1 class="title" aria-label="Pixel Arcade">PIXEL ARCADE</h1>
   <p class="credit" id="credit" aria-label="Created by J.P. Ibarreta"></p>
   <p class="tag rise" id="hello" style="--d:1.7s"></p>
@@ -102,9 +104,9 @@ a.gcard.rise{animation-name:pop}
   <div class="srow"><span>Sound effects</span><button class="small" type="button" id="bSnd"></button></div>
   <div class="srow"><span>Magic wand cursor</span><button class="small" type="button" id="bWand"></button></div>
   <div class="srow"><span>Forget my player<small>Clears your name, avatar and colour on this device.</small></span><button class="small" type="button" id="bForget">Reset</button></div>
-  <p class="tag" id="sVer" style="margin:6px 0 12px"></p>
+  <p class="tag" id="sVer" style="margin:4px 0 8px;font-size:16px"></p>
   <button class="primary big" type="button" id="sClose">Close</button></div></div>
-<script src="shared/arcade.js?v=mwjefn77"></script>
+<script src="shared/arcade.js?v=mwjeqd8e"></script>
 <script>
 const {el,sprite,SFX,MUSIC}=Arcade;
 const GAMES=[
