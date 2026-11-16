@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwj1jmtk';fetch('./version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
+<script data-arcade-version>window.AV='mwj26ild';fetch('./version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
 <link data-pwa rel="manifest" href="./manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="./icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="./shared/wand.css?v=mwj1jmtk">
-<script data-pwa defer src="./shared/wand.js?v=mwj1jmtk"></script>
+<link data-pwa rel="stylesheet" href="./shared/wand.css?v=mwj26ild">
+<script data-pwa defer src="./shared/wand.js?v=mwj26ild"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pixel Arcade</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="shared/arcade.css?v=mwj1jmtk">
+<link rel="stylesheet" href="shared/arcade.css?v=mwj26ild">
 <style>
 :root{--bg:#0d0b1f;--panel:#1a1740;--panel2:#110f2c;--edge:#4b46b0}
 main{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:28px 16px 60px}
@@ -32,6 +32,14 @@ a.gcard:hover .art{animation:pbob .5s steps(2) infinite}
 .me{display:grid;grid-template-columns:260px 1fr;gap:18px;align-items:center;margin-bottom:26px}
 .me p{margin:0 0 8px;color:var(--dim)}
 .bar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px}
+#bGal{margin:0 auto 0 0;padding:0;width:84px;height:84px;background:none;border:0;box-shadow:none;animation:pbob 1.2s steps(2) infinite}
+#bGal canvas{width:100%;height:100%;image-rendering:pixelated;display:block;filter:drop-shadow(0 0 6px #8a5cf0)}
+#bGal:hover{filter:brightness(1.3)}
+#gal{position:fixed;inset:0;z-index:80;background:#04020c;display:flex;align-items:center;justify-content:center}
+#gal[hidden]{display:none}
+#galBack{position:absolute;left:12px;top:12px;margin:0}
+#planet{width:min(74vw,62vh);height:min(74vw,62vh);image-rendering:pixelated;cursor:pointer;outline:none}
+#galAsk{position:absolute;text-align:center;width:min(360px,calc(100% - 32px))}#galAsk[hidden]{display:none}
 .srow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;padding:10px;background:var(--panel2);border:3px solid #000;box-shadow:inset 0 0 0 2px var(--edge);font-size:22px;text-align:left}
 .srow small{display:block;font-size:16px;color:var(--dim,#a9a4d8);line-height:1.1}
 .srow button{flex:none;min-width:64px;margin:0}.srow button.off{opacity:.6}
@@ -70,7 +78,7 @@ a.gcard.rise{animation-name:pop}
   </form>
 </section>
 <main id="main" hidden>
-  <div class="bar"><button class="small go" id="bInst" type="button" style="display:none">Install app</button><button class="small" id="bSet" type="button">⚙ Settings</button></div>
+  <div class="bar"><button id="bGal" type="button" aria-label="Open Pixel World" title="Pixel World"><canvas width="44" height="44"></canvas></button><button class="small go" id="bInst" type="button" style="display:none">Install app</button><button class="small" id="bSet" type="button">⚙ Settings</button></div>
   <h1 class="title" aria-label="Pixel Arcade">PIXEL ARCADE</h1>
   <p class="credit" id="credit" aria-label="Created by J.P. Ibarreta"></p>
   <p class="tag rise" id="hello" style="--d:1.7s"></p>
@@ -82,6 +90,12 @@ a.gcard.rise{animation-name:pop}
   <div class="ph rise" style="--d:2.1s">Games</div>
   <div class="games" id="games"></div>
 </main>
+<div id="gal" hidden>
+  <button class="small" type="button" id="galBack">&lt; Back</button>
+  <canvas id="planet" width="96" height="96" role="button" tabindex="0" aria-label="Enter the world"></canvas>
+  <div class="card" id="galAsk" hidden><h2>Enter the world?</h2><p class="tag">A shared village and forest. You may meet other players there.</p>
+    <button class="primary big" type="button" id="galYes">Enter</button><button class="big" type="button" id="galNo">Not yet</button></div>
+</div>
 <div class="overlay" id="set"><div class="card"><h2>Settings</h2>
   <div class="srow"><span>Music</span><button class="small" type="button" id="bMus"></button></div>
   <div class="srow"><span>Sound effects</span><button class="small" type="button" id="bSnd"></button></div>
@@ -89,7 +103,7 @@ a.gcard.rise{animation-name:pop}
   <div class="srow"><span>Forget my player<small>Clears your name, avatar and colour on this device.</small></span><button class="small" type="button" id="bForget">Reset</button></div>
   <p class="tag" id="sVer" style="margin:6px 0 12px"></p>
   <button class="primary big" type="button" id="sClose">Close</button></div></div>
-<script src="shared/arcade.js?v=mwj1jmtk"></script>
+<script src="shared/arcade.js?v=mwj26ild"></script>
 <script>
 const {el,sprite,SFX,MUSIC}=Arcade;
 const GAMES=[
@@ -133,6 +147,29 @@ MUSIC.set({bpm:120,arp:'triangle',ch:[[48,60,64,67],[45,57,60,64],[41,53,57,60],
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);if(ios)bi.style.display='';
   bi.onclick=()=>{if(ev){ev.prompt();ev.userChoice.then(()=>{ev=null;bi.style.display='none'})}
     else if(ios){const h=document.getElementById('hello');h.textContent='To install: tap Share, then "Add to Home Screen".'}}})();
+// galaxy button -> a rotating world -> "Enter?"
+(function(){const g=id=>document.getElementById(id),gal=g('gal'),ask=g('galAsk'),bc=g('bGal').firstChild.getContext('2d'),pc=g('planet'),px=pc.getContext('2d'),N=96,R0=44;
+  // the little spiral on the button
+  function spiral(t){bc.clearRect(0,0,44,44);const ca=Math.cos(-.6),sa=Math.sin(-.6);for(let arm=0;arm<2;arm++)for(let i=0;i<150;i++){const a=i*.1+arm*Math.PI+t,r=1+i*.135,x=Math.cos(a)*r,y=Math.sin(a)*r*.42,X=22+x*ca-y*sa,Y=22+x*sa+y*ca;
+      bc.fillStyle=i<14?'#ffffff':i<45?'#b7a8ff':i<80?'#7a6ae0':'#4a3aa8';bc.fillRect(X|0,Y|0,i<110?2:1,i<110?2:1)}bc.fillStyle="#ffffff";bc.fillRect(20,20,4,4);
+    for(let i=0;i<6;i++){bc.fillStyle='#dffcff';bc.fillRect((22+Math.cos(i*2.4+t*.3)*(8+i*2))|0,(22+Math.sin(i*2.4+t*.3)*(4+i))|0,1,1)}}
+  // the planet: a noise map wrapped on a ball, turned a little every frame
+  let s=20261116;const rnd=()=>{s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+  const mk=(gw,gh)=>{const v=new Float32Array(gw*gh).map(rnd);return(u,w)=>{const x=u*gw,y=w*(gh-1),x0=Math.floor(x),y0=Math.floor(y),fx=x-x0,fy=y-y0,sx=fx*fx*(3-2*fx),sy=fy*fy*(3-2*fy),
+      at=(i,j)=>v[Math.min(gh-1,j)*gw+((i%gw)+gw)%gw],a=at(x0,y0)+(at(x0+1,y0)-at(x0,y0))*sx,b=at(x0,y0+1)+(at(x0+1,y0+1)-at(x0,y0+1))*sx;return a+(b-a)*sy}};
+  const n1=mk(6,4),n2=mk(12,8),n3=mk(24,16),c1=mk(8,5),c2=mk(16,10);
+  const LAND=[[26,18,74],[40,34,120],[52,70,170],[60,120,190],[96,190,210],[150,225,225]],lat=new Float32Array(N*N),lon=new Float32Array(N*N),lit=new Float32Array(N*N),img=px.createImageData(N,N);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){const nx=(x+.5-N/2)/R0,ny=(y+.5-N/2)/R0,d=nx*nx+ny*ny,i=y*N+x;if(d>1){lat[i]=d<1.12?-2:-3;continue}const nz=Math.sqrt(1-d);lat[i]=Math.asin(ny)/Math.PI+.5;lon[i]=Math.atan2(nx,nz)/(2*Math.PI);lit[i]=Math.max(0,-nx*.5-ny*.45+nz*.74)}
+  function planet(t){const d=img.data;for(let i=0;i<N*N;i++){const o=i*4;if(lat[i]===-3){d[o+3]=0;continue}if(lat[i]===-2){d[o]=90;d[o+1]=220;d[o+2]=235;d[o+3]=150;continue}
+      const u=((lon[i]+t*.03)%1+1)%1,w=lat[i],h=n1(u,w)*.55+n2(u,w)*.3+n3(u,w)*.15,cu=((lon[i]+t*.05)%1+1)%1,cl=c1(cu,w)*.6+c2(cu,w)*.4;
+      let c=LAND[Math.max(0,Math.min(5,Math.floor((h-.28)*11)))];if(cl>.62)c=[200,190,235];else if(cl>.57)c=[150,140,205];
+      const L=.35+Math.floor(lit[i]*4.99)/4*.8;d[o]=Math.min(255,c[0]*L);d[o+1]=Math.min(255,c[1]*L);d[o+2]=Math.min(255,c[2]*L);d[o+3]=255}
+    px.putImageData(img,0,0)}
+  let t0=performance.now();(function loop(now){const t=(now-t0)/1000;spiral(t*.5);if(!gal.hidden)planet(t);requestAnimationFrame(loop)})(t0);spiral(0);
+  const open=()=>{gal.hidden=false;ask.hidden=true;planet(0);SFX.play('good')},close=()=>{gal.hidden=true};
+  g('bGal').onclick=open;g('galBack').onclick=close;g('galNo').onclick=()=>{ask.hidden=true};
+  pc.onclick=()=>{ask.hidden=false;SFX.play('good')};pc.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pc.onclick()}};
+  g('galYes').onclick=()=>{location.href='world/'};window._gal={planet,spiral}})();
 // settings panel
 (function(){const g=id=>document.getElementById(id),set=g('set'),onoff=(b,on)=>{b.textContent=on?'ON':'OFF';b.classList.toggle('off',!on)};
   g('bSet').onclick=()=>{set.classList.add('on');SFX.play('good')};g('sClose').onclick=()=>set.classList.remove('on');
