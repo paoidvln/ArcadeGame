@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwhugitq';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{})</script>
+<script data-arcade-version>window.AV='mwj12kmz';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{})</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
@@ -488,7 +488,7 @@ const CARDS={
   cursed:{n:'Cursed Steps',i:'👣',d:'Move backward 5 tiles.'},
   freeze:{n:'Time Freeze',i:'⏳',d:'Pick another player. They skip their next turn.'},
   repel:{n:'Ghost Repellent',i:'🧄',d:'The Ghost is pushed back 5 tiles.'},
-  second:{n:'Second Chance',i:'🎲',d:'Roll the die again right now.'},
+  second:{n:'Second Chance',i:'🎲',d:'Roll the dice again right now.'},
   chaos:{n:'Chaos',i:'🌪️',d:'Every player is thrown to a random tile.'},
   invis:{n:'Invisible',i:'🫥',d:'The Ghost cannot catch you for your next 2 turns.'},
   prison:{n:'Prison',i:'⛓️',d:'You are locked up. Skip your next 2 turns.'},
@@ -792,7 +792,7 @@ function render(){
   tu.innerHTML='';
   if(s.phase==='over')tu.textContent='Game over';
   else{const nm=el('span',null,net.mode!=='local'&&mine?'Your turn':cur.name+"'s turn");nm.style.color=cur.color;tu.append(nm);
-    tu.append(el('small',null,s.phase==='pick'?'Choosing a target…':s.phase==='busy'?'Resolving…':mine?'Roll the die':'Waiting for '+cur.name))}
+    tu.append(el('small',null,s.phase==='pick'?'Choosing a target…':s.phase==='busy'?'Resolving…':mine?'Roll the dice':'Waiting for '+cur.name))}
   const can=s.phase==='roll'&&mine;rb.disabled=!can;rb.classList.toggle('go',can);rb.textContent=can?'Roll':'…';
   if(!$('#die').classList.contains('rolling')&&diceBusy%2===0)setDie(s.dice);
   // players
