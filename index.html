@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwj26ild';fetch('./version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
+<script data-arcade-version>window.AV='mwj36ou6';fetch('./version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
 <link data-pwa rel="manifest" href="./manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="./icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="./shared/wand.css?v=mwj26ild">
-<script data-pwa defer src="./shared/wand.js?v=mwj26ild"></script>
+<link data-pwa rel="stylesheet" href="./shared/wand.css?v=mwj36ou6">
+<script data-pwa defer src="./shared/wand.js?v=mwj36ou6"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pixel Arcade</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="shared/arcade.css?v=mwj26ild">
+<link rel="stylesheet" href="shared/arcade.css?v=mwj36ou6">
 <style>
 :root{--bg:#0d0b1f;--panel:#1a1740;--panel2:#110f2c;--edge:#4b46b0}
 main{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:28px 16px 60px}
@@ -94,6 +94,7 @@ a.gcard.rise{animation-name:pop}
   <button class="small" type="button" id="galBack">&lt; Back</button>
   <canvas id="planet" width="96" height="96" role="button" tabindex="0" aria-label="Enter the world"></canvas>
   <div class="card" id="galAsk" hidden><h2>Enter the world?</h2><p class="tag">A shared village and forest. You may meet other players there.</p>
+    <p class="tag" id="galTip" style="display:none;color:var(--gold)">Played sideways on a phone. If your screen does not turn, unlock rotation first (switch on Auto-rotate).</p>
     <button class="primary big" type="button" id="galYes">Enter</button><button class="big" type="button" id="galNo">Not yet</button></div>
 </div>
 <div class="overlay" id="set"><div class="card"><h2>Settings</h2>
@@ -103,7 +104,7 @@ a.gcard.rise{animation-name:pop}
   <div class="srow"><span>Forget my player<small>Clears your name, avatar and colour on this device.</small></span><button class="small" type="button" id="bForget">Reset</button></div>
   <p class="tag" id="sVer" style="margin:6px 0 12px"></p>
   <button class="primary big" type="button" id="sClose">Close</button></div></div>
-<script src="shared/arcade.js?v=mwj26ild"></script>
+<script src="shared/arcade.js?v=mwj36ou6"></script>
 <script>
 const {el,sprite,SFX,MUSIC}=Arcade;
 const GAMES=[
@@ -168,7 +169,7 @@ MUSIC.set({bpm:120,arp:'triangle',ch:[[48,60,64,67],[45,57,60,64],[41,53,57,60],
   let t0=performance.now();(function loop(now){const t=(now-t0)/1000;spiral(t*.5);if(!gal.hidden)planet(t);requestAnimationFrame(loop)})(t0);spiral(0);
   const open=()=>{gal.hidden=false;ask.hidden=true;planet(0);SFX.play('good')},close=()=>{gal.hidden=true};
   g('bGal').onclick=open;g('galBack').onclick=close;g('galNo').onclick=()=>{ask.hidden=true};
-  pc.onclick=()=>{ask.hidden=false;SFX.play('good')};pc.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pc.onclick()}};
+  pc.onclick=()=>{ask.hidden=false;g('galTip').style.display=(matchMedia('(pointer:coarse)').matches||navigator.maxTouchPoints>0)?'':'none';SFX.play('good')};pc.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pc.onclick()}};
   g('galYes').onclick=()=>{location.href='world/'};window._gal={planet,spiral}})();
 // settings panel
 (function(){const g=id=>document.getElementById(id),set=g('set'),onoff=(b,on)=>{b.textContent=on?'ON':'OFF';b.classList.toggle('off',!on)};
