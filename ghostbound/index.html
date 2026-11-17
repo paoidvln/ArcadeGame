@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwjf38yp';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
+<script data-arcade-version>window.AV='mwjzkkb3';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwjf38yp">
-<script data-pwa defer src="../shared/wand.js?v=mwjf38yp"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwjzkkb3">
+<script data-pwa defer src="../shared/wand.js?v=mwjzkkb3"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Ghostbound</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -394,7 +394,8 @@ function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[
 const COLORS=['#ff5d8f','#6ff7ff','#ffd66b','#7dffb0','#b796ff','#ff9a3c','#5aa9ff','#f1eaff'];
 const DENS=['Calm — fewer traps','Haunted — classic','Nightmare — traps everywhere'];
 /* ---------- pixel sprites ---------- */
-const PAL={k:'#12081f',w:'#ffffff',s:'#ffd9b3',y:'#ffd66b',r:'#ff4d6d',g:'#7dff8a',p:'#9d6bff',o:'#ff9a3c',n:'#9a9ab0',b:'#6ff7ff',e:'#2b2b3a',m:'#ff5df0',v:'#5b2fd6',G:'#dffcff',x:'#3a2a55'};
+const PAL={k:'#12081f',w:'#ffffff',s:'#ffd9b3',y:'#ffd66b',r:'#ff4d6d',g:'#7dff8a',p:'#9d6bff',o:'#ff9a3c',n:'#9a9ab0',b:'#6ff7ff',e:'#2b2b3a',m:'#ff5df0',v:'#5b2fd6',G:'#dffcff',x:'#3a2a55',
+  t:'#8a5a2b',T:'#5c3a1a',u:'#2f7fd6',U:'#1b4f96',a:'#e8d28a',A:'#c9a84f',h:'#3fae5a',H:'#2a7a3e',q:'#c2c2d6',Q:'#6b6b85',z:'#ff8a3c',Z:'#b84a1a'};
 function shade(hex,f){const n=parseInt(hex.slice(1),16);return 'rgb('+[n>>16,n>>8&255,n&255].map(v=>Math.round(v*f))+')'}
 function sprite(rows,color){
   color=color||'#9d6bff';const w=Math.max(...rows.map(r=>r.length));let s='';
@@ -412,7 +413,19 @@ const AVATARS=[
  {n:'Pumpkin',r:[".....gg.....","....kgk.....","..kkkookkk..",".kooooooook.",".koyyooyyok.",".kooooooook.",".koykykykok.","..kooooook..","...kkkkkk...","..kcccccck..","..kcdccdck..","..kkk..kkk.."]},
  {n:'Vampire',r:["...kkkkkk...","..keeeeeek..","..keGGGGek..","..kGrGGrGk..","..kGGGGGGk..","..kGGwwGGk..",".kkkGGGGkkk.",".kcckrrkcck.",".kcckeekcck.",".kcdkeekdck.","..kkkeekkk..","...kk..kk..."]},
  {n:'Robot',r:[".....r......",".....k......","..kkkkkkkk..","..knnnnnnk..","..knbbnbbk..","..knnnnnnk..","..knkkkknk..","..kkkkkkkk..",".nkcccccckn.",".nkcyccyckn.","..kcccccck..","..kkk..kkk.."]},
- {n:'Slime',r:["............","............","....kkkk....","..kkcccckk..",".kcwccccccck","kcwcccccccck","kcckwcckwcck","kcckkcckkcck","kccccrrcccck","kcccccccccck","kddddddddddk",".kkkkkkkkkk."]}
+ {n:'Slime',r:["............","............","....kkkk....","..kkcccckk..",".kcwccccccck","kcwcccccccck","kcckwcckwcck","kcckkcckkcck","kccccrrcccck","kcccccccccck","kddddddddddk",".kkkkkkkkkk."]},
+ {n:"Pirate",r:["..kkkkkkkk..",".keeeeeeeek.","keeewwweeeek",".kkkkkkkkkk.","..kssssssk..","..kskssekk..","..kssssssk..","..kssrrssk..","..kcccccck..",".kcyccccyck.","..kcdccdck..","..kkk..kkk.."]},
+ {n:"Astronaut",r:["...kkkkkk...","..kwwwwwwk..",".kwbbbbbbwk.",".kwbGbbbbwk.",".kwbbbbbbwk.","..kwwwwwwk..","...kkkkkk...","..kccwwcck..",".kcckrbkcck.",".kcccccccck.","..kcdccdck..","..kkk..kkk.."]},
+ {n:"Alien",r:[".k........k.","..k......k..","...kkkkkk...","..kcccccck..",".kcccccccck.",".kckkcckkck.",".kckwcckwck.",".kcccccccck.","..kcckkcck..","...kcccck...","..kcdccdck..","..kkk..kkk.."]},
+ {n:"Ninja",r:["...kkkkkk...","..keeeeeek..",".keeeeeeeek.",".kcccccccck.",".keskssksek.",".keeeeeeeek.","..keeeeeek..",".keeeeeeeek.",".keeccccceek","..keeeeeek..","..kek..kek..","..kkk..kkk.."]},
+ {n:"Princess",r:["...y.yy.y...","...yyyyyy...","..kttttttk..",".kttssssttk.",".ktsksskstk.",".ktssrrsstk.",".kttssssttk.","..ktcccctk..","..kcccccck..",".kcccyycccck",".kccccccccck",".kkkkkkkkkkk"]},
+ {n:"Wizard",r:[".....kk.....","....kcck....","...kcyyck...","..kccccccck.","kddddddddddk","..kskssksk..","..kwwwwwwk..","..kwwwwwwk..","...kwwwwk...","..kcccccck..","..kcdccdck..","..kkk..kkk.."]},
+ {n:"Dragon",r:["..y......y..","..kk....kk..","..kckkkkck..",".kcccccccck.",".kcykccykck.",".kcccccccck.",".kccwccwcck.","kdkkcccckkdk","kddkcccckddk",".kkkcccckkk.","..kcdccdckk.","..kkk..kkk.."]},
+ {n:"Frog",r:["............","..kkk..kkk..",".kwwwkkwwwk.",".kwkwkkwkwk.",".kcccccccck.","kcccccccccck","kcrrrrrrrrck","kcccccccccck",".kcccccccck.","..kcwwwwck..",".kcck..kcck.",".kkkk..kkkk."]},
+ {n:"Bunny",r:["..kk....kk..",".kck....kck.",".kmk....kmk.",".kck....kck.",".kckkkkkkck.",".kcccccccck.",".kckcccckck.",".kcccmmccck.","..kccwwcck..","..kcccccck..","..kcdccdck..","..kkk..kkk.."]},
+ {n:"Ghost",r:["...kkkkkk...","..kcccccck..",".kcccccccck.",".kckkcckkck.",".kckwcckwck.",".kcccccccck.",".kccckkccck.",".kcccccccck.",".kcccccccck.",".kcccccccck.",".kcdcddcdck.",".kk.kkkk.kk."]},
+ {n:"Bear",r:[".kk......kk.","kcck....kcck","kcckkkkkkcck",".kcccccccck.",".kckcccckck.",".kccwwwwcck.",".kccwkkwcck.",".kcccwwccck.","..kcccccck..",".kcccwwccck.","..kcdccdck..","..kkk..kkk.."]},
+ {n:"Cowboy",r:["....kkkk....","...ktttTk...","...ktttTk...","kttttttttttk","..kssssssk..","..kskssksk..","..kssssssk..","..ksttttsk..","..krrrrrrk..",".kcccyyccck.","..kcdccdck..","..kkk..kkk.."]}
 ];
 const GHOST_SVG=sprite(["...kkkkkk...","..kGGGGGGk..",".kGGGGGGGGk.",".kGEEGGEEGk.",".kGEEGGEEGk.",".kGGGGGGGGk.",".kGGGkkGGGk.",".kGGGkkGGGk.",".kGGGGGGGGk.",".kGGGGGGGGk.",".kGGkGGkGGk.","..kk.kk.kk.."]);
 const ICON={

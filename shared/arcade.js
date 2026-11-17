@@ -31,7 +31,19 @@ const AVATARS=[
  {n:'Pumpkin',r:[".....gg.....","....kgk.....","..kkkookkk..",".kooooooook.",".koyyooyyok.",".kooooooook.",".koykykykok.","..kooooook..","...kkkkkk...","..kcccccck..","..kcdccdck..","..kkk..kkk.."]},
  {n:'Vampire',r:["...kkkkkk...","..keeeeeek..","..keGGGGek..","..kGrGGrGk..","..kGGGGGGk..","..kGGwwGGk..",".kkkGGGGkkk.",".kcckrrkcck.",".kcckeekcck.",".kcdkeekdck.","..kkkeekkk..","...kk..kk..."]},
  {n:'Robot',r:[".....r......",".....k......","..kkkkkkkk..","..knnnnnnk..","..knbbnbbk..","..knnnnnnk..","..knkkkknk..","..kkkkkkkk..",".nkcccccckn.",".nkcyccyckn.","..kcccccck..","..kkk..kkk.."]},
- {n:'Slime',r:["............","............","....kkkk....","..kkcccckk..",".kcwccccccck","kcwcccccccck","kcckwcckwcck","kcckkcckkcck","kccccrrcccck","kcccccccccck","kddddddddddk",".kkkkkkkkkk."]}
+ {n:'Slime',r:["............","............","....kkkk....","..kkcccckk..",".kcwccccccck","kcwcccccccck","kcckwcckwcck","kcckkcckkcck","kccccrrcccck","kcccccccccck","kddddddddddk",".kkkkkkkkkk."]},
+ {n:"Pirate",r:["..kkkkkkkk..",".keeeeeeeek.","keeewwweeeek",".kkkkkkkkkk.","..kssssssk..","..kskssekk..","..kssssssk..","..kssrrssk..","..kcccccck..",".kcyccccyck.","..kcdccdck..","..kkk..kkk.."]},
+ {n:"Astronaut",r:["...kkkkkk...","..kwwwwwwk..",".kwbbbbbbwk.",".kwbGbbbbwk.",".kwbbbbbbwk.","..kwwwwwwk..","...kkkkkk...","..kccwwcck..",".kcckrbkcck.",".kcccccccck.","..kcdccdck..","..kkk..kkk.."]},
+ {n:"Alien",r:[".k........k.","..k......k..","...kkkkkk...","..kcccccck..",".kcccccccck.",".kckkcckkck.",".kckwcckwck.",".kcccccccck.","..kcckkcck..","...kcccck...","..kcdccdck..","..kkk..kkk.."]},
+ {n:"Ninja",r:["...kkkkkk...","..keeeeeek..",".keeeeeeeek.",".kcccccccck.",".keskssksek.",".keeeeeeeek.","..keeeeeek..",".keeeeeeeek.",".keeccccceek","..keeeeeek..","..kek..kek..","..kkk..kkk.."]},
+ {n:"Princess",r:["...y.yy.y...","...yyyyyy...","..kttttttk..",".kttssssttk.",".ktsksskstk.",".ktssrrsstk.",".kttssssttk.","..ktcccctk..","..kcccccck..",".kcccyycccck",".kccccccccck",".kkkkkkkkkkk"]},
+ {n:"Wizard",r:[".....kk.....","....kcck....","...kcyyck...","..kccccccck.","kddddddddddk","..kskssksk..","..kwwwwwwk..","..kwwwwwwk..","...kwwwwk...","..kcccccck..","..kcdccdck..","..kkk..kkk.."]},
+ {n:"Dragon",r:["..y......y..","..kk....kk..","..kckkkkck..",".kcccccccck.",".kcykccykck.",".kcccccccck.",".kccwccwcck.","kdkkcccckkdk","kddkcccckddk",".kkkcccckkk.","..kcdccdckk.","..kkk..kkk.."]},
+ {n:"Frog",r:["............","..kkk..kkk..",".kwwwkkwwwk.",".kwkwkkwkwk.",".kcccccccck.","kcccccccccck","kcrrrrrrrrck","kcccccccccck",".kcccccccck.","..kcwwwwck..",".kcck..kcck.",".kkkk..kkkk."]},
+ {n:"Bunny",r:["..kk....kk..",".kck....kck.",".kmk....kmk.",".kck....kck.",".kckkkkkkck.",".kcccccccck.",".kckcccckck.",".kcccmmccck.","..kccwwcck..","..kcccccck..","..kcdccdck..","..kkk..kkk.."]},
+ {n:"Ghost",r:["...kkkkkk...","..kcccccck..",".kcccccccck.",".kckkcckkck.",".kckwcckwck.",".kcccccccck.",".kccckkccck.",".kcccccccck.",".kcccccccck.",".kcccccccck.",".kcdcddcdck.",".kk.kkkk.kk."]},
+ {n:"Bear",r:[".kk......kk.","kcck....kcck","kcckkkkkkcck",".kcccccccck.",".kckcccckck.",".kccwwwwcck.",".kccwkkwcck.",".kcccwwccck.","..kcccccck..",".kcccwwccck.","..kcdccdck..","..kkk..kkk.."]},
+ {n:"Cowboy",r:["....kkkk....","...ktttTk...","...ktttTk...","kttttttttttk","..kssssssk..","..kskssksk..","..kssssssk..","..ksttttsk..","..krrrrrrk..",".kcccyyccck.","..kcdccdck..","..kkk..kkk.."]}
 ];
 const COLORS=['#ff5d8f','#6ff7ff','#ffd66b','#7dffb0','#b796ff','#ff9a3c','#5aa9ff','#f1eaff'];
 const avatar=p=>sprite(AVATARS[(p.av|0)%AVATARS.length].r,p.color);
