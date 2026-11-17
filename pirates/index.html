@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwjzkkb3';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
+<script data-arcade-version>window.AV='mwk0b2ad';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwjzkkb3">
-<script data-pwa defer src="../shared/wand.js?v=mwjzkkb3"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwk0b2ad">
+<script data-pwa defer src="../shared/wand.js?v=mwk0b2ad"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Treasure Tides</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwjzkkb3">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwk0b2ad">
 <style>
 :root{--bg:#06202e;--panel:#0e3a4c;--panel2:#0a2a38;--edge:#2f8fa8;--accent:#d9862b;--accent-d:#8a4a12;--accent-l:#ffd08a;
   --alt:#b8323c;--alt-d:#6e1a22;--alt-l:#ff9aa2;--dim:#9cc7d6;--hi:#7fe3ff}
@@ -45,7 +45,7 @@ body{background:var(--bg) repeating-linear-gradient(180deg,#06202e 0 16px,#08283
 </head>
 <body>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="../shared/arcade.js?v=mwjzkkb3"></script>
+<script src="../shared/arcade.js?v=mwk0b2ad"></script>
 <script>
 const {el,sprite}=Arcade,W=9,H=7;
 const SPR={
@@ -83,6 +83,16 @@ Arcade.run({
     return{cells,gold:players.map(()=>0),skip:players.map(()=>0),left:12};
   },
   valid:(s,seat,a)=>Number.isInteger(a.i)&&!!s.cells[a.i]&&!s.cells[a.i].o,
+  bot(s,i,api,lvl){const C=s.cells,closed=C.map((c,k)=>c.o?-1:k).filter(k=>k>=0),any=a=>a[Math.floor(Math.random()*a.length)];
+    if(lvl===1&&Math.random()<.6)return{i:any(closed)};
+    const marked=closed.filter(k=>C[k].h);if(marked.length)return{i:any(marked)};
+    const base=s.left/closed.length,pr=new Map(),safe=new Set(),sure=new Set();
+    C.forEach((c,k)=>{if(!c.o||c.t!=='sand')return;const nb=nbrs(k),found=nb.filter(j=>C[j].o&&C[j].t==='gold').length,un=nb.filter(j=>!C[j].o),need=c.n-found;if(!un.length)return;
+      un.forEach(j=>{if(need<=0)safe.add(j);else if(need>=un.length)sure.add(j);else{const a=pr.get(j)||[];a.push(need/un.length);pr.set(j,a)}})});
+    const sureList=closed.filter(k=>sure.has(k));if(sureList.length)return{i:any(sureList)};
+    let best=[],bv=-1;closed.forEach(k=>{if(safe.has(k))return;const a=pr.get(k),v=a?Math.max(...a):base*(lvl===3?.85:1);
+      if(v>bv+1e-9){bv=v;best=[k]}else if(Math.abs(v-bv)<1e-9)best.push(k)});
+    return{i:any(best.length?best:closed)}},
   auto(s){const h=s.cells.findIndex(c=>c.h&&!c.o);if(h>=0)return{i:h};const f=s.cells.map((c,i)=>c.o?-1:i).filter(i=>i>=0);return{i:f[Arcade.rnd(f.length)]}},
   async act(s,seat,a,api){
     const c=s.cells[a.i],p=s.players[seat],sel=`[data-i="${a.i}"]`;c.o=1;c.by=seat;c.h=0;let again=false;

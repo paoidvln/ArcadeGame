@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwjzkkb3';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
+<script data-arcade-version>window.AV='mwk0b2ad';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwjzkkb3">
-<script data-pwa defer src="../shared/wand.js?v=mwjzkkb3"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwk0b2ad">
+<script data-pwa defer src="../shared/wand.js?v=mwk0b2ad"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pixel Chess</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwjzkkb3">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwk0b2ad">
 <style>
 :root{--bg:#120c1c;--panel:#2a1f3d;--panel2:#1b1429;--edge:#a9794f;--accent:#c98a2b;--accent-d:#6b4416;--accent-l:#ffd9a0;
   --alt:#8a5cf0;--alt-d:#45288a;--alt-l:#d2c2ff;--dim:#c2b4d8;--hi:#ffd9a0}
@@ -46,7 +46,7 @@
 </head>
 <body>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="../shared/arcade.js?v=mwjzkkb3"></script>
+<script src="../shared/arcade.js?v=mwk0b2ad"></script>
 <script>
 const {el}=Arcade;
 /*ENGINE*/
@@ -90,6 +90,20 @@ function legal(s,from){const side=col(s.b[from]);return pseudo(s,from).filter(m=
 function allLegal(s,side){const out=[];for(let i=0;i<64;i++)if(s.b[i]&&col(s.b[i])===side)legal(s,i).forEach(m=>out.push({f:i,m}));return out}
 function bare(b){const rest=b.filter(p=>p&&p.toLowerCase()!=='k').map(p=>p.toLowerCase());return rest.length===0||(rest.length===1&&(rest[0]==='b'||rest[0]==='n'))}
 /*END*/
+const PV={p:100,n:320,b:330,r:500,q:900,k:0};
+function evalB(b){let sc=0;for(let i=0;i<64;i++){const p=b[i];if(!p)continue;const w=p<'a'?1:-1,t=p.toLowerCase(),r=i>>3,f=i&7,cd=3.5-Math.max(Math.abs(r-3.5),Math.abs(f-3.5));let v=PV[t];
+  if(t==='n')v+=cd*10;else if(t==='b')v+=cd*6;else if(t==='q')v+=cd*3;else if(t==='p'){v+=(w>0?6-r:r-1)*8;if(f>=2&&f<=5)v+=cd*4}else if(t==='k')v+=((w>0?r===7:r===0)?15:0)-cd*4;
+  sc+=w*v}return sc}
+const playX=(st,x)=>{const c={b:st.b.slice(),cast:Object.assign({},st.cast),ep:st.ep,half:st.half};applyMove(c,x.f,x.m,'q');return c};
+function orderedMoves(st,side){const ms=allLegal(st,side);ms.forEach(x=>{const v=st.b[x.m.t];x.o=(v?PV[v.toLowerCase()]*10-PV[st.b[x.f].toLowerCase()]:0)+(x.m.promo?8000:0)+(x.m.ep?900:0)});return ms.sort((a,b)=>b.o-a.o)}
+function qsearch(st,side,alpha,beta,d){const stand=(side?-1:1)*evalB(st.b);if(stand>=beta||d<=0)return stand;if(stand>alpha)alpha=stand;
+  const caps=[];for(let i=0;i<64;i++){const p=st.b[i];if(!p||col(p)!==side)continue;for(const m of pseudo(st,i)){const v=st.b[m.t];if(!v&&!m.promo)continue;if(v&&v.toLowerCase()==='k')return 50000;caps.push({f:i,m,o:(v?PV[v.toLowerCase()]*10:0)-PV[p.toLowerCase()]+(m.promo?8000:0)})}}
+  caps.sort((a,b)=>b.o-a.o);for(const x of caps){const sc=-qsearch(playX(st,x),1-side,-beta,-alpha,d-1);if(sc>=beta)return sc;if(sc>alpha)alpha=sc}return alpha}
+function negamax(st,side,depth,alpha,beta,ply){if(st.half>=100)return 0;if(depth<=0)return qsearch(st,side,alpha,beta,4);
+  const ms=orderedMoves(st,side);if(!ms.length)return attackedBy(st.b,kingSq(st.b,side),1-side)?-100000+ply:0;
+  let best=-Infinity;for(const x of ms){const sc=-negamax(playX(st,x),1-side,depth-1,-beta,-alpha,ply+1);if(sc>best)best=sc;if(sc>alpha)alpha=sc;if(alpha>=beta)break}return best}
+function bestMove(s,side,lvl){const depth=[2,1,2,3][lvl]||2,noise=[25,140,25,6][lvl]||25,st={b:s.b,cast:s.cast,ep:s.ep,half:s.half},ms=orderedMoves(st,side);let best=null,bv=-Infinity,alpha=-Infinity;
+  for(const x of ms){const sc=-negamax(playX(st,x),1-side,depth-1,-Infinity,-(alpha-2*noise),1),v=sc+(Math.random()*2-1)*noise;if(sc>alpha)alpha=sc;if(v>bv){bv=v;best=x}}return best}
 const name=sq=>'abcdefgh'[sq&7]+(8-(sq>>3));
 const ART={
  p:["............","............","....kkkk....","...kaaaak...","...kaaabk...","....kaak....","...kaaaak...","....kabk....","...kaaabk...","..kaaaabbk..","..kkkkkkkk..","............"],
@@ -149,6 +163,7 @@ Arcade.run({
   init:()=>({b:START.slice(),cast:{K:true,Q:true,k:true,q:true},ep:-1,half:0,last:null,cap:[[],[]],chk:-1,why:'',tc:lastTc,clock:[lastTc*60000,lastTc*60000],t0:0,n:0}),
   valid(s,seat,a){if(a.k==='resign')return true;if(a.k==='tc')return s.n===0&&seat===0&&TCS.includes(a.m);if(a.k==='flag')return!!(s.tc&&s.t0)&&s.clock[seat]-(Date.now()-s.t0)<=250;if(a.k!=='m'||!Number.isInteger(a.f)||!Number.isInteger(a.t)||a.f<0||a.f>63||a.t<0||a.t>63)return false;
     const p=s.b[a.f];return!!p&&col(p)===seat&&(a.p===undefined||'qrbn'.includes(a.p))&&legal(s,a.f).some(m=>m.t===a.t)},
+  bot(s,i,api,lvl){const x=bestMove(s,i,lvl);return x?{k:'m',f:x.f,t:x.m.t,p:'q'}:{k:'resign'}},
   auto(s,i,api){const ms=allLegal(s,i);if(!ms.length)return{k:'resign'};const worth=x=>{const p=s.b[x.m.t];return p?VAL[p.toLowerCase()]:x.m.promo?8:0},best=Math.max(...ms.map(worth)),pool=ms.filter(x=>worth(x)===best),x=pool[api.rnd(pool.length)];
     return{k:'m',f:x.f,t:x.m.t,p:'q'}},
   async act(s,seat,a,api){const me=s.players[seat],opp=1-seat,you=s.players[opp];

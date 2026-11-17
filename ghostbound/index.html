@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwjzkkb3';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
+<script data-arcade-version>window.AV='mwk0b2ad';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwjzkkb3">
-<script data-pwa defer src="../shared/wand.js?v=mwjzkkb3"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwk0b2ad">
+<script data-pwa defer src="../shared/wand.js?v=mwk0b2ad"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Ghostbound</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -213,6 +213,7 @@ input,select{font-family:VT323,monospace;font-size:22px;border:3px solid #000;ba
 .pcard .pic{width:72px;height:72px;filter:drop-shadow(3px 3px 0 #000);animation:pbob .8s steps(2) infinite}.pcard .pic svg{width:100%;height:100%}
 .pcard .avn{text-align:center;font-size:9px;color:var(--pc);margin:8px 0;text-shadow:1px 1px 0 #000}
 .pcard input{width:100%;margin-bottom:10px}
+.pcard .who{width:100%;margin:8px 0 0;font-size:9px}.pcard .who.on{background:#2fb8a6}
 @keyframes pbob{50%{transform:translateY(-6%)}}
 /* board */
 #board{background:#0b0616;border:4px solid #000;box-shadow:0 0 0 4px #4a2f8f,0 0 0 8px #000,14px 14px 0 #000;transition:none}
@@ -306,7 +307,8 @@ details{font-size:19px}summary{font-family:'Press Start 2P';font-size:9px}
   <div class="card">
     <h1 class="title">GHOSTBOUND</h1>
     <p class="tag">Race to tile 100. Don't let the Ghost catch you three times.</p>
-    <button class="primary big" id="bLocal">🕯️ Local game — one device</button>
+    <button class="primary big" id="bBot">🤖 Play vs computer</button>
+    <button class="big" id="bLocal">🕯️ Local game — one device</button>
     <button class="ghosty big" id="bOnline">🌐 Online game — room code</button>
     <button class="big" onclick="location.href='../'">&lt; Back to Arcade</button>
   </div>
@@ -519,7 +521,7 @@ let net={mode:'local',seat:0,peer:null,hostConn:null,seatConns:[],code:''};
 let lobby={seats:[],density:1};
 let pickResolve=null;
 const PREFIX='ghostbound-v1-';
-const controls=i=>net.mode==='local'||i===net.seat;
+const controls=i=>(net.mode==='local'&&!(V&&V.players&&V.players[i]&&V.players[i].bot))||i===net.seat;
 const authority=()=>net.mode!=='client';
 const vuln=(s,p)=>!p.out&&p.invis<=0&&p.pos>0&&(s.board[p.pos]||{}).type!=='safe';
 
@@ -547,13 +549,13 @@ function log(m,c){S.log.push({m,c:c||''});if(S.log.length>60)S.log.shift()}
 function startGame(seats,density){
   if(pickResolve)pickResolve(-1);
   S={gid:rnd(1e9),board:genBoard(density),density,
-     players:seats.map((p,i)=>({id:i,name:p.name,color:p.color,av:(p.av|0)%AVATARS.length,pos:0,skip:0,invis:0,catches:0,out:false,conn:p.conn!==false})),
+     players:seats.map((p,i)=>({id:i,name:p.name,color:p.color,av:(p.av|0)%AVATARS.length,pos:0,skip:0,invis:0,catches:0,out:false,conn:p.conn!==false,bot:p.bot|0})),
      ghost:{pos:0,stun:0,surge:0,last:-1},turn:0,phase:'roll',pick:null,dice:0,log:[],winner:null,seq:0,card:null,deck:shuffle(Object.keys(CARDS))};
   log('🕯️ The hunt begins. Reach tile 100 — exactly — before the Ghost claims you.','ghost');
   step(0).catch(()=>{});
   autoIfAway();
 }
-function autoIfAway(){const s=S,i=s.turn;if(s.phase==='roll'&&!s.players[i].conn)setTimeout(()=>{if(S===s&&s.phase==='roll'&&s.turn===i)takeTurn()},1300)}
+function autoIfAway(){const s=S,i=s.turn,p=s.players[i];if(s.phase==='roll'&&(!p.conn||p.bot))setTimeout(()=>{if(S===s&&s.phase==='roll'&&s.turn===i)takeTurn()},p.bot?800:1300)}
 
 async function takeTurn(){
   if(!S||S.phase!=='roll')return;
@@ -651,7 +653,7 @@ async function choose(p,kind,opts){
   const rand=()=>opts[rnd(opts.length)].id;
   const id=await new Promise(res=>{
     pickResolve=res;s.seq++;send({t:'state',s,fx:null});applyState(s);
-    if(!p.conn)setTimeout(()=>res(rand()),1300);
+    if(p.bot)setTimeout(()=>res(opts.reduce((a,q)=>q.pos>a.pos?q:a).id),900);else if(!p.conn)setTimeout(()=>res(rand()),1300);
     setTimeout(()=>res(rand()),30000);
   });
   pickResolve=null;
@@ -817,7 +819,7 @@ function render(){
   s.players.forEach((p,i)=>{
     const r=el('div','pl'+(s.turn===i&&s.phase!=='over'?' cur':'')+(p.out?' out':''));const d=el('span','pa');d.innerHTML=sprite(AVATARS[p.av||0].r,p.color);
     const lives=el('span','lives');lives.title=`Caught ${p.catches} of 3 times`;lives.innerHTML=[0,1,2].map(k=>sprite(k<3-p.catches?HEART:HEART_OFF)).join('');
-    const st=[];if(p.out)st.push('☠️');else{if(!p.conn)st.push('📡 away');if(p.skip)st.push('⏭️×'+p.skip);if(p.invis>0)st.push('🫥×'+p.invis);
+    const st=[];if(p.out)st.push('☠️');else{if(p.bot)st.push('🤖');if(!p.conn)st.push('📡 away');if(p.skip)st.push('⏭️×'+p.skip);if(p.invis>0)st.push('🫥×'+p.invis);
       if((s.board[p.pos]||{}).type==='safe')st.push('🛡️');if(near.includes(p))st.push('⚠️')}
     r.append(d,el('span','nm',p.name+(net.mode!=='local'&&i===net.seat?' (you)':'')),el('span','st',st.join(' ')),lives,el('span','ps',p.pos));pl.append(r)});
   // last card
@@ -857,7 +859,7 @@ function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.to
 document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));
 document.querySelectorAll('.dens').forEach(s=>{DENS.forEach((d,i)=>s.append(new Option(d,i)));s.value=1});
 function swatches(box,get,set){box.innerHTML='';COLORS.forEach(c=>{const b=el('b',get()===c?'sel':'');b.style.background=c;b.style.color=c;b.onclick=()=>set(c);box.append(b)})}
-const setup={n:2,p:COLORS.slice(0,4).map((c,i)=>({name:'',color:c,av:i}))};
+const setup={n:2,p:COLORS.slice(0,4).map((c,i)=>({name:'',color:c,av:i,bot:false}))};
 function playerCard(p,ph,setColor){
   const c=el('div','pcard');c.style.setProperty('--pc',p.color);
   const av=el('div','av'),L=el('button','small','<'),R=el('button','small','>'),pic=el('div','pic'),nm=el('div','avn');
@@ -873,15 +875,18 @@ function drawSetup(){
   const cnt=$('#cnt');cnt.innerHTML='';[2,3,4].forEach(n=>{const b=el('button',setup.n===n?'sel':'',n+' players');b.onclick=()=>{setup.n=n;drawSetup()};cnt.append(b)});
   const rows=$('#rows');rows.innerHTML='';rows.className='pcards';
   for(let i=0;i<setup.n;i++){const p=setup.p[i];
-    rows.append(playerCard(p,'Player '+(i+1),c=>{const o=setup.p.find(q=>q.color===c);if(o)o.color=p.color;p.color=c;drawSetup()}))}
+    const card=playerCard(p,p.bot?'Computer':'Player '+(i+1),c=>{const o=setup.p.find(q=>q.color===c);if(o)o.color=p.color;p.color=c;drawSetup()});
+    const tb=el('button','small who'+(p.bot?' on':''),p.bot?'🤖 Computer':'👤 Person');tb.type='button';
+    tb.onclick=()=>{if(!p.bot&&setup.p.slice(0,setup.n).filter(q=>!q.bot).length<=1){SFX.play('deny');return}p.bot=!p.bot;drawSetup()};card.append(tb);rows.append(card)}
 }
 const clean=(n,d)=>(String(n||'').replace(/\s+/g,' ').trim().slice(0,14))||d;
-$('#bLocal').onclick=()=>{drawSetup();show('setup')};
-$('#bStart').onclick=()=>{net.mode='local';startGame(setup.p.slice(0,setup.n).map((p,i)=>({name:clean(p.name,'Player '+(i+1)),color:p.color,av:p.av})),+$('#dens1').value)};
+$('#bLocal').onclick=()=>{setup.p.forEach(q=>q.bot=false);drawSetup();show('setup')};
+$('#bBot').onclick=()=>{setup.p.forEach((q,i)=>q.bot=i>0);setup.n=2;drawSetup();show('setup')};
+$('#bStart').onclick=()=>{net.mode='local';startGame(setup.p.slice(0,setup.n).map((p,i)=>({name:clean(p.name,p.bot?'Bot '+AVATARS[p.av].n:'Player '+(i+1)),color:p.color,av:p.av,bot:p.bot?2:0})),+$('#dens1').value)};
 $('#roll').onclick=doRoll;
 function doRoll(){if(!V||V.phase!=='roll'||!controls(V.turn))return;if(authority())takeTurn();else net.hostConn.send({t:'roll'})}
 addEventListener('keydown',e=>{if((e.code==='Space'||e.code==='Enter')&&$('#game').classList.contains('on')&&!/INPUT|SELECT|BUTTON/.test(document.activeElement.tagName)){e.preventDefault();doRoll()}});
-function restart(){if(!authority()||!S)return;const seats=S.players.map(p=>({name:p.name,color:p.color,av:p.av,conn:p.conn}));startGame(seats,S.density)}
+function restart(){if(!authority()||!S)return;const seats=S.players.map(p=>({name:p.name,color:p.color,av:p.av,conn:p.conn,bot:p.bot}));startGame(seats,S.density)}
 $('#bAgain').onclick=restart;
 $('#bRestart').onclick=function(){if(this.dataset.sure){delete this.dataset.sure;this.textContent='Restart';restart()}else{this.dataset.sure=1;this.textContent='Sure?';setTimeout(()=>{delete this.dataset.sure;this.textContent='Restart'},2500)}};
 function leave(){if(pickResolve)pickResolve(-1);S=null;V=null;builtKey='';const p=net.peer;clearInterval(net.iv);net={mode:'local',seat:0,peer:null,hostConn:null,seatConns:[],code:''};if(p)try{p.destroy()}catch(e){}

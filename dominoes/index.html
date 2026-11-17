@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwjzkkb3';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
+<script data-arcade-version>window.AV='mwk0b2ad';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwjzkkb3">
-<script data-pwa defer src="../shared/wand.js?v=mwjzkkb3"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwk0b2ad">
+<script data-pwa defer src="../shared/wand.js?v=mwk0b2ad"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dominoes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwjzkkb3">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwk0b2ad">
 <style>
 :root{--bg:#0c1a12;--panel:#1c3d2a;--panel2:#12281c;--edge:#4fa86a;--accent:#d9a441;--accent-d:#7a5a1a;--accent-l:#ffe6a8;
   --alt:#4fa86a;--alt-d:#1f5a34;--alt-l:#b4f0c4;--dim:#a8c8b2;--hi:#b4f0c4}
@@ -46,7 +46,7 @@
 </head>
 <body>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="../shared/arcade.js?v=mwjzkkb3"></script>
+<script src="../shared/arcade.js?v=mwk0b2ad"></script>
 <script>
 const {el}=Arcade;
 const PIPS={0:[],1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
@@ -60,7 +60,8 @@ const canPlay=(s,seat)=>s.hands[seat].some(t=>fits(s,t));
 const pipSum=h=>h.reduce((a,t)=>a+t[0]+t[1],0);
 let CUR=null,CTX=null,pick=-1,seen=-1;
 // whose hand this screen shows: on one shared device the player to move; in an online room always your own
-function viewer(s){if(s.players.every((p,i)=>CTX.controls(i)))return s.turn;return s.players.findIndex((p,i)=>CTX.controls(i))}
+// whose tiles to show: the person whose turn it is; on a computer's turn, the only person at this screen (or nobody, if several share it)
+function viewer(s){if(CTX.controls(s.turn))return s.turn;const me=s.players.map((p,i)=>i).filter(i=>CTX.controls(i));return me.length===1?me[0]:-1}
 function paint(){const s=CUR;if(!s)return;const e=ends(s),tb=document.getElementById('table'),v=viewer(s),can=CTX.canAct()&&v===s.turn;
   tb.innerHTML='';if(!s.chain.length)tb.append(el('div','empty','The table is empty. Play any tile to begin.'));
   s.chain.forEach((t,i)=>{const d=tile(t[0],t[1],t[0]===t[1]);if(s.lastAt===i)d.classList.add('new');tb.append(d)});
@@ -68,7 +69,7 @@ function paint(){const s=CUR;if(!s)return;const e=ends(s),tb=document.getElement
   const ot=document.getElementById('others');ot.innerHTML='';s.players.forEach((p,i)=>{if(i===v)return;const o=el('div','op'+(i===s.turn&&!s.over?' cur':'')),pa=el('span','pa'),tl=el('span','tl');pa.innerHTML=CTX.avatar(p);
     (s.over?s.hands[i].map(t=>tile(t[0],t[1],true)):s.hands[i].map(back)).forEach(x=>tl.append(x));o.append(pa,p.name+' ('+s.hands[i].length+')',tl);ot.append(o)});
   const hd=document.getElementById('hand'),ch=document.getElementById('choice');hd.innerHTML='';ch.innerHTML='';
-  document.getElementById('whose').textContent=v<0?'WATCHING':(s.players[v].name.toUpperCase()+"'S TILES");
+  document.getElementById('whose').textContent=v<0?"COMPUTER'S TURN":(s.players[v].name.toUpperCase()+"'S TILES");
   if(v<0)return;
   s.hands[v].forEach((t,i)=>{const f=fits(s,t),b=el('button',(can&&f?'ok':'')+(pick===i?' sel':''));b.type='button';b.append(tile(t[0],t[1],true));b.disabled=!can||!f;b.setAttribute('aria-label','Tile '+t[0]+' and '+t[1]);
     b.onclick=()=>{if(f.length===2&&e&&e[0]!==e[1]){pick=pick===i?-1:i;Arcade.SFX.play('click');return paint()}pick=-1;CTX.act({k:'p',i,e:f[0]})};hd.append(b)});
@@ -92,6 +93,12 @@ Arcade.run({
   valid(s,seat,a){const h=s.hands[seat],able=canPlay(s,seat);
     if(a.k==='p')return Number.isInteger(a.i)&&a.i>=0&&a.i<h.length&&(a.e==='L'||a.e==='R')&&(!s.chain.length||fits(s,h[a.i]).includes(a.e));
     if(a.k==='d')return!able&&s.yard.length>0;if(a.k==='x')return!able&&!s.yard.length;return false},
+  bot(s,i,api,lvl){const h=s.hands[i],e=ends(s),opts=[];h.forEach((t,k)=>{for(const side of fits(s,t))opts.push({k,side,t})});
+    if(!opts.length)return{k:s.yard.length?'d':'x'};if(lvl===1){const o=opts[Math.floor(Math.random()*opts.length)];return{k:'p',i:o.k,e:o.side}}
+    const has=v=>h.filter(t=>t[0]===v||t[1]===v).length;let best=opts[0],bv=-1e9;
+    opts.forEach(o=>{const t=o.t,open=!e?t[1]:o.side==='L'?(t[0]===e[0]?t[1]:t[0]):(t[0]===e[1]?t[1]:t[0]);
+      const v=t[0]+t[1]+(t[0]===t[1]?5:0)+(has(open)-1)*(lvl===3?4:2)+Math.random();if(v>bv){bv=v;best=o}});
+    return{k:'p',i:best.k,e:best.side}},
   auto(s,i){const h=s.hands[i];let best=-1,bv=-1;h.forEach((t,k)=>{if(fits(s,t)&&t[0]+t[1]+(t[0]===t[1]?3:0)>bv){bv=t[0]+t[1]+(t[0]===t[1]?3:0);best=k}});
     if(best>=0)return{k:'p',i:best,e:fits(s,h[best])[0]};return{k:s.yard.length?'d':'x'}},
   async act(s,seat,a,api){const p=s.players[seat],n=s.players.length,next=()=>{s.turn=(seat+1)%n};

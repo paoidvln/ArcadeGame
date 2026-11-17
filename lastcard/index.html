@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwjzkkb3';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
+<script data-arcade-version>window.AV='mwk0b2ad';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwjzkkb3">
-<script data-pwa defer src="../shared/wand.js?v=mwjzkkb3"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwk0b2ad">
+<script data-pwa defer src="../shared/wand.js?v=mwk0b2ad"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Last Card</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwjzkkb3">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwk0b2ad">
 <style>
 :root{--bg:#140b1f;--panel:#2b1a3f;--panel2:#1c1029;--edge:#b0559a;--accent:#e0409a;--accent-d:#7a1f52;--accent-l:#ffa6d6;
   --alt:#2fb8a6;--alt-d:#12584f;--alt-l:#a6f0e6;--dim:#c9b4d8;--hi:#ffa6d6}
@@ -44,7 +44,7 @@
 </head>
 <body>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="../shared/arcade.js?v=mwjzkkb3"></script>
+<script src="../shared/arcade.js?v=mwk0b2ad"></script>
 <script>
 const {el}=Arcade;
 // A card is {s, v}: s = suit 0..3, or 4 for a wild. v = '1'..'9', S skip, R reverse, D draw two, W wild, F wild draw four.
@@ -62,7 +62,8 @@ const fits=(s,c)=>c.s===4||c.s===s.suit||(topOf(s).s!==4&&c.v===topOf(s).v);
 // what the player to move may do with card i: after drawing, only the card just drawn can be played
 const canPlay=(s,seat,i)=>fits(s,s.hands[seat][i])&&(!s.drew||i===s.hands[seat].length-1);
 let CUR=null,CTX=null,pick=-1,seen=-1;
-function viewer(s){if(s.players.every((p,i)=>CTX.controls(i)))return s.turn;return s.players.findIndex((p,i)=>CTX.controls(i))}
+// whose cards to show: the person whose turn it is; on a computer's turn, the only person at this screen (or nobody, if several share it)
+function viewer(s){if(CTX.controls(s.turn))return s.turn;const me=s.players.map((p,i)=>i).filter(i=>CTX.controls(i));return me.length===1?me[0]:-1}
 function paint(){const s=CUR;if(!s)return;const v=viewer(s),can=CTX.canAct()&&v===s.turn,t=topOf(s);
   const tb=document.getElementById('table');tb.innerHTML='';
   const dk=el('button');dk.id='deck';dk.type='button';dk.append(back('big'),el('span',null,s.deck.length+' left'));dk.disabled=!can||s.drew;dk.title='Draw a card';dk.setAttribute('aria-label','Draw a card');dk.onclick=()=>{pick=-1;CTX.act({k:'d'})};
@@ -72,7 +73,7 @@ function paint(){const s=CUR;if(!s)return;const v=viewer(s),can=CTX.canAct()&&v=
   const ot=document.getElementById('others');ot.innerHTML='';s.players.forEach((p,i)=>{if(i===v)return;const o=el('div','op'+(i===s.turn&&!s.over?' cur':'')),pa=el('span','pa'),tl=el('span','tl');pa.innerHTML=CTX.avatar(p);
     s.hands[i].forEach(()=>tl.append(back('mini')));o.append(pa,p.name+' ('+s.hands[i].length+')',tl);ot.append(o)});
   const hd=document.getElementById('hand'),ch=document.getElementById('choice');hd.innerHTML='';ch.innerHTML='';
-  document.getElementById('whose').textContent=v<0?'WATCHING':s.players[v].name.toUpperCase()+"'S CARDS";if(v<0)return;
+  document.getElementById('whose').textContent=v<0?"COMPUTER'S TURN":s.players[v].name.toUpperCase()+"'S CARDS";if(v<0)return;
   s.hands[v].forEach((c,i)=>{const ok=can&&canPlay(s,v,i),b=el('button',(ok?'ok':'')+(pick===i?' sel':''));b.type='button';b.append(cardEl(c));b.disabled=!ok;b.setAttribute('aria-label',cardName(c));
     b.onclick=()=>{if(c.s===4){pick=pick===i?-1:i;Arcade.SFX.play('click');return paint()}pick=-1;CTX.act({k:'p',i})};hd.append(b)});
   if(pick>=0&&can&&s.hands[v][pick]&&s.hands[v][pick].s===4)SUITS.forEach((su2,k)=>{const b=el('button');b.type='button';b.style.background=su2.c;b.innerHTML=glyph(k);b.append(su2.n);b.onclick=()=>{const i=pick;pick=-1;CTX.act({k:'p',i,c:k})};ch.append(b)})}
@@ -97,6 +98,12 @@ Arcade.run({
     return{hands,deck,pile:[first],suit:first.s,dir:1,drew:false,why:''}},
   valid(s,seat,a){const h=s.hands[seat];if(a.k==='d')return!s.drew;if(a.k==='x')return s.drew;
     return a.k==='p'&&Number.isInteger(a.i)&&a.i>=0&&a.i<h.length&&canPlay(s,seat,a.i)&&(h[a.i].s<4||[0,1,2,3].includes(a.c))},
+  bot(s,i,api,lvl){const h=s.hands[i],n=s.players.length,nx=((i+s.dir)%n+n)%n,few=s.hands[nx].length<=2,idx=h.map((c,k)=>k).filter(k=>canPlay(s,i,k));
+    if(!idx.length)return{k:s.drew?'x':'d'};if(lvl===1)return{k:'p',i:idx[Math.floor(Math.random()*idx.length)],c:Math.floor(Math.random()*4)};
+    const cnt=[0,0,0,0];h.forEach(c=>{if(c.s<4)cnt[c.s]++});let best=idx[0],bv=-1e9;
+    idx.forEach(k=>{const c=h[k];let v;if(c.s===4)v=(h.length<=2||few?40:-30)+(c.v==='F'&&few?30:0);else{v=10+cnt[c.s]*3+(c.v>='1'&&c.v<='9'?+c.v*.5:0);if('SRD'.includes(c.v))v+=few?30:4}
+      v+=Math.random()*(lvl===3?1:6);if(v>bv){bv=v;best=k}});
+    const c2=cnt.slice();if(h[best].s<4)c2[h[best].s]--;return{k:'p',i:best,c:c2.indexOf(Math.max(...c2))}},
   auto(s,i){const h=s.hands[i],idx=h.map((c,k)=>k).filter(k=>canPlay(s,i,k));if(!idx.length)return{k:s.drew?'x':'d'};
     const k=idx.find(k=>h[k].s<4)??idx[0],cnt=[0,0,0,0];h.forEach((c,j)=>{if(j!==k&&c.s<4)cnt[c.s]++});return{k:'p',i:k,c:cnt.indexOf(Math.max(...cnt))}},
   async act(s,seat,a,api){const p=s.players[seat],n=s.players.length,step=k=>((seat+s.dir*k)%n+n)%n;

@@ -130,7 +130,8 @@ function run(game){
   document.body.insertAdjacentHTML('afterbegin',`
 <section id="home" class="screen center on"><div class="card">
   <h1 class="title"></h1><p class="tag" id="hTag"></p>
-  <button class="primary big" id="bLocal">Local game — one device</button>
+  <button class="primary big" id="bBot">🤖 Play vs computer</button>
+  <button class="big" id="bLocal">Local game — one device</button>
   <button class="alt big" id="bOnline">Online game — room code</button>
   <button class="big" id="bArcade">&lt; Back to Arcade</button>
 </div></section>
@@ -138,6 +139,7 @@ function run(game){
   <button class="back" data-go="home">&lt; Back</button><h2>Choose your crew</h2>
   <label class="l">Players</label><div class="seg" id="cnt"></div>
   <label class="l">Avatar, name &amp; colour</label><div id="rows" class="pcards"></div>
+  <div id="botLvl"><label class="l">Computer level</label><div class="seg" id="lvl"></div></div>
   <button class="primary big" id="bStart"></button>
 </div></section>
 <section id="online" class="screen center"><div class="card">
@@ -178,7 +180,7 @@ function run(game){
   let lobby={seats:[]};
   const CANCEL={cancel:true};
   const authority=()=>net.mode!=='client';
-  const controls=i=>net.mode==='local'||i===net.seat;
+  const controls=i=>(net.mode==='local'&&!(V&&V.players[i]&&V.players[i].bot))||i===net.seat;
   const stage=$('#stage');
   function send(msg){if(net.mode==='host')net.seatConns.forEach(c=>{if(c&&c.open)try{c.send(msg)}catch(e){}})}
   const api={rnd,shuffle,sleep,
@@ -187,7 +189,7 @@ function run(game){
 
   /* ----- engine (local / host) ----- */
   function startGame(seats){
-    const players=seats.map((p,i)=>({id:i,name:p.name,color:p.color,av:(p.av|0)%AVATARS.length,conn:p.conn!==false}));
+    const players=seats.map((p,i)=>({id:i,name:p.name,color:p.color,av:(p.av|0)%AVATARS.length,conn:p.conn!==false,bot:p.bot|0}));
     const s={gid:rnd(1e9),seq:0,players,log:[],turn:0,busy:false,over:false,winners:[]};
     Object.assign(s,game.init(players,api));S=s;
     if(game.intro)api.log(game.intro,'hi');
@@ -201,8 +203,12 @@ function run(game){
     autoIfAway();
   }
   function autoIfAway(){const s=S;if(!s||s.over||s.busy)return;const i=s.turn;
-    if(!s.players[i].conn)setTimeout(()=>{if(S===s&&!s.busy&&!s.over&&s.turn===i)dispatch(i,game.auto(s,i,api))},1300)}
-  function restart(){if(!authority()||!S)return;startGame(S.players.map(p=>({name:p.name,color:p.color,av:p.av,conn:p.conn})))}
+    const p=s.players[i];if(p.conn&&!p.bot)return;
+    // computer players use the game's own bot (bot level 1 easy, 2 normal, 3 hard); a player who dropped out uses the simple stand-in
+    setTimeout(()=>{if(S!==s||s.busy||s.over||s.turn!==i)return;let a=null;
+      try{a=p.bot&&game.bot?game.bot(s,i,api,p.bot):game.auto(s,i,api)}catch(e){console.error(e)}
+      if(!a||!game.valid(s,i,a))a=game.auto(s,i,api);dispatch(i,a)},p.bot?650+rnd(500):1300)}
+  function restart(){if(!authority()||!S)return;startGame(S.players.map(p=>({name:p.name,color:p.color,av:p.av,conn:p.conn,bot:p.bot})))}
 
   /* ----- view ----- */
   const ctx={controls,sprite,avatar,burstAt,
@@ -237,7 +243,7 @@ function run(game){
     game.render(s,ctx,$('#ctl'));
     const pl=$('#players');pl.innerHTML='';
     s.players.forEach((p,i)=>{const r=el('div','pl'+(s.turn===i&&!s.over?' cur':''));const d=el('span','pa');d.innerHTML=avatar(p);
-      const st=[];if(!p.conn)st.push('📡 away');if(game.badge){const b=game.badge(s,p);if(b)st.push(b)}
+      const st=[];if(p.bot)st.push('🤖');if(!p.conn)st.push('📡 away');if(game.badge){const b=game.badge(s,p);if(b)st.push(b)}
       r.append(d,el('span','nm',p.name+(net.mode!=='local'&&i===net.seat?' (you)':'')),el('span','st',st.join(' ')),el('span','ps',game.score?game.score(s,p):''));pl.append(r)});
     const lg=$('#log'),sig=s.gid+':'+s.log.length+':'+(s.log[s.log.length-1]||{}).m;
     if(sig!==logSig){logSig=sig;lg.innerHTML='';for(let i=s.log.length-1;i>=0;i--)lg.append(el('div',s.log[i].c,s.log[i].m))}
@@ -259,17 +265,23 @@ function run(game){
   /* ----- menus ----- */
   document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));
   const me=loadProfile();
-  const setup={n:Math.max(MIN,2),p:COLORS.slice(0,4).map((c,i)=>({name:'',color:c,av:i}))};
+  const setup={n:Math.max(MIN,2),lvl:2,p:COLORS.slice(0,4).map((c,i)=>({name:'',color:c,av:i,bot:false}))};
+  const LVLS=['','Easy','Normal','Hard'];
   (function(){const p=setup.p[0];p.name=me.name;p.av=me.av;const o=setup.p.find(q=>q!==p&&q.color===me.color);if(o)o.color=p.color;p.color=me.color;
     setup.p.forEach((q,i)=>{if(i&&q.av===p.av)q.av=(q.av+i+3)%AVATARS.length})})();
   function drawSetup(){
     const cnt=$('#cnt');cnt.innerHTML='';for(let n=MIN;n<=MAX;n++){const b=el('button',setup.n===n?'sel':'',n+' players');b.onclick=()=>{setup.n=n;drawSetup()};cnt.append(b)}
     const rows=$('#rows');rows.innerHTML='';
     for(let i=0;i<setup.n;i++){const p=setup.p[i];
-      rows.append(playerCard(p,'Player '+(i+1),c=>{const o=setup.p.find(q=>q.color===c);if(o)o.color=p.color;p.color=c;drawSetup()},i?null:()=>saveProfile(p)))}
+      const card=playerCard(p,p.bot?'Computer':'Player '+(i+1),c=>{const o=setup.p.find(q=>q.color===c);if(o)o.color=p.color;p.color=c;drawSetup()},i?null:()=>saveProfile(p));
+      const tb=el('button','small who'+(p.bot?' on':''),p.bot?'🤖 Computer':'👤 Person');tb.type='button';tb.title='Switch between a person and a computer player';
+      tb.onclick=()=>{if(!p.bot&&setup.p.slice(0,setup.n).filter(q=>!q.bot).length<=1){SFX.play('deny');return}p.bot=!p.bot;SFX.play('click');drawSetup()};card.append(tb);rows.append(card)}
+    const any=setup.p.slice(0,setup.n).some(q=>q.bot),lv=$('#lvl');$('#botLvl').style.display=any?'':'none';lv.innerHTML='';
+    [1,2,3].forEach(k=>{const b=el('button',setup.lvl===k?'sel':'',LVLS[k]);b.type='button';b.onclick=()=>{setup.lvl=k;drawSetup()};lv.append(b)});
   }
-  $('#bLocal').onclick=()=>{drawSetup();show('setup')};
-  $('#bStart').onclick=()=>{net.mode='local';startGame(setup.p.slice(0,setup.n).map((p,i)=>({name:clean(p.name,'Player '+(i+1)),color:p.color,av:p.av})))};
+  $('#bLocal').onclick=()=>{setup.p.forEach(q=>q.bot=false);drawSetup();show('setup')};
+  $('#bBot').onclick=()=>{setup.p.forEach((q,i)=>q.bot=i>0);setup.n=Math.min(MAX,Math.max(MIN,2));drawSetup();show('setup')};
+  $('#bStart').onclick=()=>{net.mode='local';startGame(setup.p.slice(0,setup.n).map((p,i)=>({name:clean(p.name,p.bot?'Bot '+AVATARS[p.av].n:'Player '+(i+1)),color:p.color,av:p.av,bot:p.bot?setup.lvl:0})))};
   $('#bAgain').onclick=restart;
   $('#bArcade').onclick=$('#bEndArcade').onclick=()=>{location.href='../'};
   $('#bRestart').onclick=function(){if(this.dataset.sure){delete this.dataset.sure;this.textContent='Restart';restart()}else{this.dataset.sure=1;this.textContent='Sure?';setTimeout(()=>{delete this.dataset.sure;this.textContent='Restart'},2500)}};

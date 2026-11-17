@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwjzkkb3';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
+<script data-arcade-version>window.AV='mwk0b2ad';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwjzkkb3">
-<script data-pwa defer src="../shared/wand.js?v=mwjzkkb3"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwk0b2ad">
+<script data-pwa defer src="../shared/wand.js?v=mwk0b2ad"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Tic-Tac-Toe</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwjzkkb3">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwk0b2ad">
 <style>
 :root{--bg:#07131c;--panel:#12303f;--panel2:#0b202b;--edge:#2fb8a6;--accent:#ff7a59;--accent-d:#8a3420;--accent-l:#ffc2b0;
   --alt:#2fb8a6;--alt-d:#12584f;--alt-l:#a6f0e6;--dim:#9cc4cf;--hi:#a6f0e6}
@@ -33,7 +33,7 @@
 </head>
 <body>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="../shared/arcade.js?v=mwjzkkb3"></script>
+<script src="../shared/arcade.js?v=mwk0b2ad"></script>
 <script>
 const {el}=Arcade,GOAL=3,MAXR=9;
 const LINES=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
@@ -54,6 +54,11 @@ Arcade.run({
   sfx:({tone,seq})=>({place:()=>tone(520,0,.06,'square',.06,780),place2:()=>tone(390,0,.06,'square',.06,260),line:()=>seq([523,659,784,1047],.08,'square',.07),draw:()=>seq([330,294,330],.1,'triangle',.07)}),
   init:()=>({b:Array(9).fill(-1),wins:[0,0],first:0,line:null,round:1}),
   valid:(s,seat,a)=>a.k==='p'&&Number.isInteger(a.i)&&a.i>=0&&a.i<9&&s.b[a.i]<0,
+  bot(s,i,api,lvl){const b=s.b.slice(),free=b.map((v,k)=>v<0?k:-1).filter(k=>k>=0),any=a=>a[Math.floor(Math.random()*a.length)];
+    const nm=(bb,t,d)=>{if(winLine(bb,1-t))return -10+d;let best=-99,open=false;for(let k=0;k<9;k++){if(bb[k]>=0)continue;open=true;bb[k]=t;const v=-nm(bb,1-t,d+1);bb[k]=-1;if(v>best)best=v}return open?best:0};
+    const winNow=free.filter(k=>{b[k]=i;const w=winLine(b,i);b[k]=-1;return w});if(winNow.length&&lvl>1)return{k:'p',i:any(winNow)};
+    if(Math.random()<[0,.55,.22,0][lvl])return{k:'p',i:any(free)};
+    const sc=free.map(k=>{b[k]=i;const v=-nm(b,1-i,1);b[k]=-1;return v}),top=Math.max(...sc);return{k:'p',i:any(free.filter((k,j)=>sc[j]===top))}},
   auto(s,i,api){const free=s.b.map((v,k)=>v<0?k:-1).filter(k=>k>=0),tryFor=who=>free.find(k=>{const c=s.b.slice();c[k]=who;return winLine(c,who)});
     let k=tryFor(i);if(k===undefined)k=tryFor(1-i);if(k===undefined)k=s.b[4]<0?4:free[api.rnd(free.length)];return{k:'p',i:k}},
   async act(s,seat,a,api){const p=s.players[seat],q=s.players[1-seat];s.b[a.i]=seat;

@@ -93,3 +93,6 @@ details{font-size:19px;color:var(--dim)}summary{font-family:'Press Start 2P',mon
 #gmBox button{margin:0;width:100%;font-size:11px;padding:13px 8px}
 #gmBox details{grid-column:1/-1;text-align:left}
 @media(max-width:719px){#game.on{display:flex;flex-direction:column;gap:10px}#game aside{display:contents}#game .top{order:-1}}
+/* ---- computer players ---- */
+.pcard .who{width:100%;margin:8px 0 0;font-size:9px}.pcard .who.on{background:var(--alt);box-shadow:inset -3px -3px 0 var(--alt-d),inset 3px 3px 0 var(--alt-l)}
+#botLvl{margin-top:4px}
