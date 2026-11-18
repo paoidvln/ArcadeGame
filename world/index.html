@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwm0d5vv';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
+<script data-arcade-version>window.AV='mwm0s9l1';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwm0d5vv">
-<script data-pwa defer src="../shared/wand.js?v=mwm0d5vv"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwm0s9l1">
+<script data-pwa defer src="../shared/wand.js?v=mwm0s9l1"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Pixel World</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwm0d5vv">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwm0s9l1">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js" defer></script>
 <style>
 :root{--bg:#0b1020;--panel:#1d2a3f;--panel2:#131c2c;--edge:#4f8f6a;--accent:#3f9a5a;--accent-d:#1f5a34;--accent-l:#9fe0b0;--gold:#ffd66b}
@@ -98,7 +98,7 @@ body.touch #chat{left:8px;top:8px;bottom:auto;width:min(320px,46vw)}
 </div></div>
 <div class="overlay" id="dlg"><div class="card"><h2 id="dT"></h2><p id="dX"></p><div id="dBody"></div><div id="dB"></div></div></div>
 
-<script src="../shared/arcade.js?v=mwm0d5vv"></script>
+<script src="../shared/arcade.js?v=mwm0s9l1"></script>
 <script>
 const {$,el,SFX,MUSIC,clean}=Arcade;
 /* =====================================================================================
@@ -465,7 +465,7 @@ function sit(tb){const k=freeChair(tb);if(k<0||seatedAt(tb).length>=tb.max)retur
   P.path=null;P.then=null;P.tgt=null;P.x=c.x;P.y=c.y;P.f=c.f;P.seat=tb.id;P.chair=k;SFX.play('good');sendState();lastSeatN=seatedAt(tb).length;
   const need=tb.min-lastSeatN;toast(need>0?'Waiting for '+need+' more player'+(need>1?'s':'')+'. Invite someone in the chat!':'Enough players! Tap the table to start.')}
 function stand(){if(!P.seat)return;P.seat='';P.chair=-1;lastSeatN=0;sendState()}
-function launch(tb,hash){try{sessionStorage.setItem('arcade-back','../world/'+(WTAG?'#w='+WTAG:''));sessionStorage.setItem('world-pos',JSON.stringify({x:Math.round(P.x),y:Math.round(P.y)}))}catch(e){}save();location.href='../'+tb.id+'/'+hash}
+function launch(tb,hash){netLeave();try{sessionStorage.setItem('arcade-back','../world/'+(WTAG?'#w='+WTAG:''));sessionStorage.setItem('world-pos',JSON.stringify({x:Math.round(P.x),y:Math.round(P.y)}))}catch(e){}save();location.href='../'+tb.id+'/'+hash}
 function startTable(tb){const l=seatedAt(tb);if(l.length<tb.min)return;const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let code='';for(let i=0;i<5;i++)code+=A[Math.floor(Math.random()*A.length)];
   const msg={t:'g',table:tb.id,code,ids:l.map(x=>x.id)};
   if(NET.host){const m={...msg,from:'host'};NET.conns.forEach(c=>{try{c.send(m)}catch(e){}});goHere(m)}
@@ -558,7 +558,7 @@ const NET={peer:null,host:false,hc:null,conns:new Map(),pl:new Map(),others:new 
 // #w=name in the link opens a separate, private copy of the world (handy for a group of friends, or for testing)
 const WTAG=(new URLSearchParams(location.hash.slice(1)).get('w')||'').toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,16),WID=i=>'pixarcade-world1-'+(WTAG?WTAG+'-':'')+'abcd'[i],MAXP=14;
 function netStatus(t){$('#net').textContent=t}
-function countOn(){const n=NET.others.size+1;netStatus('👥 '+n+(n===1?' player':' players'))}
+function countOn(){const n=NET.others.size+1;netStatus('👥 '+n+(n===1?' player':' players')+(NET.world?' · world '+(NET.world+1):''))}
 function myState(){return{t:'s',n:S.name,x:Math.round(P.x),y:Math.round(P.y),f:P.f,m:P.mov?1:0,lv:S.lv,lk:S.look,seat:P.seat}}
 function safeState(d){return{n:clean(d.n,'Player'),tx:Math.min(MW*T,Math.max(0,+d.x||0)),ty:Math.min(MH*T,Math.max(0,+d.y||0)),f:d.f<0?-1:1,m:!!d.m,lv:Math.min(999,Math.max(1,d.lv|0)),lk:safeLook(d.lk),seat:TABLES.some(t=>t.id===d.seat&&!t.deco)?d.seat:''}}
 function upsert(id,d){const s=safeState(d);let o=NET.others.get(id);if(!o){o=Object.assign({x:s.tx,y:s.ty,say:'',sayT:0},s);NET.others.set(id,o);countOn()}else Object.assign(o,s);o.seen=Date.now()}
@@ -569,6 +569,7 @@ function netJoin(i){if(!window.Peer){netStatus('offline');if(document.readyState
   p.on('connection',c=>{if(g!==NET.gen)return;
     c.on('open',()=>{if(NET.conns.size>=MAXP){try{c.send({t:'full'})}catch(e){}setTimeout(()=>c.close(),400);return}NET.conns.set(c.peer,c);c.last=0});
     c.on('data',d=>{if(g!==NET.gen||!d||typeof d!=='object'||!NET.conns.has(c.peer))return;
+      if(d.t==='probe'){try{c.send({t:'here',n:NET.others.size})}catch(e){}setTimeout(()=>{try{c.close()}catch(e){}},300);return}
       if(d.t==='s'){const isNew=!NET.others.has(c.peer);upsert(c.peer,d);if(isNew)hostSay(null,NET.others.get(c.peer).n+' joined the world',true)}
       else if(d.t==='c'){const now=Date.now();if(now-c.last<700)return;c.last=now;const m=cleanMsg(d.m),o=NET.others.get(c.peer);if(m&&o)hostSay(c.peer,m)}
       else if(d.t==='g'){const now=Date.now();if(now-(c.lastG||0)<3000||!Array.isArray(d.ids))return;c.lastG=now;const m={t:'g',from:c.peer,table:String(d.table),code:String(d.code),ids:d.ids.slice(0,4).map(String)};
@@ -577,15 +578,27 @@ function netJoin(i){if(!window.Peer){netStatus('offline');if(document.readyState
   p.on('error',e=>{if(g!==NET.gen)return;if(e.type==='unavailable-id')netClient(i);else if(!open)netRetry()});
   p.on('disconnected',()=>{if(g===NET.gen)try{p.reconnect()}catch(e){}})}
 function netClient(i){netLeave();const g=NET.gen,p=new Peer();NET.peer=p;
-  p.on('open',id=>{if(g!==NET.gen)return;NET.id=id;const c=p.connect(WID(i),{reliable:true,serialization:'json'});NET.hc=c;let ok=false,full=false;const to=setTimeout(()=>{if(g===NET.gen&&!ok)netRetry()},9000);
+  p.on('open',id=>{if(g!==NET.gen)return;NET.id=id;const c=p.connect(WID(i),{reliable:true,serialization:'json'});NET.hc=c;let ok=false,full=false;const to=setTimeout(()=>{if(g===NET.gen&&!ok){netLeave();netStatus('connecting…');clearTimeout(NET.wait);NET.wait=setTimeout(()=>netJoin(i+1),300)}},6000);
     c.on('open',()=>{if(g!==NET.gen)return;ok=true;clearTimeout(to);NET.world=i;countOn();sendState(true)});
     c.on('data',d=>{if(g!==NET.gen||!d||typeof d!=='object')return;
       if(d.t==='full'){full=true;netJoin(i+1)}
       else if(d.t==='w'&&d.p&&typeof d.p==='object'){const ids=Object.keys(d.p).slice(0,MAXP+2);ids.forEach(k=>{if(k!==NET.id)upsert(k,d.p[k])});NET.others.forEach((o,k)=>{if(!ids.includes(k))NET.others.delete(k)});countOn()}
       else if(d.t==='c')gotChat(d)
-      else if(d.t==='g')goHere(d)});
+      else if(d.t==='g')goHere(d)
+      else if(d.t==='move'){netLeave();netStatus('connecting…');clearTimeout(NET.wait);NET.wait=setTimeout(()=>netJoin(0),1500+Math.random()*1500)}});
     c.on('close',()=>{if(g===NET.gen&&!full)netRetry()})});
   p.on('error',()=>{if(g===NET.gen)netRetry()})}
+function probeLower(){if(!NET.host||!NET.world||!NET.peer||NET.probing||paused)return;NET.probing=true;const g=NET.gen,me=NET.peer;let j=0;
+  const next=()=>{if(g!==NET.gen||j>=NET.world){NET.probing=false;return}let done=false;const c=me.connect(WID(j),{reliable:true,serialization:'json'});
+    const fin=(alive,n)=>{if(done)return;done=true;clearTimeout(to);try{c.close()}catch(e){}if(g!==NET.gen){NET.probing=false;return}
+      if(alive&&n+NET.others.size+1<=MAXP){NET.probing=false;return moveAll()}j++;next()};
+    const to=setTimeout(()=>fin(false),5000);
+    c.on('open',()=>{try{c.send({t:'probe'})}catch(e){}});
+    c.on('data',d=>{if(d&&d.t==='here')fin(true,d.n|0);else if(d&&d.t==='full')fin(false)});c.on('error',()=>fin(false))};
+  next()}
+function moveAll(){NET.conns.forEach(c=>{try{c.send({t:'move'})}catch(e){}});addChat('','Joining the other players in the main world…',true);
+  setTimeout(()=>{netLeave();netStatus('connecting…');clearTimeout(NET.wait);NET.wait=setTimeout(()=>netJoin(0),400)},400)}
+setInterval(probeLower,12000);
 function gotChat(d){const m=cleanMsg(d.m);if(!m)return;if(d.sys)return addChat('',m,true);if(d.id===NET.id)return;const o=NET.others.get(d.id);addChat(o?o.n:clean(d.n,'Player'),m);if(o){o.say=m.slice(0,40);o.sayT=time+4}}
 function hostSay(id,m,sys){const o=id&&NET.others.get(id),msg={t:'c',id:id||'',n:o?o.n:'',m,sys:sys?1:0};NET.conns.forEach(c=>{try{c.send(msg)}catch(e){}});gotChat(msg)}
 function netChat(m){if(NET.host){const msg={t:'c',id:'host',n:S.name,m};NET.conns.forEach(c=>{try{c.send(msg)}catch(e){}})}else if(NET.hc&&NET.hc.open)try{NET.hc.send({t:'c',m})}catch(e){}}
@@ -600,6 +613,7 @@ SFX.add({swing:()=>SFX.tone(300,0,.06,'square',.04,140),hit:()=>SFX.tone(180,0,.
 MUSIC.set({bpm:92,lead:'triangle',arp:'triangle',ch:[[48,55,60,64],[45,52,57,60],[41,48,53,57],[43,50,55,59]],mel:[67,0,72,0,76,0,72,0, 69,0,72,0,76,0,0,0, 65,0,69,0,72,0,69,0, 67,0,71,0,74,0,0,0]});
 function begin(){started=true;hud();if(!S.hall){S.hall=1;save();setTimeout(()=>toast('New: the Arcade Hall is just south of the village!'),2400)}addChat('','Welcome to Pixel World, '+S.name+'! Tap the ground to walk. Tap a villager to talk.',true);netJoin(0);if(!Object.keys(S.q).length)setTimeout(()=>toast('Elder Oro is waiting in the square'),900)}
 addEventListener('beforeunload',()=>{save();netLeave()});
+addEventListener('pagehide',()=>{save();netLeave()});
 setInterval(save,15000);
 requestAnimationFrame(frame);
 const enter=()=>{begin();if(TOUCH)goLandscape();checkRot()};
