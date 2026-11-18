@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwk0b2ad';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
+<script data-arcade-version>window.AV='mwm0d5vv';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwk0b2ad">
-<script data-pwa defer src="../shared/wand.js?v=mwk0b2ad"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwm0d5vv">
+<script data-pwa defer src="../shared/wand.js?v=mwm0d5vv"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Ghostbound</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -310,7 +310,7 @@ details{font-size:19px}summary{font-family:'Press Start 2P';font-size:9px}
     <button class="primary big" id="bBot">🤖 Play vs computer</button>
     <button class="big" id="bLocal">🕯️ Local game — one device</button>
     <button class="ghosty big" id="bOnline">🌐 Online game — room code</button>
-    <button class="big" onclick="location.href='../'">&lt; Back to Arcade</button>
+    <button class="big" onclick="backTo()">&lt; Back to Arcade</button>
   </div>
 </section>
 
@@ -383,7 +383,7 @@ details{font-size:19px}summary{font-family:'Press Start 2P';font-size:9px}
 <div class="overlay" id="cardOv"></div>
 <div class="overlay" id="pick"><div class="card"><h2 id="pickT"></h2><div class="tag" id="pickD" style="text-align:left;margin:0"></div><div class="opts" id="pickO"></div></div></div>
 <div class="overlay" id="end"><div class="card"><div class="ei" id="endI"></div><h1 id="endT"></h1><p class="tag" id="endD"></p>
-  <button class="primary big" id="bAgain">Play again</button><button class="big" onclick="location.href='../'" style="order:9">&lt; Back to Arcade</button><button class="big" id="bEndMenu">Main menu</button></div></div>
+  <button class="primary big" id="bAgain">Play again</button><button class="big" onclick="backTo()" style="order:9">&lt; Back to Arcade</button><button class="big" id="bEndMenu">Main menu</button></div></div>
 
 <script>
 'use strict';
@@ -519,6 +519,7 @@ let S=null;           // authoritative state (local / host only)
 let V=null;           // state being displayed
 let net={mode:'local',seat:0,peer:null,hostConn:null,seatConns:[],code:''};
 let lobby={seats:[],density:1};
+let autoN=0,autoJoinLeft=0;   // set from the link when Pixel World opens this game
 let pickResolve=null;
 const PREFIX='ghostbound-v1-';
 const controls=i=>(net.mode==='local'&&!(V&&V.players&&V.players[i]&&V.players[i].bot))||i===net.seat;
@@ -905,7 +906,7 @@ $('#bMenu').onclick=$('#bEndMenu').onclick=$('#bLeaveLobby').onclick=leave;
   const how=document.querySelector('#game details');if(how){const wrap=how.parentElement;box.append(how);if(wrap&&wrap.classList.contains('panel'))wrap.remove()}
   span.innerHTML='';const mb=document.createElement('button');mb.className='small';mb.type='button';mb.id='bGMenu';mb.textContent='Menu';span.append(mb);
   const close=()=>ov.classList.remove('on');mb.onclick=()=>ov.classList.add('on');ov.querySelector('#gmClose').onclick=close;
-  ov.querySelector('#gmArcade').onclick=()=>{location.href='../'};
+  ov.querySelector('#gmArcade').onclick=()=>{backTo()};
   box.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&(b.id==='bMenu'||(b.id==='bRestart'&&b.dataset.sure)))close()},true);
 })();
 
@@ -922,8 +923,8 @@ function makeCode(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let 
 const inLobby=()=>$('#lobby').classList.contains('on')||$('#online').classList.contains('on');
 
 $('#bCreate').onclick=()=>{if(needPeer())hostRoom()};
-function hostRoom(){
-  const code=makeCode(),peer=new Peer(PREFIX+code,{debug:0});
+function hostRoom(fixed){
+  const code=fixed||makeCode(),peer=new Peer(PREFIX+code,{debug:0});
   net={mode:'host',seat:0,peer,hostConn:null,seatConns:[],code};
   peer.on('open',()=>{lobby={seats:[{name:clean(me.name,'Host'),color:me.color,av:me.av,conn:null}],density:+$('#dens2').value};oErr('');drawLobby()});
   peer.on('connection',c=>{c._seen=Date.now();c.on('data',d=>{c._seen=Date.now();hostData(c,d)});c.on('close',()=>hostDrop(c));c.on('error',()=>hostDrop(c))});
@@ -935,7 +936,8 @@ function hostRoom(){
     else if(!$('#game').classList.contains('on')&&e.type!=='peer-unavailable'){leave();show('online');oErr('Could not open a room: '+e.type)}});
 }
 function pubSeats(){return lobby.seats.map(s=>({name:s.name,color:s.color,av:s.av}))}
-function castLobby(){lobby.seats.forEach((s,i)=>{if(s.conn&&s.conn.open)s.conn.send({t:'lobby',seats:pubSeats(),you:i,code:net.code,density:lobby.density})});drawLobby()}
+function castLobby(){lobby.seats.forEach((s,i)=>{if(s.conn&&s.conn.open)s.conn.send({t:'lobby',seats:pubSeats(),you:i,code:net.code,density:lobby.density})});drawLobby();autoStart()}
+function autoStart(){if(autoN&&!S&&net.mode==='host'&&lobby.seats.length>=autoN){autoN=0;setTimeout(()=>{if(!S)$('#bStartOnline').click()},900)}}
 function hostData(c,d){
   if(!d||typeof d!=='object'||net.mode!=='host')return;
   if(d.t==='join'){
@@ -988,10 +990,16 @@ function joinRoom(code){
       else if(d.t==='state')applyState(d.s,d.fx);
       else if(d.t==='reject')fail(d.why)});
     c.on('close',()=>fail());c.on('error',()=>fail())});
-  peer.on('error',e=>fail(e.type==='peer-unavailable'?'Room not found. Check the code.':'Connection error: '+e.type));
+  peer.on('error',e=>{if(e.type==='peer-unavailable'&&autoJoinLeft>0&&net.peer===peer){autoJoinLeft--;clearInterval(net.iv);net.peer=null;try{peer.destroy()}catch(x){}setTimeout(()=>joinRoom(code),2500);return}
+    fail(e.type==='peer-unavailable'?'Room not found. Check the code.':'Connection error: '+e.type)});
 }
 addEventListener('beforeunload',()=>{if(net.peer)try{net.peer.destroy()}catch(e){}});
-{const m=/room=([A-Za-z0-9]{5})/.exec(location.hash);if(m){drawOnline();$('#oCode').value=m[1].toUpperCase();show('online')}}
+{const H=new URLSearchParams(location.hash.slice(1)),hn=H.get('nm'),hc=(H.get('room')||'').toUpperCase(),hh=(H.get('host')||'').toUpperCase(),nn=+H.get('n')||0;
+  if(hn)me.name=clean(hn,me.name);autoN=nn?Math.min(4,Math.max(2,nn)):0;
+  const whenPeer=f=>{if(typeof Peer==='undefined')return setTimeout(()=>whenPeer(f),300);f()};
+  if(H.has('bot'))$('#bBot').click();
+  else if(/^[A-Z0-9]{5}$/.test(hh)){drawOnline();show('online');whenPeer(()=>{if(needPeer())hostRoom(hh)})}
+  else if(/^[A-Z0-9]{5}$/.test(hc)){drawOnline();show('online');$('#oCode').value=hc;if(H.has('auto')){autoJoinLeft=5;whenPeer(()=>{if(needPeer())joinRoom(hc)})}}}
 
 /* ================= atmosphere ================= */
 (function(){const c=$('#fx'),x=c.getContext('2d');let w,h,ps=[],bs=[];

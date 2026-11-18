@@ -178,6 +178,7 @@ function run(game){
   let S=null,V=null,builtGid=null;
   let net={mode:'local',seat:0,peer:null,hostConn:null,seatConns:[],code:'',iv:0};
   let lobby={seats:[]};
+  let autoN=0,autoJoinLeft=0;   // set from the link when Pixel World opens this game
   const CANCEL={cancel:true};
   const authority=()=>net.mode!=='client';
   const controls=i=>(net.mode==='local'&&!(V&&V.players[i]&&V.players[i].bot))||i===net.seat;
@@ -283,7 +284,7 @@ function run(game){
   $('#bBot').onclick=()=>{setup.p.forEach((q,i)=>q.bot=i>0);setup.n=Math.min(MAX,Math.max(MIN,2));drawSetup();show('setup')};
   $('#bStart').onclick=()=>{net.mode='local';startGame(setup.p.slice(0,setup.n).map((p,i)=>({name:clean(p.name,p.bot?'Bot '+AVATARS[p.av].n:'Player '+(i+1)),color:p.color,av:p.av,bot:p.bot?setup.lvl:0})))};
   $('#bAgain').onclick=restart;
-  $('#bArcade').onclick=$('#bEndArcade').onclick=()=>{location.href='../'};
+  $('#bArcade').onclick=$('#bEndArcade').onclick=()=>{backTo()};
   $('#bRestart').onclick=function(){if(this.dataset.sure){delete this.dataset.sure;this.textContent='Restart';restart()}else{this.dataset.sure=1;this.textContent='Sure?';setTimeout(()=>{delete this.dataset.sure;this.textContent='Restart'},2500)}};
   function leave(){S=null;V=null;builtGid=null;const p=net.peer;clearInterval(net.iv);net={mode:'local',seat:0,peer:null,hostConn:null,seatConns:[],code:'',iv:0};if(p)try{p.destroy()}catch(e){}
     if(location.hash)history.replaceState(null,'',location.pathname+location.search);show('home')}
@@ -299,8 +300,8 @@ function run(game){
     $('#oErr').textContent='Connecting…';$('#bCreate').disabled=$('#bJoin').disabled=true;return true}
   function makeCode(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<5;i++)s+=A[rnd(A.length)];return s}
   $('#bCreate').onclick=()=>{if(needPeer())hostRoom()};
-  function hostRoom(){
-    const code=makeCode(),peer=new Peer(PREFIX+code,{debug:0});
+  function hostRoom(fixed){
+    const code=fixed||makeCode(),peer=new Peer(PREFIX+code,{debug:0});
     net={mode:'host',seat:0,peer,hostConn:null,seatConns:[],code,iv:0};
     peer.on('open',()=>{lobby={seats:[{name:clean(me.name,'Host'),color:me.color,av:me.av,conn:null}]};oErr('');drawLobby()});
     peer.on('connection',c=>{c._seen=Date.now();c.on('data',d=>{c._seen=Date.now();hostData(c,d)});c.on('close',()=>hostDrop(c));c.on('error',()=>hostDrop(c))});
@@ -312,7 +313,8 @@ function run(game){
       else if(!$('#game').classList.contains('on')&&e.type!=='peer-unavailable'){leave();show('online');oErr('Could not open a room: '+e.type)}});
   }
   const pubSeats=()=>lobby.seats.map(s=>({name:s.name,color:s.color,av:s.av}));
-  function castLobby(){lobby.seats.forEach((s,i)=>{if(s.conn&&s.conn.open)s.conn.send({t:'lobby',seats:pubSeats(),you:i,code:net.code})});drawLobby()}
+  function castLobby(){lobby.seats.forEach((s,i)=>{if(s.conn&&s.conn.open)s.conn.send({t:'lobby',seats:pubSeats(),you:i,code:net.code})});drawLobby();autoStart()}
+  function autoStart(){if(autoN&&!S&&net.mode==='host'&&lobby.seats.length>=autoN){autoN=0;setTimeout(()=>{if(!S)$('#bStartOnline').click()},900)}}
   function hostData(c,d){
     if(!d||typeof d!=='object'||net.mode!=='host')return;
     if(d.t==='join'){
@@ -357,7 +359,8 @@ function run(game){
         else if(d.t==='ping')try{c.send({t:'pong'})}catch(e){}});
       c.on('close',()=>fail());c.on('error',()=>fail())});
     net.iv=setInterval(()=>{if(net.peer===peer&&net.seat>=0&&Date.now()-seen>15000)fail('Lost connection to the host.')},3000);
-    peer.on('error',e=>{clearTimeout(to);fail(e.type==='peer-unavailable'?'No room with that code.':null)});
+    peer.on('error',e=>{clearTimeout(to);if(e.type==='peer-unavailable'&&autoJoinLeft>0&&net.peer===peer){autoJoinLeft--;clearInterval(net.iv);net.peer=null;try{peer.destroy()}catch(x){}setTimeout(()=>joinRoom(code),2500);return}
+      fail(e.type==='peer-unavailable'?'No room with that code.':null)});
   }
 
   /* ----- top-bar menu: every in-game button except the game controls lives in one panel ----- */
@@ -370,12 +373,16 @@ function run(game){
     const how=document.querySelector('#game details');if(how){const wrap=how.parentElement;box.append(how);if(wrap&&wrap.classList.contains('panel'))wrap.remove()}
     span.innerHTML='';const mb=document.createElement('button');mb.className='small';mb.type='button';mb.id='bGMenu';mb.textContent='Menu';span.append(mb);
     const close=()=>ov.classList.remove('on');mb.onclick=()=>ov.classList.add('on');ov.querySelector('#gmClose').onclick=close;
-    ov.querySelector('#gmArcade').onclick=()=>{location.href='../'};
+    ov.querySelector('#gmArcade').onclick=()=>{backTo()};
     box.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&(b.id==='bMenu'||(b.id==='bRestart'&&b.dataset.sure)))close()},true);
   })();
   
-  const m=location.hash.match(/room=([A-Za-z0-9]{5})/);
-  if(m){drawOnline();show('online');$('#oCode').value=m[1].toUpperCase()}
+  {const H=new URLSearchParams(location.hash.slice(1)),hn=H.get('nm'),hc=(H.get('room')||'').toUpperCase(),hh=(H.get('host')||'').toUpperCase(),nn=+H.get('n')||0;
+  if(hn)me.name=clean(hn,me.name);autoN=nn?Math.min(MAX,Math.max(MIN,nn)):0;
+  const whenPeer=f=>{if(typeof Peer==='undefined')return setTimeout(()=>whenPeer(f),300);f()};
+  if(H.has('bot'))$('#bBot').click();
+  else if(/^[A-Z0-9]{5}$/.test(hh)){drawOnline();show('online');whenPeer(()=>{if(needPeer())hostRoom(hh)})}
+  else if(/^[A-Z0-9]{5}$/.test(hc)){drawOnline();show('online');$('#oCode').value=hc;if(H.has('auto')){autoJoinLeft=5;whenPeer(()=>{if(needPeer())joinRoom(hc)})}}}
   // test hooks
   run._={get S(){return S},startGame,dispatch,api};
 }

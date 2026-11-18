@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwk0b2ad';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){}</script>
+<script data-arcade-version>window.AV='mwm0d5vv';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwk0b2ad">
-<script data-pwa defer src="../shared/wand.js?v=mwk0b2ad"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwm0d5vv">
+<script data-pwa defer src="../shared/wand.js?v=mwm0d5vv"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Pixel World</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwk0b2ad">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwm0d5vv">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js" defer></script>
 <style>
 :root{--bg:#0b1020;--panel:#1d2a3f;--panel2:#131c2c;--edge:#4f8f6a;--accent:#3f9a5a;--accent-d:#1f5a34;--accent-l:#9fe0b0;--gold:#ffd66b}
@@ -98,7 +98,7 @@ body.touch #chat{left:8px;top:8px;bottom:auto;width:min(320px,46vw)}
 </div></div>
 <div class="overlay" id="dlg"><div class="card"><h2 id="dT"></h2><p id="dX"></p><div id="dBody"></div><div id="dB"></div></div></div>
 
-<script src="../shared/arcade.js?v=mwk0b2ad"></script>
+<script src="../shared/arcade.js?v=mwm0d5vv"></script>
 <script>
 const {$,el,SFX,MUSIC,clean}=Arcade;
 /* =====================================================================================
@@ -108,9 +108,9 @@ const {$,el,SFX,MUSIC,clean}=Arcade;
      The first player in becomes the host of that world; if they leave, another takes over.
    - Progress (gold, rank, outfits, quests) is saved on this device.
    ===================================================================================== */
-const T=16,MW=64,MH=48,SPEED=62,KEY='pixelworld-1';
-const G=0,PATH=1,WTR=2,TREE=3,WALL=4,FENCE=5,STONE=6,SAND=7,FLOOR=8,WELL=9,LAMP=10,BARREL=11,STALL=12,SOIL=13,DIRT=14,COBBLE=15;
-const SOLID=[0,0,1,1,1,1,1,0,0,1,1,1,1,0,0,0];
+const T=16,MW=64,MH=64,SPEED=62,KEY='pixelworld-1';
+const G=0,PATH=1,WTR=2,TREE=3,WALL=4,FENCE=5,STONE=6,SAND=7,FLOOR=8,WELL=9,LAMP=10,BARREL=11,STALL=12,SOIL=13,DIRT=14,COBBLE=15,ARC=16,TBL=17,CAB=18;
+const SOLID=[0,0,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0,1,1];
 const map=new Uint8Array(MW*MH),gnd=new Uint8Array(MW*MH),idx=(x,y)=>y*MW+x;   // map = what stands on a tile, gnd = the ground under it
 function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 const HOUSES=[{x:14,y:14,w:6,h:4,roof:'#b5533c'},{x:30,y:14,w:7,h:4,roof:'#7a5aa0'},{x:14,y:27,w:6,h:4,roof:'#3d7ab5'},{x:31,y:27,w:6,h:4,roof:'#c98a2b'}];
@@ -119,8 +119,21 @@ const NPCS=[
  {id:'tailor',n:'Mira the Tailor',tx:33,ty:18,lk:{sk:0,hs:1,hc:6,out:'red',hat:'bow'},idle:'New clothes make a new adventurer. Have a look!'},
  {id:'florist',n:'Flora',tx:16,ty:31,lk:{sk:2,hs:3,hc:2,out:'bdress',oc:'#7dffb0',hat:'straw'},idle:'The meadow is lovely this time of day.'},
  {id:'jack',n:'Jack the Woodsman',tx:24,ty:10,lk:{sk:1,hs:2,hc:1,out:'basic',oc:'#ff9a3c',hat:'none'},idle:'Mind the roots out there.'},
- {id:'guard',n:'Captain Bram',tx:41,ty:21,lk:{sk:3,hs:0,hc:0,out:'armor',hat:'none'},idle:'Stay sharp beyond the gate.'}
+ {id:'guard',n:'Captain Bram',tx:41,ty:21,lk:{sk:3,hs:0,hc:0,out:'armor',hat:'none'},idle:'Stay sharp beyond the gate.'},
+ {id:'keeper',n:'Pip the Keeper',tx:26,ty:51,lk:{sk:0,hs:3,hc:6,out:'basic',oc:'#6ff7ff',hat:'wiz'},idle:'Welcome to the Arcade Hall! Every table is a game. Sit down to wait for playmates — when enough players are seated, anyone at the table can start. No one around? Play the computer instead.'}
 ];
+// The Arcade Hall, south of the village: one table per game (id = the game's folder)
+const TABLES=[
+ {id:'pirates',n:'Treasure Tides',d:'Dig up the island for buried chests. 2 to 4 players.',x:17,y:47,min:2,max:4},
+ {id:'space',n:'Asteroid Dash',d:'Roll to fly, bank to stay safe. 2 to 4 players.',x:21,y:47,min:2,max:4},
+ {id:'ghostbound',n:'Ghostbound',d:'Race across 100 haunted tiles before the Ghost catches you. 2 to 4 players.',x:29,y:47,min:2,max:4},
+ {id:'chess',n:'Pixel Chess',d:'The classic duel of kings, with a chess clock. 2 players.',x:33,y:47,min:2,max:2},
+ {id:'tictactoe',n:'Tic-Tac-Toe',d:'Three in a row takes the round. First to three rounds wins. 2 players.',x:17,y:53,min:2,max:2},
+ {id:'dominoes',n:'Dominoes',d:'Match the ends and empty your hand first. 2 to 4 players.',x:21,y:53,min:2,max:4},
+ {id:'lastcard',n:'Last Card',d:'Match the suit or the number and play your last card first. 2 to 4 players.',x:29,y:53,min:2,max:4},
+ {id:'claw',n:'Prize Claw',x:33,y:53,deco:1}];
+// where players sit: left and right for two-player games, plus top and bottom for four
+function chairsOf(tb){if(tb.deco)return[];const X=tb.x*T,Y=tb.y*T,L={x:X-8,y:Y+24,f:1},R={x:X+40,y:Y+24,f:-1};return tb.max>2?[L,R,{x:X+16,y:Y-4,f:1},{x:X+16,y:Y+44,f:-1}]:[L,R]}
 const SPAWN={x:23*T+8,y:24*T+8},SHRINE={x:58*T+8,y:11*T+8},CHEST={tx:60,ty:44};
 const AREA={meadow:[40,29,52,41],grove:[43,15,61,27],north:[18,3,34,9]};
 const inA=(a,x,y)=>x>=a[0]&&x<=a[2]&&y>=a[1]&&y<=a[3];
@@ -139,6 +152,8 @@ const inA=(a,x,y)=>x>=a[0]&&x<=a[2]&&y>=a[1]&&y<=a[3];
   fill(46,23,46,35,G,TREE);fill(46,35,50,35,G,TREE);fill(50,35,50,40,G,TREE);fill(50,40,56,40,G,TREE);fill(56,40,56,44,G,TREE);fill(56,44,60,44,G,TREE);
   fill(21,29,23,32,SOIL);
   HOUSES.forEach(h=>fill(h.x+Math.floor(h.w/2)-1,h.y+h.h,h.x+Math.ceil(h.w/2),h.y+h.h+1,COBBLE));
+  // the hall: a cleared square with a neon floor and a road from the village gate
+  fill(22,37,29,42,G,TREE);fill(13,42,39,59,G,TREE);fill(15,44,37,57,ARC);fill(25,36,26,43,DIRT);fill(24,43,27,43,ARC);
   NPCS.forEach(n=>{for(let y=n.ty-1;y<=n.ty+1;y++)for(let x=n.tx-1;x<=n.tx+1;x++)if(map[idx(x,y)]===TREE)map[idx(x,y)]=G});
   map[idx(CHEST.tx,CHEST.ty)]=G;
   for(let i=0;i<map.length;i++)gnd[i]=map[i]===TREE?G:map[i];
@@ -148,6 +163,9 @@ const inA=(a,x,y)=>x>=a[0]&&x<=a[2]&&y>=a[1]&&y<=a[3];
   HOUSES.forEach(h=>fill(h.x,h.y,h.x+h.w-1,h.y+h.h-1,WALL));
   fill(21,19,22,20,WELL);[[24,21],[27,24],[12,21],[38,24],[24,13],[27,33]].forEach(([x,y])=>map[idx(x,y)]=LAMP);
   [[20,17],[20,16],[37,30],[13,30],[29,17]].forEach(([x,y])=>map[idx(x,y)]=BARREL);fill(38,17,39,17,STALL);
+  fill(14,43,23,43,FENCE);fill(28,43,38,43,FENCE);fill(14,43,14,58,FENCE);fill(38,43,38,58,FENCE);fill(14,58,38,58,FENCE);map[idx(23,43)]=LAMP;map[idx(28,43)]=LAMP;
+  [[15,44],[16,44],[36,44],[37,44]].forEach(([x,y])=>map[idx(x,y)]=CAB);[[15,57],[37,57]].forEach(([x,y])=>map[idx(x,y)]=LAMP);
+  TABLES.forEach(tb=>fill(tb.x,tb.y,tb.x+1,tb.y+1,TBL));
 })();
 const npcTiles=new Set(NPCS.map(n=>idx(n.tx,n.ty)));
 NPCS.forEach(n=>{n.x=n.tx*T+8;n.y=n.ty*T+8});
@@ -207,7 +225,9 @@ let S={look:null,name:'',owned:['basic','bdress','none'],gold:0,xp:0,lv:1,q:{},c
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){S=Object.assign(S,s);S.gold=Math.max(0,S.gold|0);S.xp=Math.max(0,S.xp|0);S.lv=Math.max(1,S.lv|0);
   S.owned=Array.isArray(S.owned)?S.owned.filter(k=>Object.hasOwn(OUT,k)||Object.hasOwn(HATS,k)):['basic','bdress','none'];if(S.look)S.look=safeLook(S.look);if(!S.q||typeof S.q!=='object')S.q={}}}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
-const P={x:SPAWN.x,y:SPAWN.y,f:1,mov:false,path:null,then:null,tgt:null,hp:5,inv:0,cd:0,slash:0,regen:0};
+const P={x:SPAWN.x,y:SPAWN.y,f:1,mov:false,path:null,then:null,tgt:null,hp:5,inv:0,cd:0,slash:0,regen:0,seat:'',chair:-1};
+// coming back from a game started here: stand where you left
+try{const wp=JSON.parse(sessionStorage.getItem('world-pos'));if(wp){sessionStorage.removeItem('world-pos');if(!blocked(+wp.x,+wp.y)){P.x=+wp.x;P.y=+wp.y}}}catch(e){}
 const prof=Arcade.loadProfile();if(!S.name)S.name=clean(prof.name,'');
 
 /* ---------- quests ---------- */
@@ -290,6 +310,8 @@ function renderMap(){const mk=()=>{const g=document.createElement('canvas');g.wi
     else if(t===DIRT){px(X,Y,T,T,FLAT[DIRT]);for(let i=0;i<5;i++)px(X+(R()*14|0),Y+(R()*15|0),2,1,'#84603a');for(let i=0;i<2;i++)px(X+(R()*13|0),Y+(R()*14|0),3,1,'#ad8558')}
     else if(t===COBBLE){px(X,Y,T,T,'#6f6c88');for(let r=0;r<4;r++)for(let k=-1;k<4;k++){const sx=X+k*5+(r&1?2:0),sw=4;if(sx+sw<=X||sx>=X+T)continue;const a=Math.max(X,sx),b=Math.min(X+T,sx+sw);px(a,Y+r*4,b-a,3,(r+k)&1?'#b9b6cc':'#a5a2ba');px(a,Y+r*4,b-a,1,'#d3d0e2')}}
     else if(t===FLOOR){px(X,Y,T,T,'#8d8aa3');px(X,Y,T,1,'#6f6c88');px(X,Y,1,T,'#6f6c88');px(X+1,Y+1,T-1,1,'#a5a2ba');if(R()<.3)px(X+3+(R()*8|0),Y+4+(R()*8|0),4,1,'#5d5a75');if(R()<.22)px(X+(R()*10|0),Y+10+(R()*4|0),5,3,'#4f8f6a')}
+    else if(t===ARC){px(X,Y,T,T,(x+y)&1?'#2b2048':'#33285a');px(X+1,Y+1,T-2,1,'#3d3170');if(R()<.07)px(X+3+(R()*10|0),Y+3+(R()*10|0),1,1,['#b796ff','#6ff7ff','#ff9ad0'][R()*3|0]);
+      [[0,-1,X,Y,T,2],[0,1,X,Y+14,T,2],[-1,0,X,Y,2,T],[1,0,X+14,Y,2,T]].forEach(([dx,dy,a,b,w,h])=>{if(gat(x+dx,y+dy)!==ARC)px(a,b,w,h,'#e0409a')})}
     else if(t===SOIL){px(X,Y,T,T,'#6b4a2b');for(let i=3;i<T;i+=5){px(X,Y+i,T,2,'#523720');px(X+3,Y+i-3,2,3,'#6fbf6f');px(X+10,Y+i-3,2,3,'#6fbf6f');px(X+3,Y+i-4,1,1,'#ffd66b')}}
     else{const n=((x>>2)*7+(y>>2)*13+((x>>3)^(y>>3))*5)%3;px(X,Y,T,T,['#46a84c','#42a248','#4bb052'][n]);for(let i=0;i<3;i++)px(X+(R()*15|0),Y+(R()*14|0),1,2,'#2f8a3a');for(let i=0;i<2;i++)px(X+(R()*15|0),Y+(R()*14|0),1,1,'#7ad37a');
       if(map[idx(x,y)]===G){const r=R(),a=X+3+(R()*8|0),b=Y+4+(R()*7|0);
@@ -316,8 +338,44 @@ function renderMap(){const mk=()=>{const g=document.createElement('canvas');g.wi
     if(t===BARREL){px(X+3,Y+13,11,2,'#00000040');px(X+3,Y+2,10,13,'#3a2a1c');px(X+4,Y+3,8,11,'#8a5a2b');px(X+5,Y+3,2,11,'#a8703a');px(X+4,Y+5,8,1,'#c9a66b');px(X+4,Y+11,8,1,'#c9a66b');px(X+4,Y+3,8,1,'#5a3d22')}
     if(t===STALL){const first=at(x-1,y)!==STALL;tall(X,Y,p=>{p(X,Y+5,16,10,'#5a3d22');p(X,Y+6,16,8,'#8a5a2b');p(X,Y+5,16,2,'#c9a66b');p(first?X:X+14,Y-3,2,9,'#5a3d22');for(let i=0;i<4;i++)p(X+i*4,Y-11,4,8,i%2?'#f1eaff':'#e0409a');p(X,Y-4,16,1,'#7a1f3a');
         p(X+3,Y+2,4,3,first?'#ffd66b':'#6ff7ff');p(X+9,Y+1,4,4,first?'#ff8fc0':'#b796ff')})}
+    if(t===CAB){const c=['#5b2fd6','#e0409a','#2a9df4','#3f9a5a'][(x+y)%4];px(X+1,Y+13,14,3,'#00000050');
+      tall(X,Y,p=>{p(X+1,Y-16,14,30,'#1a1026');p(X+2,Y-15,12,28,c);p(X+2,Y-15,2,28,shade(c,1.3));p(X+3,Y-14,10,3,'#ffd66b');p(X+3,Y-10,10,8,'#0b1030');p(X+4,Y-9,8,6,'#6ff7ff');p(X+5,Y-8,3,2,'#e9fdff');p(X+4,Y-6,8,1,'#2a9df4');
+        p(X+3,Y-1,10,4,shade(c,.7));p(X+5,Y-3,1,3,'#1a1026');p(X+4,Y-4,3,2,'#ff4d6d');p(X+9,Y-2,2,2,'#ffd66b');p(X+12,Y-2,1,2,'#7dffb0');p(X+4,Y+4,8,8,shade(c,.55));p(X+6,Y+6,4,2,'#1a1026')})}
+    if(t===TBL&&at(x-1,y)!==TBL&&at(x,y-1)!==TBL){const tb=TABLES.find(q=>q.x===x&&q.y===y);if(tb)drawTable(tb,X,Y)}
     if(t===WELL&&at(x-1,y)!==WELL&&at(x,y-1)!==WELL){px(X+3,Y+27,27,3,'#00000040');px(X+2,Y+10,28,19,'#4b4a5e');px(X+4,Y+12,24,15,'#8d8aa3');px(X+4,Y+12,24,2,'#b9b6cc');px(X+7,Y+15,18,9,'#1d4f8a');px(X+9,Y+17,6,2,'#5aa9ff');px(X+10,Y+21,2,2,'#4b4a5e');
       const k=(a,b,w,h,col)=>{tc.fillStyle=col;tc.fillRect(a,b,w,h)};k(X+4,Y-4,3,17,'#5a3d22');k(X+25,Y-4,3,17,'#5a3d22');k(X-1,Y-13,34,11,'#1a1026');k(X,Y-12,32,9,'#b5533c');k(X,Y-12,32,2,'#d9705a');k(X,Y-6,32,1,'#7a3526');k(X+15,Y-3,2,10,'#c9a66b')}}
+  // ---- arcade tables: each one dressed for its game ----
+  function drawTable(tb,X,Y){const k=(a,b,w,h,c)=>px(X+a,Y+b,w,h,c);
+    if(tb.deco){const both=fn=>{fn(k);tc.save();tc.beginPath();tc.rect(X-2,Y-22,36,22);tc.clip();fn((a,b,w,h,c)=>{tc.fillStyle=c;tc.fillRect(X+a,Y+b,w,h)});tc.restore()};
+      k(1,30,30,3,'#00000050');
+      both(p=>{p(1,-18,30,48,'#1a1026');p(3,-16,26,6,'#e0409a');p(3,-16,26,1,'#ff9ad0');p(3,-10,26,24,'#9fe7ff');p(4,-9,24,22,'#c8f6ff');p(15,-9,1,8,'#5d5a75');p(13,-1,5,2,'#aeb6c8');p(13,1,1,2,'#aeb6c8');p(17,1,1,2,'#aeb6c8');
+        [[5,8,'#ff8fc0'],[10,9,'#ffd66b'],[20,8,'#7dffb0'],[24,9,'#b796ff'],[8,5,'#6ff7ff'],[17,6,'#ff9a3c']].forEach(([a,b,c])=>{p(a,b,4,4,c);p(a+1,b+1,1,1,'#1a1026');p(a+2,b+1,1,1,'#1a1026')});
+        p(3,14,26,14,'#5b2fd6');p(3,14,26,2,'#8a5cf0');p(6,18,7,7,'#1a1026');p(7,19,5,5,'#ffd66b');p(18,20,2,4,'#1a1026');p(17,18,4,2,'#ff4d6d');p(23,20,3,3,'#6ff7ff')});return}
+    chairsOf(tb).forEach(c=>{px(c.x-6,c.y-2,12,5,'#00000040');px(c.x-5,c.y-4,10,6,'#3a2a1c');px(c.x-4,c.y-4,8,4,'#c98a2b');px(c.x-4,c.y-4,8,1,'#ffd9a0')});
+    const D={
+      pirates:{top:'#9a6234',edge:'#5a3a1e',hi:'#c98a50',draw(){k(1,9,30,1,'#7a4a24');k(1,18,30,1,'#7a4a24');k(4,4,17,13,'#c9b077');k(4,3,17,13,'#ead9a6');k(4,3,17,1,'#fff4d6');k(7,6,5,3,'#7dc46a');k(8,5,3,1,'#7dc46a');
+        [[7,11],[9,10],[11,10],[13,9]].forEach(([a,b])=>k(a,b,1,1,'#8a5a2b'));[[15,6],[17,6],[16,7],[15,8],[17,8]].forEach(([a,b])=>k(a,b,1,1,'#e0303f'));
+        k(21,14,9,8,'#3a2a1c');k(22,15,7,6,'#8a5a2b');k(22,15,7,1,'#a8703a');k(22,17,7,1,'#ffd66b');k(25,17,2,2,'#ffd66b');[[4,20],[7,22],[11,21],[15,23]].forEach(([a,b])=>{k(a,b,2,2,'#ffd66b');k(a,b,1,1,'#fff4c2')})}},
+      space:{top:'#11123a',edge:'#06071f',hi:'#3d46b8',draw(){[[3,3],[9,2],[27,4],[24,10],[3,22],[12,23],[28,22],[20,2],[6,14]].forEach(([a,b])=>k(a,b,1,1,'#fff'));
+        k(5,5,4,1,'#e0409a');k(4,6,6,5,'#e0409a');k(5,11,4,1,'#e0409a');k(5,6,2,2,'#ff9ad0');k(2,8,10,1,'#ffd66b');
+        k(15,4,3,9,'#f1eaff');k(16,2,1,2,'#ff4d6d');k(15,4,3,1,'#ff4d6d');k(14,10,1,3,'#ff4d6d');k(18,10,1,3,'#ff4d6d');k(16,6,1,2,'#6ff7ff');k(16,13,1,2,'#ff9a3c');k(16,15,1,1,'#ffd66b');
+        const die=(a,b,n)=>{k(a,b,7,7,'#1a1026');k(a+1,b+1,5,5,'#f1eaff');({3:[[1,1],[3,3],[5,5]],5:[[1,1],[5,1],[3,3],[1,5],[5,5]]})[n].forEach(([c,d])=>k(a+c,b+d,1,1,'#1a1026'))};die(19,15,3);die(24,18,5)}},
+      ghostbound:{top:'#2a1650',edge:'#120a26',hi:'#5b2fd6',draw(){for(let r=0;r<4;r++)for(let c=0;c<6;c++)k(4+c*4,3+r*4,4,4,(r+c)&1?'#3a2a55':'#5b2fd6');k(4,3,24,1,'#8a5cf0');
+        k(9,8,2,2,'#ff5d8f');k(18,12,2,2,'#6ff7ff');k(14,4,2,2,'#ffd66b');k(19,10,7,8,'#dffcff');k(18,12,9,5,'#dffcff');[19,21,23,25].forEach(a=>k(a,18,1,1,'#dffcff'));k(20,12,1,2,'#1a1026');k(23,12,1,2,'#1a1026');k(21,15,2,1,'#1a1026');
+        [[2,20],[27,20]].forEach(([a,b])=>{k(a,b+1,3,5,'#f1eaff');k(a+1,b-1,1,2,'#ffd66b');k(a+1,b-2,1,1,'#ff9a3c')})}},
+      chess:{top:'#6b4426',edge:'#3a2414',hi:'#9a6234',draw(){for(let r=0;r<8;r++)for(let c=0;c<8;c++){k(4+c*3,1+r*3,3,3,(r+c)&1?'#a9794f':'#e8d5a8');
+          if(r<2||r>5)k(5+c*3,1+r*3,1,2,r<2?'#2c2344':'#fbf6ea')}k(3,1,1,24,'#3a2414');k(28,1,1,24,'#3a2414');k(12,8,1,2,'#2c2344');k(15,16,1,2,'#fbf6ea')}},
+      tictactoe:{top:'#12303f',edge:'#071a24',hi:'#2fb8a6',draw(){k(11,2,2,22,'#a6f0e6');k(18,2,2,22,'#a6f0e6');k(5,8,21,2,'#a6f0e6');k(5,16,21,2,'#a6f0e6');
+        const X=(a,b)=>{for(let i=0;i<5;i++){k(a+i,b+i,1,1,'#ff7a59');k(a+4-i,b+i,1,1,'#ff7a59')}},O=(a,b)=>{k(a+1,b,3,1,'#6ff7ff');k(a+1,b+4,3,1,'#6ff7ff');k(a,b+1,1,3,'#6ff7ff');k(a+4,b+1,1,3,'#6ff7ff')};
+        X(6,2);X(13,10);X(20,18);O(13,2);O(6,18);O(20,10);k(6,2,19,1,'#ffd66b44')}},
+      dominoes:{top:'#1f5a34',edge:'#0f3a1f',hi:'#2f7a48',draw(){const P=[[1,1],[0,0],[2,2],[2,0],[0,2],[0,1],[2,1]];
+        const H=(a,b,p1,p2)=>{k(a,b,9,5,'#1a1026');k(a+1,b+1,7,3,'#f6f0e0');k(a+4,b+1,1,3,'#1a1026');P.slice(0,p1).forEach(([c,d])=>k(a+1+c,b+1+d,1,1,'#1a1026'));P.slice(0,p2).forEach(([c,d])=>k(a+5+c,b+1+d,1,1,'#1a1026'))};
+        H(2,5,6,3);H(11,5,3,5);H(20,5,5,1);k(13,11,5,9,'#1a1026');k(14,12,3,7,'#f6f0e0');k(14,15,3,1,'#1a1026');k(15,13,1,1,'#1a1026');k(15,17,1,1,'#1a1026');
+        [[3,14],[4,18]].forEach(([a,b])=>{k(a,b,9,5,'#1a1026');k(a+1,b+1,7,3,'#7a1f3a');k(a+1,b+1,7,1,'#b5486a')});H(21,18,2,4)}},
+      lastcard:{top:'#3a1f52',edge:'#1c1029',hi:'#5a3a7a',draw(){k(3,4,9,12,'#1a1026');k(4,5,7,10,'#22223a');k(5,6,5,8,'#e0409a');k(6,7,3,6,'#22223a');k(3,3,9,1,'#1a1026');
+        const card=(a,b,c)=>{k(a,b,7,10,'#1a1026');k(a+1,b+1,5,8,c);k(a+2,b+3,3,3,'#ffffffcc');k(a+1,b+1,5,1,'#ffffff55')};card(15,2,'#ff7a59');
+        card(12,14,'#2fb8a6');card(16,15,'#d9a441');card(20,14,'#8a5cf0');card(24,13,'#ff7a59')}}}[tb.id];
+    k(2,30,30,3,'#00000045');k(0,0,32,31,'#1a1026');k(1,1,30,26,D.top);k(1,27,30,3,D.edge);k(1,1,30,1,D.hi);D.draw()}
   // ---- houses: plaster and timber, two roof shapes ----
   HOUSES.forEach((h,hi)=>{const X=h.x*T,Y=h.y*T,Wd=h.w*T,Hh=h.h*T,wallY=Y+Hh-30,cx=X+(Wd>>1),rc=f=>shade(h.roof,f),TB='#6b4426',PL='#f1ead8',LIT='#ffe9a8';
     const both=fn=>{fn(px);tc.save();tc.beginPath();tc.rect(X-8,Y-32,Wd+16,32);tc.clip();fn((a,b,w,hh,col)=>{tc.fillStyle=col;tc.fillRect(a,b,w,hh)});tc.restore()};
@@ -344,6 +402,9 @@ function renderMap(){const mk=()=>{const g=document.createElement('canvas');g.wi
     if(hi%2===0)for(let k=0;k<9;k++){const hw2=4+Math.round(k*1.5);px(cx-hw2-1,Y+Hh-37+k,hw2*2+2,2,'#1a1026');px(cx-hw2,Y+Hh-37+k,hw2*2,1,k%3===2?rc(.68):rc(.9))}
     [X+9,X+Wd-22].forEach(wx=>{px(wx,wallY+5,13,12,'#3a2a1c');px(wx+2,wallY+7,9,8,LIT);px(wx+2,wallY+7,9,2,'#fff7d6');px(wx+6,wallY+7,1,8,TB);px(wx+2,wallY+10,9,1,TB);px(wx-1,wallY+3,15,3,'#d9743a');px(wx-1,wallY+5,15,1,'#a8521f');
       px(wx,wallY+17,13,3,'#8a5a2b');px(wx+1,wallY+15,2,2,'#ff8fc0');px(wx+5,wallY+15,2,2,'#ffd66b');px(wx+9,wallY+15,2,2,'#ff8fc0');wins.push([wx+6,wallY+11])})});
+  // the hall's sign hangs between the two gate lamps
+  {const bx=23*T+4,by=43*T-26;tc.fillStyle='#1a1026';tc.fillRect(bx,by,88,14);tc.fillStyle='#e0409a';tc.fillRect(bx+2,by+2,84,10);tc.fillStyle='#ff9ad0';tc.fillRect(bx+2,by+2,84,2);
+    for(let i=0;i<10;i++){tc.fillStyle=i%2?'#ffd66b':'#6ff7ff';tc.fillRect(bx+6+i*8,by+10,3,2)}}
   return{g,top,lamps,chims,waters,wins}}
 const WORLD=renderMap(),MAPIMG=WORLD.g,TOPIMG=WORLD.top,GLOW=WORLD.lamps.concat(WORLD.wins);
 
@@ -363,12 +424,13 @@ function goTalk(n){if(Math.hypot(P.x-n.x,P.y-n.y)<28){P.path=null;return talk(n)
 let keys={},started=false,time=0;
 const typing=()=>/INPUT|TEXTAREA/.test(document.activeElement.tagName);
 addEventListener('keydown',e=>{if(typing()||paused||!started)return;const k=e.key.length===1?e.key.toLowerCase():e.key;keys[k]=true;
-  if(k===' '){e.preventDefault();attack()}if(k==='e'){const n=NPCS.find(n=>Math.hypot(P.x-n.x,P.y-n.y)<30);if(n)talk(n)}if(k==='Enter'){e.preventDefault();document.body.classList.add('chatting');$('#cin').focus()}
+  if(k===' '){e.preventDefault();attack()}if(k==='e'){const n=NPCS.find(n=>Math.hypot(P.x-n.x,P.y-n.y)<30);if(n)talk(n);else{const tb=TABLES.find(t=>Math.abs(P.x-(t.x*T+16))<34&&Math.abs(P.y-(t.y*T+16))<34);if(tb)tableDlg(tb)}}if(k==='Enter'){e.preventDefault();document.body.classList.add('chatting');$('#cin').focus()}
   if(k.startsWith('Arrow'))e.preventDefault()});
 addEventListener('keyup',e=>{const k=e.key.length===1?e.key.toLowerCase():e.key;keys[k]=false});
 addEventListener('blur',()=>{keys={}});
 cv.addEventListener('pointerdown',e=>{if(!started||paused)return;MUSIC.kick();if(typing())document.activeElement.blur();const wx=cam.x+e.clientX/Z,wy=cam.y+e.clientY/Z;
   const n=NPCS.find(n=>Math.abs(wx-n.x)<9&&wy>n.y-18&&wy<n.y+6);if(n)return goTalk(n);
+  const tbl=tableAt(Math.floor(wx/T),Math.floor(wy/T))||TABLES.find(t=>t.deco&&wx>=t.x*T&&wx<t.x*T+32&&wy>=t.y*T-18&&wy<t.y*T+32);if(tbl)return goTable(tbl);
   const s=slimes.find(s=>!s.dead&&Math.abs(wx-s.x)<10&&Math.abs(wy-(s.y-4))<10);if(s){P.tgt=s;P.then=null;return}
   const tx=Math.floor(wx/T),ty=Math.floor(wy/T);if(tx<0||ty<0||tx>=MW||ty>=MH)return;const i=idx(tx,ty),p=findPath(tx,ty,SOLID[map[i]]||npcTiles.has(i));if(p){P.path=p;P.tgt=null;P.then=null}});
 $('#bAtk').onclick=()=>attack();
@@ -395,10 +457,43 @@ function attack(){if(P.cd>0||paused||!started)return;P.cd=.35;P.slash=.16;SFX.pl
   if(Math.abs(best.x-P.x)>2)P.f=best.x<P.x?-1:1;best.hp--;best.hit=.2;const a=Math.atan2(best.y-P.y,best.x-P.x);best.vx=Math.cos(a)*70;best.vy=Math.sin(a)*70;best.t=.25;SFX.play('hit');
   if(best.hp<=0){best.dead=true;best.resp=10+Math.random()*6;if(P.tgt===best)P.tgt=null;S.gold+=3;toast('+3 gold');progress('s');reward(0,6)}}
 
+/* ---------- the arcade hall: sit at a game's table, wait for playmates, start together ---------- */
+const tableAt=(tx,ty)=>TABLES.find(t=>tx>=t.x&&tx<=t.x+1&&ty>=t.y&&ty<=t.y+1);
+function seatedAt(tb){const l=[];if(P.seat===tb.id)l.push({id:NET.id,n:S.name,lv:S.lv,me:1});NET.others.forEach((o,k)=>{if(o.seat===tb.id)l.push({id:k,n:o.n,lv:o.lv})});return l.slice(0,tb.max)}
+function freeChair(tb){const cs=chairsOf(tb),others=[...NET.others.values()].filter(o=>o.seat===tb.id);return cs.findIndex(c=>!others.some(o=>Math.hypot(o.tx-c.x,o.ty-c.y)<8))}
+function sit(tb){const k=freeChair(tb);if(k<0||seatedAt(tb).length>=tb.max)return toast('That table is full.');const c=chairsOf(tb)[k];
+  P.path=null;P.then=null;P.tgt=null;P.x=c.x;P.y=c.y;P.f=c.f;P.seat=tb.id;P.chair=k;SFX.play('good');sendState();lastSeatN=seatedAt(tb).length;
+  const need=tb.min-lastSeatN;toast(need>0?'Waiting for '+need+' more player'+(need>1?'s':'')+'. Invite someone in the chat!':'Enough players! Tap the table to start.')}
+function stand(){if(!P.seat)return;P.seat='';P.chair=-1;lastSeatN=0;sendState()}
+function launch(tb,hash){try{sessionStorage.setItem('arcade-back','../world/'+(WTAG?'#w='+WTAG:''));sessionStorage.setItem('world-pos',JSON.stringify({x:Math.round(P.x),y:Math.round(P.y)}))}catch(e){}save();location.href='../'+tb.id+'/'+hash}
+function startTable(tb){const l=seatedAt(tb);if(l.length<tb.min)return;const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let code='';for(let i=0;i<5;i++)code+=A[Math.floor(Math.random()*A.length)];
+  const msg={t:'g',table:tb.id,code,ids:l.map(x=>x.id)};
+  if(NET.host){const m={...msg,from:'host'};NET.conns.forEach(c=>{try{c.send(m)}catch(e){}});goHere(m)}
+  else if(NET.hc&&NET.hc.open)try{NET.hc.send(msg)}catch(e){}else toast('Not connected to the world. Try again in a moment.')}
+// everyone named in a start message goes to the game: whoever started it opens the room, the others join it a moment later
+function goHere(d){const tb=TABLES.find(t=>t.id===d.table&&!t.deco);if(!tb||!Array.isArray(d.ids)||!/^[A-Z0-9]{5}$/.test(d.code)||!NET.id||!d.ids.includes(NET.id))return;
+  const nm='&nm='+encodeURIComponent(S.name);paused=true;
+  if(d.from===NET.id){toast('Opening the '+tb.n+' room…');setTimeout(()=>launch(tb,'#host='+d.code+'&n='+d.ids.length+nm),700)}
+  else{const o=NET.others.get(d.from);toast((o?o.n:'Someone')+' started '+tb.n+'! Joining…');setTimeout(()=>launch(tb,'#room='+d.code+'&auto=1'+nm),2600)}}
+function tableDlg(tb){if(tb.deco){SFX.play('deny');return toast('The prize claw is out of order. A pixel plushie is stuck inside!')}
+  const l=seatedAt(tb),mine=P.seat===tb.id,full=l.length>=tb.max&&!mine,box=el('div'),q=el('div','ql');q.style.whiteSpace='pre-line';
+  q.append(el('b',null,'At this table · '+l.length+' / '+tb.max),l.length?l.map(x=>x.n+(x.me?' (you)':'')+' · Lv '+x.lv).join('\n'):'Nobody yet. Sit down and invite someone in the chat!');box.append(q);
+  const b=[];
+  if(mine){if(l.length>=tb.min)b.push({t:'Start the game · '+l.length+' players',p:1,fn:()=>startTable(tb)});else b.push({t:'Waiting for '+(tb.min-l.length)+' more…',p:1,fn:()=>toast('Ask someone in the chat to sit at the '+tb.n+' table.')});b.push({t:'Stand up',fn:stand})}
+  else if(!full)b.push({t:'Sit down',p:1,fn:()=>sit(tb)});
+  b.push({t:'Play vs computer',fn:()=>launch(tb,'#bot')},{t:'Close'});
+  dlg(tb.n,tb.d+(full?'\n\nThis table is full.':''),b,box)}
+function goTable(tb){if(P.seat===tb.id)return tableDlg(tb);const cx=tb.x*T+16,cy=tb.y*T+16;if(Math.abs(P.x-cx)<34&&Math.abs(P.y-cy)<34){P.path=null;return tableDlg(tb)}
+  const p=findPath(tb.x,tb.y,true)||findPath(tb.x+1,tb.y+1,true);if(p){P.path=p;P.tgt=null;P.then=()=>tableDlg(tb);if(!p.length){P.then=null;tableDlg(tb)}}}
+let lastSeatN=0;
+setInterval(()=>{if(!P.seat||!started)return;const tb=TABLES.find(t=>t.id===P.seat),n=seatedAt(tb).length;if(n===lastSeatN)return;
+  if(n>lastSeatN)toast(n>=tb.min&&lastSeatN<tb.min?'Enough players at the '+tb.n+' table! Tap the table to start.':'A player sat down at your table ('+n+'/'+tb.max+').');else toast('A player left your table ('+n+'/'+tb.max+').');lastSeatN=n},700);
+
 /* ---------- one step of the game ---------- */
 function tick(dt){if(!started||paused||rotOn)return;time+=dt;
   let mx=0,my=0;if(!typing()){if(keys.ArrowLeft||keys.a)mx--;if(keys.ArrowRight||keys.d)mx++;if(keys.ArrowUp||keys.w)my--;if(keys.ArrowDown||keys.s)my++}
   if(joy.x||joy.y){mx=joy.x;my=joy.y}
+  if(P.seat&&(mx||my||(P.path&&P.path.length)))stand();
   if(P.tgt&&!P.tgt.dead&&!mx&&!my){const d=Math.hypot(P.tgt.x-P.x,P.tgt.y-P.y);if(d<22){P.path=null;attack()}else if(!P.path||!P.path.length||(P.rp=(P.rp||0)-dt)<=0){P.rp=.5;P.path=findPath(Math.floor(P.tgt.x/T),Math.floor(P.tgt.y/T),true)}}
   if(mx||my){P.path=null;P.then=null;P.tgt=null;const l=Math.hypot(mx,my),sp=SPEED*dt,nx=P.x+mx/l*sp,ny=P.y+my/l*sp;if(!blocked(nx,P.y))P.x=nx;if(!blocked(P.x,ny))P.y=ny;P.mov=true;if(Math.abs(mx)>.25)P.f=mx<0?-1:1}
   else if(P.path&&P.path.length){const[tx,ty]=P.path[0],dx=tx-P.x,dy=ty-P.y,d=Math.hypot(dx,dy),sp=SPEED*dt;
@@ -444,6 +539,9 @@ function draw(){cam.x=MW*T<=VW?(MW*T-VW)/2:Math.max(0,Math.min(MW*T-VW,P.x-VW/2)
   NPCS.forEach(n=>{label(n.n,n.x,n.y-21,'#ffd66b',true);const mark=QUESTS.some(q=>q.npc===n.id&&qs(q)==='r')?'?':QUESTS.some(q=>q.npc===n.id&&(qs(q)===''||(q.rep&&qs(q)==='c')))&&!QUESTS.some(q=>q.npc===n.id&&qs(q)==='a')?'!':'';
     if(mark)label(mark,n.x,n.y-29-(Math.floor(time*2)%2),mark==='?'?'#6ff7ff':'#ffd66b')});
   NET.others.forEach(o=>{label(o.n+' · Lv '+o.lv,o.x,o.y-21,'#fff');if(o.say&&o.sayT>time)label(o.say,o.x,o.y-30,'#fff',true)});
+  TABLES.forEach(tb=>{const X=tb.x*T,Y=tb.y*T;if(X<cam.x-80||X>cam.x+VW+40||Y<cam.y-60||Y>cam.y+VH+60)return;if(tb.deco)return label(tb.n,X+16,Y-26,'#ff9ad0',true);
+    const n=seatedAt(tb).length;label(tb.n+' · '+n+'/'+tb.max,X+16,tb.max>2?Y-34:Y-12,n>=tb.min?'#7dffb0':'#ffd66b',true)});
+  label('★ PIXEL ARCADE ★',26*T,43*T-15,'#ffffff',false);label('↓ Arcade Hall',26*T,37*T+2,'#ff9ad0',true);
   label(S.name,P.x,P.y-21,'#9fe0b0');if(mySay&&mySayT>time)label(mySay,P.x,P.y-30,'#fff',true)}
 let last=0;function frame(t){const dt=Math.min(.05,(t-last)/1000||0);last=t;tick(dt);if(started)draw();requestAnimationFrame(frame)}
 
@@ -457,11 +555,12 @@ $('#cform').onsubmit=e=>{e.preventDefault();const inp=$('#cin'),m=cleanMsg(inp.v
 
 /* ---------- other players: peer-to-peer worlds (no server) ---------- */
 const NET={peer:null,host:false,hc:null,conns:new Map(),pl:new Map(),others:new Map(),id:'',gen:0,acc:0,bacc:0,wait:0,world:0};
-const WID=i=>'pixarcade-world1-'+'abcd'[i],MAXP=14;
+// #w=name in the link opens a separate, private copy of the world (handy for a group of friends, or for testing)
+const WTAG=(new URLSearchParams(location.hash.slice(1)).get('w')||'').toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,16),WID=i=>'pixarcade-world1-'+(WTAG?WTAG+'-':'')+'abcd'[i],MAXP=14;
 function netStatus(t){$('#net').textContent=t}
 function countOn(){const n=NET.others.size+1;netStatus('👥 '+n+(n===1?' player':' players'))}
-function myState(){return{t:'s',n:S.name,x:Math.round(P.x),y:Math.round(P.y),f:P.f,m:P.mov?1:0,lv:S.lv,lk:S.look}}
-function safeState(d){return{n:clean(d.n,'Player'),tx:Math.min(MW*T,Math.max(0,+d.x||0)),ty:Math.min(MH*T,Math.max(0,+d.y||0)),f:d.f<0?-1:1,m:!!d.m,lv:Math.min(999,Math.max(1,d.lv|0)),lk:safeLook(d.lk)}}
+function myState(){return{t:'s',n:S.name,x:Math.round(P.x),y:Math.round(P.y),f:P.f,m:P.mov?1:0,lv:S.lv,lk:S.look,seat:P.seat}}
+function safeState(d){return{n:clean(d.n,'Player'),tx:Math.min(MW*T,Math.max(0,+d.x||0)),ty:Math.min(MH*T,Math.max(0,+d.y||0)),f:d.f<0?-1:1,m:!!d.m,lv:Math.min(999,Math.max(1,d.lv|0)),lk:safeLook(d.lk),seat:TABLES.some(t=>t.id===d.seat&&!t.deco)?d.seat:''}}
 function upsert(id,d){const s=safeState(d);let o=NET.others.get(id);if(!o){o=Object.assign({x:s.tx,y:s.ty,say:'',sayT:0},s);NET.others.set(id,o);countOn()}else Object.assign(o,s);o.seen=Date.now()}
 function netLeave(){NET.gen++;try{NET.peer&&NET.peer.destroy()}catch(e){}NET.peer=null;NET.hc=null;NET.conns.clear();NET.pl.clear();NET.others.clear();NET.host=false}
 function netRetry(){netLeave();netStatus('connecting…');clearTimeout(NET.wait);NET.wait=setTimeout(()=>netJoin(0),1200+Math.random()*2500)}
@@ -471,7 +570,9 @@ function netJoin(i){if(!window.Peer){netStatus('offline');if(document.readyState
     c.on('open',()=>{if(NET.conns.size>=MAXP){try{c.send({t:'full'})}catch(e){}setTimeout(()=>c.close(),400);return}NET.conns.set(c.peer,c);c.last=0});
     c.on('data',d=>{if(g!==NET.gen||!d||typeof d!=='object'||!NET.conns.has(c.peer))return;
       if(d.t==='s'){const isNew=!NET.others.has(c.peer);upsert(c.peer,d);if(isNew)hostSay(null,NET.others.get(c.peer).n+' joined the world',true)}
-      else if(d.t==='c'){const now=Date.now();if(now-c.last<700)return;c.last=now;const m=cleanMsg(d.m),o=NET.others.get(c.peer);if(m&&o)hostSay(c.peer,m)}});
+      else if(d.t==='c'){const now=Date.now();if(now-c.last<700)return;c.last=now;const m=cleanMsg(d.m),o=NET.others.get(c.peer);if(m&&o)hostSay(c.peer,m)}
+      else if(d.t==='g'){const now=Date.now();if(now-(c.lastG||0)<3000||!Array.isArray(d.ids))return;c.lastG=now;const m={t:'g',from:c.peer,table:String(d.table),code:String(d.code),ids:d.ids.slice(0,4).map(String)};
+        if(!m.ids.includes(c.peer))return;NET.conns.forEach(x=>{try{x.send(m)}catch(e){}});goHere(m)}});
     const bye=()=>{if(g!==NET.gen)return;const o=NET.others.get(c.peer);NET.conns.delete(c.peer);NET.others.delete(c.peer);if(o)hostSay(null,o.n+' left',true);countOn()};c.on('close',bye);c.on('error',bye)});
   p.on('error',e=>{if(g!==NET.gen)return;if(e.type==='unavailable-id')netClient(i);else if(!open)netRetry()});
   p.on('disconnected',()=>{if(g===NET.gen)try{p.reconnect()}catch(e){}})}
@@ -481,7 +582,8 @@ function netClient(i){netLeave();const g=NET.gen,p=new Peer();NET.peer=p;
     c.on('data',d=>{if(g!==NET.gen||!d||typeof d!=='object')return;
       if(d.t==='full'){full=true;netJoin(i+1)}
       else if(d.t==='w'&&d.p&&typeof d.p==='object'){const ids=Object.keys(d.p).slice(0,MAXP+2);ids.forEach(k=>{if(k!==NET.id)upsert(k,d.p[k])});NET.others.forEach((o,k)=>{if(!ids.includes(k))NET.others.delete(k)});countOn()}
-      else if(d.t==='c')gotChat(d)});
+      else if(d.t==='c')gotChat(d)
+      else if(d.t==='g')goHere(d)});
     c.on('close',()=>{if(g===NET.gen&&!full)netRetry()})});
   p.on('error',()=>{if(g===NET.gen)netRetry()})}
 function gotChat(d){const m=cleanMsg(d.m);if(!m)return;if(d.sys)return addChat('',m,true);if(d.id===NET.id)return;const o=NET.others.get(d.id);addChat(o?o.n:clean(d.n,'Player'),m);if(o){o.say=m.slice(0,40);o.sayT=time+4}}
@@ -489,14 +591,14 @@ function hostSay(id,m,sys){const o=id&&NET.others.get(id),msg={t:'c',id:id||'',n
 function netChat(m){if(NET.host){const msg={t:'c',id:'host',n:S.name,m};NET.conns.forEach(c=>{try{c.send(msg)}catch(e){}})}else if(NET.hc&&NET.hc.open)try{NET.hc.send({t:'c',m})}catch(e){}}
 function sendState(){if(!NET.host&&NET.hc&&NET.hc.open)try{NET.hc.send(myState())}catch(e){}}
 function netTick(dt){if(!NET.peer)return;NET.acc+=dt;NET.bacc+=dt;
-  if(NET.host){if(NET.bacc>.12){NET.bacc=0;if(NET.conns.size){const p={host:myState()};NET.others.forEach((o,k)=>{p[k]={n:o.n,x:Math.round(o.tx),y:Math.round(o.ty),f:o.f,m:o.m?1:0,lv:o.lv,lk:o.lk}});const msg={t:'w',p};NET.conns.forEach(c=>{try{c.send(msg)}catch(e){}})}
+  if(NET.host){if(NET.bacc>.12){NET.bacc=0;if(NET.conns.size){const p={host:myState()};NET.others.forEach((o,k)=>{p[k]={n:o.n,x:Math.round(o.tx),y:Math.round(o.ty),f:o.f,m:o.m?1:0,lv:o.lv,lk:o.lk,seat:o.seat}});const msg={t:'w',p};NET.conns.forEach(c=>{try{c.send(msg)}catch(e){}})}
       const now=Date.now();NET.others.forEach((o,k)=>{if(now-o.seen>12000){const c=NET.conns.get(k);try{c&&c.close()}catch(e){}NET.conns.delete(k);NET.others.delete(k);countOn()}})}}
   else if(NET.acc>(P.mov?.15:1)){NET.acc=0;sendState()}}
 
 /* ---------- start ---------- */
 SFX.add({swing:()=>SFX.tone(300,0,.06,'square',.04,140),hit:()=>SFX.tone(180,0,.09,'sawtooth',.06,70),tick:()=>SFX.tone(880,0,.05,'triangle',.06,1320)});
 MUSIC.set({bpm:92,lead:'triangle',arp:'triangle',ch:[[48,55,60,64],[45,52,57,60],[41,48,53,57],[43,50,55,59]],mel:[67,0,72,0,76,0,72,0, 69,0,72,0,76,0,0,0, 65,0,69,0,72,0,69,0, 67,0,71,0,74,0,0,0]});
-function begin(){started=true;hud();addChat('','Welcome to Pixel World, '+S.name+'! Tap the ground to walk. Tap a villager to talk.',true);netJoin(0);if(!Object.keys(S.q).length)setTimeout(()=>toast('Elder Oro is waiting in the square'),900)}
+function begin(){started=true;hud();if(!S.hall){S.hall=1;save();setTimeout(()=>toast('New: the Arcade Hall is just south of the village!'),2400)}addChat('','Welcome to Pixel World, '+S.name+'! Tap the ground to walk. Tap a villager to talk.',true);netJoin(0);if(!Object.keys(S.q).length)setTimeout(()=>toast('Elder Oro is waiting in the square'),900)}
 addEventListener('beforeunload',()=>{save();netLeave()});
 setInterval(save,15000);
 requestAnimationFrame(frame);
@@ -504,7 +606,7 @@ const enter=()=>{begin();if(TOUCH)goLandscape();checkRot()};
 if(!S.look||!S.name)lookEditor(enter,true);
 else if(TOUCH)dlg('Pixel World','Welcome back, '+S.name+'!\n\nThis world is played with your phone held sideways.',[{t:'Play',p:1,fn:enter},{t:'< Back to Arcade',fn:()=>{location.href='../'}}]);
 else enter();
-window._W={S,P,NET,tick,draw,talk,attack,findPath,slimes,ITEMS,QUESTS,NPCS,map,idx,shop,menu};
+window._W={S,P,NET,tick,draw,talk,attack,findPath,slimes,ITEMS,QUESTS,NPCS,map,idx,shop,menu,TABLES,chairsOf,seatedAt,sit,stand,startTable,goHere,tableDlg,goTable};
 </script>
 </body>
 </html>
