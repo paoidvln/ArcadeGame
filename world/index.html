@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwnzthl3';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
+<script data-arcade-version>window.AV='mwo00p8u';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwnzthl3">
-<script data-pwa defer src="../shared/wand.js?v=mwnzthl3"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwo00p8u">
+<script data-pwa defer src="../shared/wand.js?v=mwo00p8u"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Pixel World</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwnzthl3">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwo00p8u">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js" defer></script>
 <style>
 :root{--bg:#0b1020;--panel:#1d2a3f;--panel2:#131c2c;--edge:#4f8f6a;--accent:#3f9a5a;--accent-d:#1f5a34;--accent-l:#9fe0b0;--gold:#ffd66b}
@@ -107,7 +107,7 @@ body.touch #chat{left:8px;top:8px;bottom:auto;width:min(320px,46vw)}
 </div></div>
 <div class="overlay" id="dlg"><div class="card"><h2 id="dT"></h2><p id="dX"></p><div id="dBody"></div><div id="dB"></div></div></div>
 
-<script src="../shared/arcade.js?v=mwnzthl3"></script>
+<script src="../shared/arcade.js?v=mwo00p8u"></script>
 <script>
 const {$,el,SFX,MUSIC,clean}=Arcade;
 /* =====================================================================================
@@ -282,7 +282,9 @@ function slimeSprite(f){const key='sl'+f;let cv=sprC.get(key);if(cv)return cv;co
 /* ---------- saved progress ---------- */
 let S={look:null,name:'',owned:['basic','bdress','none'],gold:0,xp:0,lv:1,q:{},chest:false};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){S=Object.assign(S,s);S.gold=Math.max(0,S.gold|0);S.xp=Math.max(0,S.xp|0);S.lv=Math.max(1,S.lv|0);
-  S.owned=Array.isArray(S.owned)?S.owned.filter(k=>Object.hasOwn(OUT,k)||Object.hasOwn(HATS,k)):['basic','bdress','none'];if(S.look)S.look=safeLook(S.look);if(!S.q||typeof S.q!=='object')S.q={}}}catch(e){}
+  S.owned=Array.isArray(S.owned)?S.owned.filter(k=>Object.hasOwn(OUT,k)||Object.hasOwn(HATS,k)||Object.hasOwn(WEAPONS,k)):['basic','bdress','none'];
+  // the Solaris Edge comes in the same chest as the Sunfire Paragon; an older loader dropped swords from saves, so give it back
+  if((S.owned.includes('sunfire')||(S.look&&S.look.wep==='solaris'))&&!S.owned.includes('solaris'))S.owned.push('solaris');if(S.look)S.look=safeLook(S.look);if(!S.q||typeof S.q!=='object')S.q={}}}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 // hearts and sword damage grow with level: level 20 has 10 hearts and hits for 6
 const maxHP=()=>5+Math.floor(S.lv/4),dmg=()=>1+Math.floor(S.lv/4)+((S.look&&WEAPONS[S.look.wep]||WEAPONS.none).bonus);
