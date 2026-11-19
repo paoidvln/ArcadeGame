@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwm0s9l1';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
+<script data-arcade-version>window.AV='mwnifvl5';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwm0s9l1">
-<script data-pwa defer src="../shared/wand.js?v=mwm0s9l1"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwnifvl5">
+<script data-pwa defer src="../shared/wand.js?v=mwnifvl5"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Pixel World</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwm0s9l1">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwnifvl5">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js" defer></script>
 <style>
 :root{--bg:#0b1020;--panel:#1d2a3f;--panel2:#131c2c;--edge:#4f8f6a;--accent:#3f9a5a;--accent-d:#1f5a34;--accent-l:#9fe0b0;--gold:#ffd66b}
@@ -98,7 +98,7 @@ body.touch #chat{left:8px;top:8px;bottom:auto;width:min(320px,46vw)}
 </div></div>
 <div class="overlay" id="dlg"><div class="card"><h2 id="dT"></h2><p id="dX"></p><div id="dBody"></div><div id="dB"></div></div></div>
 
-<script src="../shared/arcade.js?v=mwm0s9l1"></script>
+<script src="../shared/arcade.js?v=mwnifvl5"></script>
 <script>
 const {$,el,SFX,MUSIC,clean}=Arcade;
 /* =====================================================================================
@@ -109,8 +109,8 @@ const {$,el,SFX,MUSIC,clean}=Arcade;
    - Progress (gold, rank, outfits, quests) is saved on this device.
    ===================================================================================== */
 const T=16,MW=64,MH=64,SPEED=62,KEY='pixelworld-1';
-const G=0,PATH=1,WTR=2,TREE=3,WALL=4,FENCE=5,STONE=6,SAND=7,FLOOR=8,WELL=9,LAMP=10,BARREL=11,STALL=12,SOIL=13,DIRT=14,COBBLE=15,ARC=16,TBL=17,CAB=18;
-const SOLID=[0,0,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0,1,1];
+const G=0,PATH=1,WTR=2,TREE=3,WALL=4,FENCE=5,STONE=6,SAND=7,FLOOR=8,WELL=9,LAMP=10,BARREL=11,STALL=12,SOIL=13,DIRT=14,COBBLE=15,ARC=16,TBL=17,CAB=18,BONSAI=19;
+const SOLID=[0,0,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0,1,1,1];
 const map=new Uint8Array(MW*MH),gnd=new Uint8Array(MW*MH),idx=(x,y)=>y*MW+x;   // map = what stands on a tile, gnd = the ground under it
 function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 const HOUSES=[{x:14,y:14,w:6,h:4,roof:'#b5533c'},{x:30,y:14,w:7,h:4,roof:'#7a5aa0'},{x:14,y:27,w:6,h:4,roof:'#3d7ab5'},{x:31,y:27,w:6,h:4,roof:'#c98a2b'}];
@@ -166,6 +166,7 @@ const inA=(a,x,y)=>x>=a[0]&&x<=a[2]&&y>=a[1]&&y<=a[3];
   fill(14,43,23,43,FENCE);fill(28,43,38,43,FENCE);fill(14,43,14,58,FENCE);fill(38,43,38,58,FENCE);fill(14,58,38,58,FENCE);map[idx(23,43)]=LAMP;map[idx(28,43)]=LAMP;
   [[15,44],[16,44],[36,44],[37,44]].forEach(([x,y])=>map[idx(x,y)]=CAB);[[15,57],[37,57]].forEach(([x,y])=>map[idx(x,y)]=LAMP);
   TABLES.forEach(tb=>fill(tb.x,tb.y,tb.x+1,tb.y+1,TBL));
+  [[16,57],[36,57],[18,20],[35,25]].forEach(([x,y])=>map[idx(x,y)]=BONSAI);   // potted bonsai
 })();
 const npcTiles=new Set(NPCS.map(n=>idx(n.tx,n.ty)));
 NPCS.forEach(n=>{n.x=n.tx*T+8;n.y=n.ty*T+8});
@@ -325,13 +326,33 @@ function renderMap(){const mk=()=>{const g=document.createElement('canvas');g.wi
     [[0,-1,X,Y,T,1],[0,1,X,Y+15,T,1],[-1,0,X,Y,1,T],[1,0,X+15,Y,1,T]].forEach(([dx,dy,a,b,w,h])=>{if(!sm(dx,dy))px(a,b,w,h,EDGE[t])});
     [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([dx,dy])=>{if(sm(dx,0)||sm(0,dy))return;const col=flat(gat(x,y+dy));
       STEP.forEach((w,i)=>{px(dx<0?X:X+T-w,dy<0?Y+i:Y+15-i,w,1,col)});STEP.forEach((w,i)=>{if(i<4)px(dx<0?X+w:X+T-w-1,dy<0?Y+i:Y+15-i,1,1,EDGE[t])})})}
+  // ---- bonsai-style trees: a twisting trunk under puffy, shaded leaf clusters. Each style is drawn once and reused. ----
+  const TPAL={green:['#16403e','#2f7a52','#6fb844','#b6e35a','#e0f78a'],deep:['#10302c','#22603f','#4a9446','#86c64c','#bfe56e'],pink:['#1d4a4a','#a8336e','#df5f9b','#ff9cc8','#ffd3e6']};
+  function bonsai(pal,seed,W,Hh,ox,foot,top,cl){const cv=document.createElement('canvas');cv.width=W;cv.height=Hh;const x=cv.getContext('2d'),r=mulberry(seed),p=(a,b,w,h,col)=>{x.fillStyle=col;x.fillRect(a,b,w,h)},dir=seed%2?1:-1;
+    const tx=t=>Math.round(ox+Math.sin(t*3.3)*Math.max(2,W/12)*dir);
+    for(let yy=foot;yy>=top;yy--){const t=(foot-yy)/(foot-top),w=t<.25?Math.max(4,W/9|0):t<.65?Math.max(3,W/12|0):2,c=tx(t)-(w>>1);p(c,yy,w,1,'#5a3a1e');p(c,yy,1,1,'#8a5a34');p(c+w-1,yy,1,1,'#3e2612')}
+    p(ox-4,foot,3,1,'#5a3a1e');p(ox+2,foot,3,1,'#5a3a1e');
+    const C=cl.map(([a,b,rr])=>[ox+a+Math.round(r()*2-1),b+Math.round(r()*2-1),rr+(r()<.35?1:0)]);
+    C.forEach(([a,b])=>{const sx=tx(.8),sy=top+4;for(let k=0;k<=8;k++){const q=k/8;p(Math.round(sx+(a-sx)*q),Math.round(sy+(b+2-sy)*q),1,1,'#3e2612')}});
+    // the crown: one dark mass, then clusters stacked from the bottom up, each lighter the higher it sits
+    const lo=Math.min(...C.map(c=>c[1])),hi=Math.max(...C.map(c=>c[1]));
+    C.forEach(([a,b,rr])=>disc(p,a,b+1,rr+1,pal[0]));
+    C.slice().sort((m,n)=>n[1]-m[1]).forEach(([a,b,rr])=>{const lv=b>=lo+(hi-lo)*.66?0:b>=lo+(hi-lo)*.3?1:2;
+      disc(p,a,b+1,rr,pal[0]);disc(p,a,b,rr-1,pal[lv?1:1]);disc(p,a-1,b-1,Math.max(1,rr-2),pal[lv+1]);if(rr>3&&lv)disc(p,a-2,b-2,Math.max(1,rr-4),pal[lv+2]);if(!lv)disc(p,a-1,b-2,Math.max(1,rr-4),pal[2])});
+    for(let i=0;i<C.length*5;i++){const [a,b,rr]=C[i%C.length],ang=r()*6.28,d=r()*(rr-1);p(Math.round(a+Math.cos(ang)*d),Math.round(b+Math.sin(ang)*d),1,1,d<rr*.45?pal[4]:r()<.5?pal[0]:pal[3])}
+    return cv}
+  const TREECL=[[-10,22,6],[10,21,6],[0,24,5],[-14,15,5],[14,14,5],[-6,15,6],[6,14,6],[0,18,6],[-8,8,5],[8,7,5],[0,8,6],[-3,3,4],[4,3,4]],POTCL=[[-7,14,4],[7,13,4],[0,15,4],[-4,9,5],[5,9,5],[-9,8,3],[9,8,3],[0,5,5],[-3,2,3],[4,2,3]];
+  const TREES={},treeOf=(k,v)=>(TREES[k+v]=TREES[k+v]||bonsai(TPAL[k],v*97+k.length*13+7,40,44,20,42,18,TREECL));
+  const potOf=(k,v)=>{const key='pot'+k+v;if(TREES[key])return TREES[key];const cv=bonsai(TPAL[k],v*31+5,28,34,14,26,14,POTCL),x=cv.getContext('2d'),p=(a,b,w,h,col)=>{x.fillStyle=col;x.fillRect(a,b,w,h)};
+    p(2,25,24,3,'#2a0f28');p(3,25,22,2,'#8a4482');p(3,25,22,1,'#a85aa0');p(4,28,20,4,'#5a2a55');for(let i=0;i<20;i+=2)p(4+i,29+(i%4?1:0),1,1,'#4a2046');p(4,31,20,1,'#3a1a38');p(6,32,3,2,'#2a0f28');p(19,32,3,2,'#2a0f28');
+    return TREES[key]=cv};
   // ---- things ----
   for(let y=0;y<MH;y++)for(let x=0;x<MW;x++){const t=map[idx(x,y)],X=x*T,Y=y*T;
-    if(t===TREE){const v=R(),vil=x>=11&&x<=39&&y>=11&&y<=34,pal=vil?['#7a2f5a','#c85a94','#e88ab8','#ffc2e0']:v<.3?['#14401f','#2a7a3a','#3c9a4a','#63c26a']:['#17471f','#318a3a','#46a84c','#7ad37a'],cx=X+8,cy=Y-8;
-      px(X-3,Y+12,22,3,'#2f8a3a');px(X,Y+15,16,1,'#2f8a3a');
-      tall(X,Y,p=>{p(X+5,Y+3,6,12,'#5a3a1e');p(X+6,Y+3,2,12,'#8a5a34');p(X+9,Y+3,1,12,'#472c15');p(X+3,Y+13,3,2,'#5a3a1e');p(X+10,Y+13,3,2,'#5a3a1e');
-        disc(p,cx,cy,15,pal[0],1.02);disc(p,cx,cy-1,13,pal[1],1.04);disc(p,cx-3,cy-4,9,pal[2]);disc(p,cx-5,cy-7,4,pal[3]);disc(p,cx+6,cy+3,4,pal[2]);disc(p,cx+7,cy-6,3,pal[2]);
-        [[-9,2],[4,-11],[9,-1],[-2,6],[2,-3],[-7,-10],[10,6]].forEach(([a,b],i)=>{p(cx+a,cy+b,2,1,i&1?pal[3]:pal[0]);p(cx+a,cy+b+1,1,1,pal[0])})})}
+    if(t===TREE){const v=R(),vil=x>=11&&x<=39&&y>=11&&y<=34,spr=treeOf(vil||v<.1?'pink':v<.35?'deep':'green',(x*7+y*13)%6);
+      px(X-4,Y+12,24,3,'#2f8a3a');px(X-1,Y+15,18,1,'#2f8a3a');
+      c.drawImage(spr,0,28,40,16,X-12,Y,40,16);tc.drawImage(spr,0,0,40,28,X-12,Y-28,40,28)}
+    if(t===BONSAI){const spr=potOf((x+y)%2?'pink':'green',(x*5+y)%4);px(X-1,Y+13,18,3,'#00000035');
+      c.drawImage(spr,0,18,28,16,X-6,Y,28,16);tc.drawImage(spr,0,0,28,18,X-6,Y-18,28,18)}
     if(t===STONE){px(X+2,Y+13,12,3,'#00000040');tall(X,Y,p=>{p(X+3,Y-8,10,22,'#4b4a5e');p(X+4,Y-7,8,20,'#8d8aa3');p(X+4,Y-7,3,20,'#b9b6cc');p(X+2,Y-10,12,3,'#6f6c88');p(X+2,Y+12,12,3,'#6f6c88');p(X+6,Y+1,5,1,'#5d5a75');p(X+8,Y+6,3,2,'#4f8f6a')})}
     if(t===FENCE){px(X,Y+6,T,2,'#8a5a2b');px(X,Y+11,T,2,'#8a5a2b');px(X+2,Y+3,3,12,'#6b4a2b');px(X+11,Y+3,3,12,'#6b4a2b');px(X+2,Y+3,1,12,'#a8703a');px(X+11,Y+3,1,12,'#a8703a');px(X,Y+6,T,1,'#a8703a')}
     if(t===LAMP){lamps.push([X+8,Y-8]);px(X+4,Y+13,8,2,'#00000040');tall(X,Y,p=>{p(X+7,Y-6,2,20,'#3a2a1c');p(X+5,Y+13,6,2,'#3a2a1c');p(X+4,Y-13,8,8,'#3a2a1c');p(X+5,Y-12,6,6,'#ffd66b');p(X+7,Y-11,2,3,'#fff4c2');p(X+3,Y-14,10,2,'#3a2a1c')})}
