@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwnvwem5';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
+<script data-arcade-version>window.AV='mwny4unn';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwnvwem5">
-<script data-pwa defer src="../shared/wand.js?v=mwnvwem5"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwny4unn">
+<script data-pwa defer src="../shared/wand.js?v=mwny4unn"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Pixel World</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwnvwem5">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwny4unn">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js" defer></script>
 <style>
 :root{--bg:#0b1020;--panel:#1d2a3f;--panel2:#131c2c;--edge:#4f8f6a;--accent:#3f9a5a;--accent-d:#1f5a34;--accent-l:#9fe0b0;--gold:#ffd66b}
@@ -98,7 +98,7 @@ body.touch #chat{left:8px;top:8px;bottom:auto;width:min(320px,46vw)}
 </div></div>
 <div class="overlay" id="dlg"><div class="card"><h2 id="dT"></h2><p id="dX"></p><div id="dBody"></div><div id="dB"></div></div></div>
 
-<script src="../shared/arcade.js?v=mwnvwem5"></script>
+<script src="../shared/arcade.js?v=mwny4unn"></script>
 <script>
 const {$,el,SFX,MUSIC,clean}=Arcade;
 /* =====================================================================================
@@ -109,8 +109,8 @@ const {$,el,SFX,MUSIC,clean}=Arcade;
    - Progress (gold, rank, outfits, quests) is saved on this device.
    ===================================================================================== */
 const T=16,MW=64,MH=64,SPEED=62,KEY='pixelworld-1';
-const G=0,PATH=1,WTR=2,TREE=3,WALL=4,FENCE=5,STONE=6,SAND=7,FLOOR=8,WELL=9,LAMP=10,BARREL=11,STALL=12,SOIL=13,DIRT=14,COBBLE=15,ARC=16,TBL=17,CAB=18,BONSAI=19;
-const SOLID=[0,0,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0,1,1,1];
+const G=0,PATH=1,WTR=2,TREE=3,WALL=4,FENCE=5,STONE=6,SAND=7,FLOOR=8,WELL=9,LAMP=10,BARREL=11,STALL=12,SOIL=13,DIRT=14,COBBLE=15,ARC=16,TBL=17,CAB=18,BONSAI=19,PORTAL=20,EMBER=21,LAVA=22;
+const SOLID=[0,0,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,1];
 const map=new Uint8Array(MW*MH),gnd=new Uint8Array(MW*MH),idx=(x,y)=>y*MW+x;   // map = what stands on a tile, gnd = the ground under it
 function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 const HOUSES=[{x:14,y:14,w:6,h:4,roof:'#b5533c'},{x:30,y:14,w:7,h:4,roof:'#7a5aa0'},{x:14,y:27,w:6,h:4,roof:'#3d7ab5'},{x:31,y:27,w:6,h:4,roof:'#c98a2b'}];
@@ -154,6 +154,8 @@ const inA=(a,x,y)=>x>=a[0]&&x<=a[2]&&y>=a[1]&&y<=a[3];
   HOUSES.forEach(h=>fill(h.x+Math.floor(h.w/2)-1,h.y+h.h,h.x+Math.ceil(h.w/2),h.y+h.h+1,COBBLE));
   // the hall: a cleared square with a neon floor and a road from the village gate
   fill(22,37,29,42,G,TREE);fill(13,42,39,59,G,TREE);fill(15,44,37,57,ARC);fill(25,36,26,43,DIRT);fill(24,43,27,43,ARC);
+  // the Phoenix's lair: a lava-ringed arena in the south-east forest, reached only through the portal; and a clearing for the portal
+  fill(43,46,61,61,TREE);fill(44,47,60,60,LAVA);fill(45,48,59,59,EMBER);fill(47,12,52,17,G,TREE);
   NPCS.forEach(n=>{for(let y=n.ty-1;y<=n.ty+1;y++)for(let x=n.tx-1;x<=n.tx+1;x++)if(map[idx(x,y)]===TREE)map[idx(x,y)]=G});
   map[idx(CHEST.tx,CHEST.ty)]=G;
   for(let i=0;i<map.length;i++)gnd[i]=map[i]===TREE?G:map[i];
@@ -167,6 +169,7 @@ const inA=(a,x,y)=>x>=a[0]&&x<=a[2]&&y>=a[1]&&y<=a[3];
   [[15,44],[16,44],[36,44],[37,44]].forEach(([x,y])=>map[idx(x,y)]=CAB);[[15,57],[37,57]].forEach(([x,y])=>map[idx(x,y)]=LAMP);
   TABLES.forEach(tb=>fill(tb.x,tb.y,tb.x+1,tb.y+1,TBL));
   [[16,57],[36,57],[18,20],[35,25]].forEach(([x,y])=>map[idx(x,y)]=BONSAI);   // potted bonsai
+  map[idx(50,14)]=PORTAL;map[idx(52,58)]=PORTAL;                                  // the way in, and the way out of the lair
 })();
 const npcTiles=new Set(NPCS.map(n=>idx(n.tx,n.ty)));
 NPCS.forEach(n=>{n.x=n.tx*T+8;n.y=n.ty*T+8});
@@ -186,7 +189,7 @@ const OUT={
   armor:{n:'Knight armour',price:160,type:'shirt',c:'#aeb6c8',p:'#6b7386',t:'#ffd66b'},
   ninja:{n:'Shadow suit',price:200,type:'shirt',c:'#22223a',p:'#22223a',t:'#e0409a'},
   royal:{n:'Royal gown',price:300,type:'dress',c:'#8a5cf0',t:'#ffd66b'}};
-const HATS={none:{n:'No hat',price:0},straw:{n:'Straw hat',price:40},bow:{n:'Hair bow',price:50},wiz:{n:'Wizard hat',price:100},crown:{n:'Gold crown',price:260}};
+const HATS={none:{n:'No hat',price:0},straw:{n:'Straw hat',price:40},bow:{n:'Hair bow',price:50},wiz:{n:'Wizard hat',price:100},crown:{n:'Gold crown',price:260},phoenix:{n:'Phoenix crest',price:0}};
 const RANKS=[[1,'Newcomer'],[3,'Explorer'],[5,'Adventurer'],[8,'Hero'],[12,'Legend']];
 const rankOf=lv=>RANKS.filter(r=>lv>=r[0]).pop()[1];
 const BASE=["....hhhh....","...hhhhhh...","..hhhhhhhh..","..hssssssh..","..hsessesh..","..ssssssss..","...ssmmss...","...cccccc...","..cccccccc..",".sccccccccs.",".sccttttccs.","..cccccccc..","...pppppp...","...pp..pp...","...pp..pp...","...bb..bb..."];
@@ -252,6 +255,7 @@ function charSprite(lk,fr,dir){fr=fr||0;dir=dir|0;const key=[lk.sk,lk.hs,lk.hc,l
   if(lk.hat==='straw'){Q2(4,1,8,3,'#e3c46a');Q2(4,1,8,1,'#f3dc94');Q2(4,3,8,1,'#b5533c');Q2(1,4,14,1,'#e3c46a');Q2(1,4,14,1,'#e3c46a');Q2(11,1,1,3,'#c9a84f')}
   if(lk.hat==='wiz'){Q2(9,0,2,1,'#3d4fc4');Q2(7,1,3,1,'#3d4fc4');Q2(6,2,5,1,'#3d4fc4');Q2(5,3,7,1,'#3d4fc4');Q2(2,4,12,1,'#2a3690');Q2(6,1,1,2,'#6f80e8');Q2(8,2,1,1,'#ffd66b');Q2(10,3,1,1,'#ffd66b')}
   if(lk.hat==='crown'){[4,7,8,11].forEach(i=>Q2(i,1,1,1,'#ffd66b'));Q2(4,2,8,2,'#ffd66b');Q2(4,3,8,1,'#c9a84f');Q2(4,2,1,1,'#fff4c2');if(dir!==1){Q2(7,2,2,1,'#ff5d8f')}else Q2(7,2,2,1,'#6ff7ff')}
+  if(lk.hat==='phoenix'){Q2(4,4,8,1,'#c9a84f');Q2(7,4,2,1,'#dc2626');Q2(5,2,1,2,'#fb923c');Q2(6,1,1,3,'#facc15');Q2(7,0,1,4,'#fde68a');Q2(8,0,1,4,'#facc15');Q2(9,1,1,3,'#fb923c');Q2(10,2,1,2,'#dc2626');Q2(4,3,1,1,'#dc2626');Q2(11,3,1,1,'#dc2626')}
   if(lk.hat==='bow'){if(side){Q2(3,3,3,3,'#ff5d8f');Q2(3,4,1,1,'#c0306a')}else{Q2(9,3,2,2,'#ff5d8f');Q2(12,3,2,2,'#ff5d8f');Q2(11,3,1,2,'#c0306a');Q2(9,3,1,1,'#ff9ad0')}}
   cv=outlined(raw);sprC.set(key,cv);return cv}
 function slimeSprite(f){const key='sl'+f;let cv=sprC.get(key);if(cv)return cv;const raw=document.createElement('canvas');raw.width=12;raw.height=9;const x=raw.getContext('2d'),P=(a,b,w,h,c)=>{x.fillStyle=c;x.fillRect(a,b,w,h)},o=f?1:0;
@@ -263,7 +267,9 @@ let S={look:null,name:'',owned:['basic','bdress','none'],gold:0,xp:0,lv:1,q:{},c
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){S=Object.assign(S,s);S.gold=Math.max(0,S.gold|0);S.xp=Math.max(0,S.xp|0);S.lv=Math.max(1,S.lv|0);
   S.owned=Array.isArray(S.owned)?S.owned.filter(k=>Object.hasOwn(OUT,k)||Object.hasOwn(HATS,k)):['basic','bdress','none'];if(S.look)S.look=safeLook(S.look);if(!S.q||typeof S.q!=='object')S.q={}}}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
-const P={x:SPAWN.x,y:SPAWN.y,f:1,mov:false,path:null,then:null,tgt:null,hp:5,inv:0,cd:0,slash:0,regen:0,seat:'',chair:-1,d:0};
+// hearts and sword damage grow with level: level 20 has 10 hearts and hits for 6
+const maxHP=()=>5+Math.floor(S.lv/4),dmg=()=>1+Math.floor(S.lv/4);
+const P={x:SPAWN.x,y:SPAWN.y,f:1,mov:false,path:null,then:null,tgt:null,hp:maxHP(),inv:0,cd:0,slash:0,regen:0,seat:'',chair:-1,d:0};
 // coming back from a game started here: stand where you left
 try{const wp=JSON.parse(sessionStorage.getItem('world-pos'));if(wp){sessionStorage.removeItem('world-pos');if(!blocked(+wp.x,+wp.y)){P.x=+wp.x;P.y=+wp.y}}}catch(e){}
 const prof=Arcade.loadProfile();if(!S.name)S.name=clean(prof.name,'');
@@ -280,8 +286,8 @@ const qs=q=>S.q[q.id]?S.q[q.id].s:'';           // '' not taken · a active · r
 const npcName=id=>NPCS.find(n=>n.id===id).n;
 function progress(kind,who){let hit=false;QUESTS.forEach(q=>{if(qs(q)!=='a'||q.kind!==kind||(q.who&&q.who!==who))return;const st=S.q[q.id];st.n++;hit=true;
   if(st.n>=q.need){st.s='r';toast('Quest ready: return to '+npcName(q.npc));SFX.play('good')}});if(hit){save();hud()}return hit}
-const xpNeed=lv=>50*lv;
-function reward(g,xp){S.gold+=g;S.xp+=xp;while(S.xp>=xpNeed(S.lv)){S.xp-=xpNeed(S.lv);S.lv++;const bonus=20*S.lv;S.gold+=bonus;toast('Rank up! Level '+S.lv+' · '+rankOf(S.lv)+' · +'+bonus+' gold');SFX.play('win');try{Arcade.burst(innerWidth/2,innerHeight/2,['#ffd66b','#fff','#6ff7ff'],40)}catch(e){}}save();hud()}
+const xpNeed=lv=>30+12*lv;
+function reward(g,xp){S.gold+=g;S.xp+=xp;while(S.xp>=xpNeed(S.lv)){S.xp-=xpNeed(S.lv);S.lv++;P.hp=maxHP();const bonus=20*S.lv;S.gold+=bonus;toast('Rank up! Level '+S.lv+' · '+rankOf(S.lv)+' · +'+bonus+' gold');SFX.play('win');try{Arcade.burst(innerWidth/2,innerHeight/2,['#ffd66b','#fff','#6ff7ff'],40)}catch(e){}}save();hud()}
 
 /* ---------- small UI helpers ---------- */
 function toast(t){const b=$('#toast'),d=el('div',null,t);b.append(d,document.createElement('br'));while(b.children.length>6)b.firstChild.remove();setTimeout(()=>{if(d.nextSibling&&d.nextSibling.tagName==='BR')d.nextSibling.remove();d.remove()},3200)}
@@ -289,7 +295,7 @@ let paused=false;
 function dlg(title,text,buttons,body){paused=true;keys={};$('#dT').textContent=title;$('#dX').textContent=text||'';const bd=$('#dBody');bd.innerHTML='';if(body)bd.append(body);
   const bb=$('#dB');bb.innerHTML='';buttons.forEach((b,i)=>{const k=el('button',(b.p?'primary ':'')+'big',b.t);k.type='button';k.onclick=()=>{if(!b.keep)closeDlg();b.fn&&b.fn()};bb.append(k)});$('#dlg').classList.add('on')}
 function closeDlg(){$('#dlg').classList.remove('on');paused=false}
-function hud(){$('#sLv').textContent='Lv '+S.lv;$('#sLv').title=rankOf(S.lv);$('#sGold').textContent=S.gold+'g';$('#hpb').firstChild.style.width=Math.max(0,P.hp)/5*100+'%';
+function hud(){$('#sLv').textContent='Lv '+S.lv;$('#sLv').title=rankOf(S.lv);$('#sGold').textContent=S.gold+'g';$('#hpb').firstChild.style.width=Math.max(0,P.hp)/maxHP()*100+'%';
   $('#xpb').firstChild.style.width=Math.min(100,S.xp/xpNeed(S.lv)*100)+'%';
   const act=QUESTS.filter(q=>qs(q)==='a'||qs(q)==='r').slice(0,2),qt=$('#qt');qt.innerHTML='';
   if(!act.length)qt.textContent='Talk to someone with a ! to find a quest';
@@ -348,6 +354,9 @@ function renderMap(){const mk=()=>{const g=document.createElement('canvas');g.wi
     else if(t===DIRT){px(X,Y,T,T,FLAT[DIRT]);for(let i=0;i<5;i++)px(X+(R()*14|0),Y+(R()*15|0),2,1,'#84603a');for(let i=0;i<2;i++)px(X+(R()*13|0),Y+(R()*14|0),3,1,'#ad8558')}
     else if(t===COBBLE){px(X,Y,T,T,'#6f6c88');for(let r=0;r<4;r++)for(let k=-1;k<4;k++){const sx=X+k*5+(r&1?2:0),sw=4;if(sx+sw<=X||sx>=X+T)continue;const a=Math.max(X,sx),b=Math.min(X+T,sx+sw);px(a,Y+r*4,b-a,3,(r+k)&1?'#b9b6cc':'#a5a2ba');px(a,Y+r*4,b-a,1,'#d3d0e2')}}
     else if(t===FLOOR){px(X,Y,T,T,'#8d8aa3');px(X,Y,T,1,'#6f6c88');px(X,Y,1,T,'#6f6c88');px(X+1,Y+1,T-1,1,'#a5a2ba');if(R()<.3)px(X+3+(R()*8|0),Y+4+(R()*8|0),4,1,'#5d5a75');if(R()<.22)px(X+(R()*10|0),Y+10+(R()*4|0),5,3,'#4f8f6a')}
+    else if(t===EMBER){px(X,Y,T,T,(x+y)&1?'#2a1414':'#301818');for(let i=0;i<3;i++)px(X+(R()*14|0),Y+(R()*15|0),2,1,'#3d2020');if(R()<.3){const a=X+2+(R()*10|0),b=Y+2+(R()*10|0);px(a,b,3,1,'#c2410c');px(a+1,b+1,2,1,'#f97316')}}
+    else if(t===LAVA){px(X,Y,T,T,'#c2410c');px(X+(R()*10|0),Y+(R()*12|0),5,2,'#f97316');px(X+(R()*12|0),Y+(R()*12|0),2,2,'#fde047');
+      [[0,-1,X,Y,T,2],[0,1,X,Y+14,T,2],[-1,0,X,Y,2,T],[1,0,X+14,Y,2,T]].forEach(([dx,dy,a,b,w,h])=>{if(gat(x+dx,y+dy)!==LAVA)px(a,b,w,h,'#3d1a10')})}
     else if(t===ARC){px(X,Y,T,T,(x+y)&1?'#2b2048':'#33285a');px(X+1,Y+1,T-2,1,'#3d3170');if(R()<.07)px(X+3+(R()*10|0),Y+3+(R()*10|0),1,1,['#b796ff','#6ff7ff','#ff9ad0'][R()*3|0]);
       [[0,-1,X,Y,T,2],[0,1,X,Y+14,T,2],[-1,0,X,Y,2,T],[1,0,X+14,Y,2,T]].forEach(([dx,dy,a,b,w,h])=>{if(gat(x+dx,y+dy)!==ARC)px(a,b,w,h,'#e0409a')})}
     else if(t===SOIL){px(X,Y,T,T,'#6b4a2b');for(let i=3;i<T;i+=5){px(X,Y+i,T,2,'#523720');px(X+3,Y+i-3,2,3,'#6fbf6f');px(X+10,Y+i-3,2,3,'#6fbf6f');px(X+3,Y+i-4,1,1,'#ffd66b')}}
@@ -396,6 +405,7 @@ function renderMap(){const mk=()=>{const g=document.createElement('canvas');g.wi
     if(t===BARREL){px(X+3,Y+13,11,2,'#00000040');px(X+3,Y+2,10,13,'#3a2a1c');px(X+4,Y+3,8,11,'#8a5a2b');px(X+5,Y+3,2,11,'#a8703a');px(X+4,Y+5,8,1,'#c9a66b');px(X+4,Y+11,8,1,'#c9a66b');px(X+4,Y+3,8,1,'#5a3d22')}
     if(t===STALL){const first=at(x-1,y)!==STALL;tall(X,Y,p=>{p(X,Y+5,16,10,'#5a3d22');p(X,Y+6,16,8,'#8a5a2b');p(X,Y+5,16,2,'#c9a66b');p(first?X:X+14,Y-3,2,9,'#5a3d22');for(let i=0;i<4;i++)p(X+i*4,Y-11,4,8,i%2?'#f1eaff':'#e0409a');p(X,Y-4,16,1,'#7a1f3a');
         p(X+3,Y+2,4,3,first?'#ffd66b':'#6ff7ff');p(X+9,Y+1,4,4,first?'#ff8fc0':'#b796ff')})}
+    if(t===PORTAL){px(X-5,Y+9,26,6,'#00000045');px(X-4,Y+8,24,6,'#3a3448');px(X-3,Y+8,22,2,'#6f6c88');px(X-3,Y+12,22,1,'#2a2438')}
     if(t===CAB){const c=['#5b2fd6','#e0409a','#2a9df4','#3f9a5a'][(x+y)%4];px(X+1,Y+13,14,3,'#00000050');
       tall(X,Y,p=>{p(X+1,Y-16,14,30,'#1a1026');p(X+2,Y-15,12,28,c);p(X+2,Y-15,2,28,shade(c,1.3));p(X+3,Y-14,10,3,'#ffd66b');p(X+3,Y-10,10,8,'#0b1030');p(X+4,Y-9,8,6,'#6ff7ff');p(X+5,Y-8,3,2,'#e9fdff');p(X+4,Y-6,8,1,'#2a9df4');
         p(X+3,Y-1,10,4,shade(c,.7));p(X+5,Y-3,1,3,'#1a1026');p(X+4,Y-4,3,2,'#ff4d6d');p(X+9,Y-2,2,2,'#ffd66b');p(X+12,Y-2,1,2,'#7dffb0');p(X+4,Y+4,8,8,shade(c,.55));p(X+6,Y+6,4,2,'#1a1026')})}
@@ -482,13 +492,15 @@ function goTalk(n){if(Math.hypot(P.x-n.x,P.y-n.y)<28){P.path=null;return talk(n)
 let keys={},started=false,time=0;
 const typing=()=>/INPUT|TEXTAREA/.test(document.activeElement.tagName);
 addEventListener('keydown',e=>{if(typing()||paused||!started)return;const k=e.key.length===1?e.key.toLowerCase():e.key;keys[k]=true;
-  if(k===' '){e.preventDefault();attack()}if(k==='e'){const n=NPCS.find(n=>Math.hypot(P.x-n.x,P.y-n.y)<30);if(n)talk(n);else{const tb=TABLES.find(t=>Math.abs(P.x-(t.x*T+16))<34&&Math.abs(P.y-(t.y*T+16))<34);if(tb)tableDlg(tb)}}if(k==='Enter'){e.preventDefault();document.body.classList.add('chatting');$('#cin').focus()}
+  if(k===' '){e.preventDefault();attack()}if(k==='e'){const n=NPCS.find(n=>Math.hypot(P.x-n.x,P.y-n.y)<30);if(n)talk(n);else{const tb=TABLES.find(t=>Math.abs(P.x-(t.x*T+16))<34&&Math.abs(P.y-(t.y*T+16))<34);if(tb)tableDlg(tb);else{const pt=[PORTAL_OUT,PORTAL_IN].find(q=>Math.hypot(P.x-(q.tx*T+8),P.y-(q.ty*T+8))<28);if(pt)portalDlg(pt===PORTAL_IN)}}}if(k==='Enter'){e.preventDefault();document.body.classList.add('chatting');$('#cin').focus()}
   if(k.startsWith('Arrow'))e.preventDefault()});
 addEventListener('keyup',e=>{const k=e.key.length===1?e.key.toLowerCase():e.key;keys[k]=false});
 addEventListener('blur',()=>{keys={}});
 cv.addEventListener('pointerdown',e=>{if(!started||paused)return;MUSIC.kick();if(typing())document.activeElement.blur();const wx=cam.x+e.clientX/Z,wy=cam.y+e.clientY/Z;
   const n=NPCS.find(n=>Math.abs(wx-n.x)<9&&wy>n.y-18&&wy<n.y+6);if(n)return goTalk(n);
   const tbl=tableAt(Math.floor(wx/T),Math.floor(wy/T))||TABLES.find(t=>t.deco&&wx>=t.x*T&&wx<t.x*T+32&&wy>=t.y*T-18&&wy<t.y*T+32);if(tbl)return goTable(tbl);
+  if(BOSS.on&&Math.hypot(wx-BOSS.x,wy-(BOSS.y-BOSS.alt))<20){if(Math.hypot(P.x-BOSS.x,P.y-BOSS.y)<30)return attack();const p=findPath(Math.floor(BOSS.x/T),Math.floor(BOSS.y/T),true);if(p){P.path=p;P.tgt=null}return}
+  {const ptx=Math.floor(wx/T),pty=Math.floor(wy/T),pt=[PORTAL_OUT,PORTAL_IN].find(q=>q.tx===ptx&&(q.ty===pty||q.ty===pty+1));if(pt)return goPortal(pt.tx,pt.ty)}
   const s=slimes.find(s=>!s.dead&&Math.abs(wx-s.x)<10&&Math.abs(wy-(s.y-4))<10);if(s){P.tgt=s;P.then=null;return}
   const tx=Math.floor(wx/T),ty=Math.floor(wy/T);if(tx<0||ty<0||tx>=MW||ty>=MH)return;const i=idx(tx,ty),p=findPath(tx,ty,SOLID[map[i]]||npcTiles.has(i));if(p){P.path=p;P.tgt=null;P.then=null}});
 $('#bAtk').onclick=()=>attack();
@@ -511,9 +523,11 @@ $('#rotTry').onclick=goLandscape;$('#rotSkip').onclick=()=>{rotSkip=true;checkRo
 /* ---------- slimes (each player has their own; they are not shared) ---------- */
 const slimes=[];function placeSlime(s){const[x,y]=GROVE[Math.random()*GROVE.length|0];s.x=x*T+8;s.y=y*T+8;s.hp=2;s.dead=false;s.t=0;s.vx=s.vy=0;s.hit=0}
 for(let i=0;i<8;i++){const s={};placeSlime(s);slimes.push(s)}
-function attack(){if(P.cd>0||paused||!started)return;P.cd=.35;P.slash=.16;SFX.play('swing');let best=null,bd=26;slimes.forEach(s=>{if(s.dead)return;const d=Math.hypot(s.x-P.x,s.y-P.y);if(d<bd){bd=d;best=s}});if(!best)return;
-  if(Math.abs(best.x-P.x)>2)P.f=best.x<P.x?-1:1;P.d=Math.abs(best.y-P.y)>Math.abs(best.x-P.x)?(best.y>P.y?0:1):2;best.hp--;best.hit=.2;const a=Math.atan2(best.y-P.y,best.x-P.x);best.vx=Math.cos(a)*70;best.vy=Math.sin(a)*70;best.t=.25;SFX.play('hit');
-  if(best.hp<=0){best.dead=true;best.resp=10+Math.random()*6;if(P.tgt===best)P.tgt=null;S.gold+=3;toast('+3 gold');progress('s');reward(0,6)}}
+function attack(){if(P.cd>0||paused||!started)return;P.cd=.35;P.slash=.16;SFX.play('swing');
+  if(BOSS.on&&BOSS.st==='rest'&&Math.hypot(BOSS.x-P.x,BOSS.y-P.y)<30){P.f=BOSS.x<P.x?-1:1;return hitBoss()}
+  let best=null,bd=26;slimes.forEach(s=>{if(s.dead)return;const d=Math.hypot(s.x-P.x,s.y-P.y);if(d<bd){bd=d;best=s}});if(!best)return;
+  if(Math.abs(best.x-P.x)>2)P.f=best.x<P.x?-1:1;P.d=Math.abs(best.y-P.y)>Math.abs(best.x-P.x)?(best.y>P.y?0:1):2;best.hp-=dmg();best.hit=.2;const a=Math.atan2(best.y-P.y,best.x-P.x);best.vx=Math.cos(a)*70;best.vy=Math.sin(a)*70;best.t=.25;SFX.play('hit');
+  if(best.hp<=0){best.dead=true;best.resp=10+Math.random()*6;if(P.tgt===best)P.tgt=null;S.gold+=3;toast('+3 gold');progress('s');reward(0,8+Math.floor(S.lv/2))}}
 
 /* ---------- the arcade hall: sit at a game's table, wait for playmates, start together ---------- */
 const tableAt=(tx,ty)=>TABLES.find(t=>tx>=t.x&&tx<=t.x+1&&ty>=t.y&&ty<=t.y+1);
@@ -547,6 +561,79 @@ let lastSeatN=0;
 setInterval(()=>{if(!P.seat||!started)return;const tb=TABLES.find(t=>t.id===P.seat),n=seatedAt(tb).length;if(n===lastSeatN)return;
   if(n>lastSeatN)toast(n>=tb.min&&lastSeatN<tb.min?'Enough players at the '+tb.n+' table! Tap the table to start.':'A player sat down at your table ('+n+'/'+tb.max+').');else toast('A player left your table ('+n+'/'+tb.max+').');lastSeatN=n},700);
 
+/* ---------- butterflies: monarchs and blue morphos drift around the meadow, village, clearing and lake ---------- */
+const BF=[{o:'#f97316',O:'#fdba74',k:'#3b1d14',w:'#fff7ed'},{o:'#2563eb',O:'#7dd3fc',k:'#172554',w:'#ffffff'}];
+const BOPEN=["kk..","kOok","koOo",".kok","kwok",".kk."],BSHUT=[".k","kO","ko",".k","kw",".."];
+const BFLY=[];(function(){const R=mulberry(424242),homes=[AREA.meadow,[12,12,38,33],AREA.north,[4,35,16,44],AREA.meadow];
+  for(let i=0;i<20;i++){const h=homes[i%homes.length],x=(h[0]+R()*(h[2]-h[0]))*T,y=(h[1]+R()*(h[3]-h[1]))*T;BFLY.push({x,y,tx:x,ty:y,h,k:i%3===0?1:0,ph:R()*6,t:R()*3,sp:16+R()*14,f:1})}})();
+function bflyTick(dt){BFLY.forEach(b=>{b.t-=dt;const dp=Math.hypot(P.x-b.x,P.y-b.y);
+  if(dp<22){const a=Math.atan2(b.y-P.y,b.x-P.x);b.tx=b.x+Math.cos(a)*60;b.ty=b.y+Math.sin(a)*60;b.t=1.4}
+  else if(b.t<=0){b.t=2+Math.random()*3;b.tx=(b.h[0]+Math.random()*(b.h[2]-b.h[0]))*T;b.ty=(b.h[1]+Math.random()*(b.h[3]-b.h[1]))*T}
+  const dx=b.tx-b.x,dy=b.ty-b.y,d=Math.hypot(dx,dy)||1,sp=Math.min(d,(dp<22?55:b.sp)*dt);b.x+=dx/d*sp+Math.cos(time*3+b.ph)*.3;b.y+=dy/d*sp+Math.sin(time*5+b.ph)*.4;if(Math.abs(dx)>1)b.f=dx<0?-1:1})}
+function drawButterfly(b){const X=Math.round(b.x-cam.x),Y=Math.round(b.y-cam.y);if(X<-10||Y<-30||X>VW+10||Y>VH+20)return;const c=BF[b.k],open=Math.floor(time*11+b.ph*3)%2===0,alt=14+Math.round(Math.sin(time*2+b.ph)*3),half=open?BOPEN:BSHUT,w=half[0].length;
+  ctx.fillStyle='#00000040';ctx.fillRect(X-2,Y,4,1);
+  half.forEach((row,r)=>{const full=row+(r>0&&r<5?'k':'.')+row.split('').reverse().join('');for(let i=0;i<full.length;i++){const ch=full[i];if(ch==='.')continue;ctx.fillStyle=c[ch];ctx.fillRect(X-w+i,Y-alt+r,1,1)}});
+  ctx.fillStyle=c.k;ctx.fillRect(X-1,Y-alt-1,1,1);ctx.fillRect(X+1,Y-alt-1,1,1)}
+
+/* ---------- the Phoenix: a boss for level 20 heroes, fought alone in its lair ---------- */
+const PORTAL_OUT={tx:50,ty:14},PORTAL_IN={tx:52,ty:58},ARENA=[45,48,59,59],ARENA_C={x:52*T+8,y:52*T+8};
+const FIRE=['#fffbe0','#fde68a','#facc15','#fb923c','#ea580c','#dc2626'];
+const BOSS_SONG={bpm:150,lead:'square',arp:'square',ch:[[45,57,60,64],[41,53,57,60],[43,55,59,62],[40,52,56,59]],mel:[69,0,72,69,76,0,74,72, 69,0,72,69,77,0,76,74, 72,0,76,72,79,0,77,76, 74,0,72,71,69,0,68,0]};
+const inArena=()=>inA(ARENA,Math.floor(P.x/T),Math.floor(P.y/T));
+const BOSS={on:false,max:180,hp:180,x:0,y:0,alt:22,st:'fly',t:0,shots:[],trail:[],flash:0,phase:1,n:0,k:0,tx:0,ty:0};
+const POPS=[];const pop=(t,x,y,c)=>POPS.push({t,x,y,c,life:.8});
+function drawSwirl(cx,cy,R0,t,big){for(let arm=0;arm<3;arm++)for(let i=0;i<(big?44:16);i++){const q=i/(big?44:16),r=q*R0,a=t*3+arm*2.094+q*4.4,x=Math.round(cx+Math.cos(a)*r-cam.x),y=Math.round(cy+Math.sin(a)*r*.85-cam.y);
+    ctx.fillStyle=FIRE[Math.min(5,Math.floor(q*6))];const sz=q<.35?3:2;ctx.fillRect(x-1,y-1,sz,sz)}
+  ctx.fillStyle=FIRE[0];ctx.fillRect(Math.round(cx-cam.x)-2,Math.round(cy-cam.y)-2,big?5:3,big?5:3)}
+const phC={};
+function phoenixSprite(fr,flash){const key=fr+'|'+flash;if(phC[key])return phC[key];const cv=document.createElement('canvas');cv.width=40;cv.height=32;const x=cv.getContext('2d'),p=(a,b,c)=>{x.fillStyle=flash?'#ffffff':c;x.fillRect(Math.round(a),Math.round(b),1,1)};
+  const base=[-1.15,-.25,.45][fr];   // wings up, level, down
+  [-1,1].forEach(sd=>{for(let k=0;k<6;k++){const ang=base+k*.2,len=15-k*1.6;for(let l=0;l<len;l++){const q=l/len,c=q<.4?'#fde047':q<.75?'#fb923c':'#dc2626';p(20+sd*(3+Math.cos(ang)*l),14+Math.sin(ang)*l,c);p(20+sd*(3+Math.cos(ang)*l),15+Math.sin(ang)*l,q<.4?'#facc15':c)}}});
+  for(let yy=-7;yy<=7;yy++){const hw=Math.round(Math.sqrt(1-(yy/7.5)**2)*4);for(let xx=-hw;xx<=hw;xx++)p(20+xx,17+yy,Math.abs(xx)<2&&yy<3?'#fef3c7':'#facc15')}
+  for(let yy=-3;yy<=3;yy++)for(let xx=-3;xx<=3;xx++)if(xx*xx+yy*yy<=9)p(20+xx,7+yy,'#facc15');
+  p(21,6,'#1a1026');p(23,7,'#ea580c');p(24,7,'#ea580c');p(23,8,'#c2410c');
+  [[19,2,'#fb923c'],[20,1,'#fde047'],[21,2,'#dc2626'],[18,3,'#dc2626'],[20,0,'#dc2626']].forEach(([a,b,c])=>p(a,b,c));
+  for(let yy=24;yy<31;yy++){p(20,yy,yy<27?'#fb923c':'#dc2626');p(19+(yy%2),yy,'#ea580c')}
+  return phC[key]=cv}
+function drawPhoenix(){const B=BOSS,X=Math.round(B.x-cam.x),Y=Math.round(B.y-B.alt-cam.y),fr=B.st==='rest'?2:Math.floor(time*9)%3;
+  ctx.fillStyle='#00000055';ctx.fillRect(Math.round(B.x-cam.x)-9,Math.round(B.y-cam.y)+1,18,3);
+  B.trail.forEach((q,i)=>{const z=i/B.trail.length,sz=Math.max(1,Math.round(6-z*5));ctx.fillStyle=FIRE[Math.min(5,1+Math.floor(z*5))];ctx.fillRect(Math.round(q.x-cam.x-sz/2),Math.round(q.y-cam.y+8-sz/2),sz,sz)});
+  if(B.st==='aim'&&Math.floor(time*12)%2){ctx.fillStyle='rgba(255,80,40,.35)';ctx.fillRect(Math.round(B.tx-cam.x)-8,Math.round(B.ty-cam.y)-3,16,6)}
+  const spr=phoenixSprite(fr,B.flash>0);ctx.drawImage(spr,X-20,Y-18)}
+function portalDlg(inside){if(inside)return dlg('Exit portal','Leave the lair and go back to the forest?',[{t:'Leave',p:1,fn:()=>leaveArena()},{t:'Stay'}]);
+  const ok=S.lv>=20;dlg('Phoenix Portal','A swirling gate of fire. Beyond it waits the Phoenix, a boss for level 20 heroes.\n\nYou are level '+S.lv+', with '+maxHP()+' hearts and a sword that hits for '+dmg()+'.'+(S.boss?'\nYou have beaten the Phoenix '+S.boss+(S.boss>1?' times.':' time.'):''),
+    ok?[{t:'Enter the portal',p:1,fn:enterArena},{t:'Not yet'}]:[{t:'Come back at level 20',p:1},{t:'Close'}])}
+function goPortal(tx,ty){const inside=tx===PORTAL_IN.tx&&ty===PORTAL_IN.ty,cx=tx*T+8,cy=ty*T+8;if(Math.hypot(P.x-cx,P.y-cy)<28){P.path=null;return portalDlg(inside)}
+  const p=findPath(tx,ty,true);if(p){P.path=p;P.tgt=null;P.then=()=>portalDlg(inside);if(!p.length){P.then=null;portalDlg(inside)}}}
+function resetBoss(){Object.assign(BOSS,{on:true,hp:BOSS.max,x:ARENA_C.x,y:ARENA_C.y-30,alt:22,st:'fly',t:2.5,shots:[],trail:[],flash:0,phase:1,n:0})}
+function enterArena(){stand();P.path=null;P.tgt=null;P.x=PORTAL_IN.tx*T+8;P.y=(PORTAL_IN.ty-2)*T+8;P.d=1;P.hp=maxHP();resetBoss();MUSIC.set(BOSS_SONG);SFX.play('win');
+  toast('The Phoenix rises! Dodge its fire, and strike when it lands.');hud()}
+function leaveArena(msg){BOSS.on=false;BOSS.shots=[];P.path=null;P.x=PORTAL_OUT.tx*T+8;P.y=(PORTAL_OUT.ty+1)*T+12;P.d=0;MUSIC.set(WORLD_SONG);if(msg)toast(msg);hud()}
+function hurt(n,fx,fy){if(P.inv>0)return;P.hp-=n;P.inv=1.2;SFX.play('bad');const a=Math.atan2(P.y-fy,P.x-fx),kx=P.x+Math.cos(a)*12,ky=P.y+Math.sin(a)*12;if(!blocked(kx,ky)){P.x=kx;P.y=ky}P.path=null;
+  if(P.hp<=0){P.hp=maxHP();if(BOSS.on)leaveArena("The Phoenix's flames were too strong. You wake up outside the portal.");else{P.x=SPAWN.x;P.y=SPAWN.y;P.tgt=null;toast('You fainted… the villagers carried you home.')}}hud()}
+function hitBoss(){const d=dmg(),B=BOSS;B.hp-=d;B.flash=.12;SFX.play('hit');pop('-'+d,B.x,B.y-26,'#fde047');
+  if(B.hp<=B.max/2&&B.phase===1){B.phase=2;toast('The Phoenix is reborn in brighter flames!');SFX.play('win');for(let k=0;k<12;k++)B.shots.push({x:B.x,y:B.y-6,vx:Math.cos(k/12*6.283)*70,vy:Math.sin(k/12*6.283)*70,life:3})}
+  if(B.hp<=0)bossDown()}
+function bossDown(){BOSS.on=false;BOSS.shots=[];S.boss=(S.boss|0)+1;const first=S.boss===1,g=first?500:150,xp=first?300:100;MUSIC.set(WORLD_SONG);SFX.play('win');
+  for(let k=0;k<6;k++)setTimeout(()=>{try{Arcade.burst(innerWidth*(.25+.5*Math.random()),innerHeight*(.25+.35*Math.random()),['#fde047','#fb923c','#dc2626','#ffffff'],40)}catch(e){}},k*250);
+  if(first&&!S.owned.includes('phoenix'))S.owned.push('phoenix');save();reward(g,xp);
+  dlg('The Phoenix is beaten!',first?'Its last ember settles in your hands and becomes a Phoenix Crest.\n\nReward: '+g+' gold · '+xp+' XP · Phoenix Crest hat (wear it from Menu → My look)':'It will rise again. It always does.\n\nReward: '+g+' gold · '+xp+' XP',
+    [{t:'Leave the lair',p:1,fn:()=>leaveArena()},{t:'Stay a while'}])}
+const fireAt=(sx,sy,tx,ty,sp,spread)=>{const a=Math.atan2(ty-sy,tx-sx)+(spread||0);BOSS.shots.push({x:sx,y:sy,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:4})};
+// the fight: it circles the arena, throws fireballs, then dives at you and lands to rest; only a resting Phoenix can be hit
+function bossTick(dt){const B=BOSS;if(!B.on)return;if(!inArena()){B.on=false;B.shots=[];MUSIC.set(WORLD_SONG);return}
+  B.t-=dt;B.flash=Math.max(0,B.flash-dt);const fast=B.phase===2?1.35:1;B.trail.unshift({x:B.x,y:B.y-B.alt});if(B.trail.length>14)B.trail.pop();
+  if(B.st==='fly'){const k=time*.8*fast,tx=ARENA_C.x+Math.cos(k)*70,ty=ARENA_C.y-10+Math.sin(k*2)*30;B.x+=(tx-B.x)*Math.min(1,dt*2);B.y+=(ty-B.y)*Math.min(1,dt*2);B.alt+=(22-B.alt)*Math.min(1,dt*3);
+    if(B.t<=0){B.n++;if(B.n%2){B.st='volley';B.t=.3;B.k=B.phase===2?6:4}else{B.st='aim';B.t=.8;B.tx=P.x;B.ty=P.y;SFX.play('swing')}}}
+  else if(B.st==='volley'){if(B.t<=0){B.t=.28/fast;B.k--;fireAt(B.x,B.y-B.alt,P.x,P.y-6,85*fast,(Math.random()-.5)*.25);SFX.play('tick');if(B.k<=0){B.st='fly';B.t=2.2/fast}}}
+  else if(B.st==='aim'){if(B.t<=0){B.st='dive';B.t=1.2}}
+  else if(B.st==='dive'){const dx=B.tx-B.x,dy=B.ty-B.y,d=Math.hypot(dx,dy),sp=230*fast*dt;B.alt=Math.max(0,B.alt-dt*60);
+    if(d<=sp||B.t<=0){B.x=B.tx;B.y=B.ty;B.alt=0;B.st='rest';B.t=2.4/fast;SFX.play('hit');if(B.phase===2)for(let k=0;k<8;k++)B.shots.push({x:B.x,y:B.y-4,vx:Math.cos(k/8*6.283)*60,vy:Math.sin(k/8*6.283)*60,life:2.5})}
+    else{B.x+=dx/d*sp;B.y+=dy/d*sp}
+    if(Math.hypot(P.x-B.x,P.y-B.y)<14)hurt(2,B.x,B.y)}
+  else if(B.st==='rest'){if(B.t<=0){B.st='fly';B.t=2.6/fast}}
+  B.shots=B.shots.filter(q=>{q.x+=q.vx*dt;q.y+=q.vy*dt;q.life-=dt;if(Math.hypot(P.x-q.x,P.y-8-q.y)<8){hurt(1,q.x,q.y);return false}return q.life>0&&inA([44,46,61,61],Math.floor(q.x/T),Math.floor(q.y/T))})}
+
 /* ---------- one step of the game ---------- */
 function tick(dt){if(!started||paused||rotOn)return;time+=dt;
   let mx=0,my=0;if(!typing()){if(keys.ArrowLeft||keys.a)mx--;if(keys.ArrowRight||keys.d)mx++;if(keys.ArrowUp||keys.w)my--;if(keys.ArrowDown||keys.s)my++}
@@ -558,7 +645,7 @@ function tick(dt){if(!started||paused||rotOn)return;time+=dt;
     if(d<=sp){P.x=tx;P.y=ty;P.path.shift();if(!P.path.length&&P.then){const f=P.then;P.then=null;f()}}else{P.x+=dx/d*sp;P.y+=dy/d*sp;if(Math.abs(dx)>.5)P.f=dx<0?-1:1;P.d=Math.abs(dy)>Math.abs(dx)?(dy>0?0:1):2}P.mov=true}
   else P.mov=false;
   P.cd=Math.max(0,P.cd-dt);P.slash=Math.max(0,P.slash-dt);P.inv=Math.max(0,P.inv-dt);
-  if(P.hp<5&&(P.regen+=dt)>6){P.regen=0;P.hp++;hud()}
+  if(P.hp<maxHP()&&!BOSS.on&&(P.regen+=dt)>6){P.regen=0;P.hp++;hud()}
   // things to pick up (only while their quest is active)
   const want={f:QUESTS.some(q=>q.kind==='f'&&qs(q)==='a'),w:QUESTS.some(q=>q.kind==='w'&&qs(q)==='a')};
   ITEMS.forEach(it=>{if(it.off>0){it.off-=dt;return}if(want[it.k]&&Math.hypot(it.x-P.x,it.y-P.y)<11){it.off=25;SFX.play('tick');progress(it.k)}});
@@ -567,8 +654,8 @@ function tick(dt){if(!started||paused||rotOn)return;time+=dt;
   slimes.forEach(s=>{if(s.dead){if((s.resp-=dt)<=0)placeSlime(s);return}s.hit=Math.max(0,s.hit-dt);
     if((s.t-=dt)<=0){s.t=.8+Math.random()*1.2;const d=Math.hypot(P.x-s.x,P.y-s.y);if(d<70){s.vx=(P.x-s.x)/d*24;s.vy=(P.y-s.y)/d*24}else{const a=Math.random()*6.28,m=Math.random()<.4?0:16;s.vx=Math.cos(a)*m;s.vy=Math.sin(a)*m}}
     const nx=s.x+s.vx*dt,ny=s.y+s.vy*dt;if(!blocked(nx,s.y)&&inA(AREA.grove,Math.floor(nx/T),Math.floor(s.y/T)))s.x=nx;else s.vx=-s.vx;if(!blocked(s.x,ny)&&inA(AREA.grove,Math.floor(s.x/T),Math.floor(ny/T)))s.y=ny;else s.vy=-s.vy;
-    if(P.inv<=0&&Math.hypot(P.x-s.x,P.y-s.y)<9){P.hp--;P.inv=1.2;SFX.play('bad');const a=Math.atan2(P.y-s.y,P.x-s.x),kx=P.x+Math.cos(a)*10,ky=P.y+Math.sin(a)*10;if(!blocked(kx,ky)){P.x=kx;P.y=ky}P.path=null;
-      if(P.hp<=0){P.hp=5;P.x=SPAWN.x;P.y=SPAWN.y;P.tgt=null;toast('You fainted… the villagers carried you home.')}hud()}});
+    if(P.inv<=0&&Math.hypot(P.x-s.x,P.y-s.y)<9)hurt(1,s.x,s.y)});
+  bossTick(dt);bflyTick(dt);for(let i=POPS.length-1;i>=0;i--){POPS[i].life-=dt;POPS[i].y-=dt*24;if(POPS[i].life<=0)POPS.splice(i,1)}
   NET.others.forEach(o=>{o.x+=(o.tx-o.x)*Math.min(1,dt*10);o.y+=(o.ty-o.y)*Math.min(1,dt*10)});
   netTick(dt)}
 
@@ -593,7 +680,10 @@ function draw(){cam.x=MW*T<=VW?(MW*T-VW)/2:Math.max(0,Math.min(MW*T-VW,P.x-VW/2)
   slimes.forEach(s=>{if(!s.dead)list.push({y:s.y,d:()=>{const X=Math.round(s.x-cam.x),Y=Math.round(s.y-cam.y);ctx.fillStyle='#00000050';ctx.fillRect(X-5,Y+1,10,2);if(s.hit>0)ctx.globalAlpha=.5;ctx.drawImage(slimeSprite(Math.floor(time*3+s.x)%2),X-7,Y-8);ctx.globalAlpha=1}})});
   NET.others.forEach(o=>list.push({y:o.y,d:()=>drawChar(o.lk,o.x,o.y,o.f,o.m,false,o.d)}));
   list.push({y:P.y,d:()=>{drawChar(S.look,P.x,P.y,P.f,P.mov,P.inv>0&&Math.floor(time*12)%2,P.d);if(P.slash>0){ctx.fillStyle='#fff';const X=Math.round(P.x-cam.x)+P.f*8,Y=Math.round(P.y-cam.y)-10;ctx.fillRect(X,Y,2,2);ctx.fillRect(X+P.f*2,Y+2,2,4);ctx.fillRect(X,Y+6,2,2)}}});
+  [PORTAL_OUT,PORTAL_IN].forEach(p=>{const cx=p.tx*T+8,cy=p.ty*T+2;if(cx>cam.x-30&&cx<cam.x+VW+30&&cy>cam.y-30&&cy<cam.y+VH+30)drawSwirl(cx,cy,13,time,true)});
   list.sort((a,b)=>a.y-b.y).forEach(o=>o.d());
+  if(BOSS.on){BOSS.shots.forEach(q=>drawSwirl(q.x,q.y,5,time*2.5,false));drawPhoenix()}
+  BFLY.forEach(drawButterfly);
   ctx.drawImage(TOPIMG,-cam.x,-cam.y);
   WORLD.chims.forEach(([x,y],i)=>{for(let k=0;k<3;k++){const a=(time*.35+k/3+i*.2)%1,sz=2+(a*3|0);ctx.globalAlpha=.55*(1-a);ctx.fillStyle='#eceaf5';ctx.fillRect(Math.round(x-cam.x+Math.sin((a+k)*5)*3),Math.round(y-cam.y-a*18),sz,sz)}});ctx.globalAlpha=1;
   const night=(Math.sin(time/90)+1)/2;if(night>.55){const k=(night-.55)/.45;ctx.fillStyle='rgba(12,14,60,'+(k*.42).toFixed(3)+')';ctx.fillRect(0,0,VW,VH);ctx.globalCompositeOperation='lighter';
@@ -603,6 +693,10 @@ function draw(){cam.x=MW*T<=VW?(MW*T-VW)/2:Math.max(0,Math.min(MW*T-VW,P.x-VW/2)
   NET.others.forEach(o=>{label(o.n+' · Lv '+o.lv,o.x,o.y-28,'#fff');if(o.say&&o.sayT>time)label(o.say,o.x,o.y-37,'#fff',true)});
   TABLES.forEach(tb=>{const X=tb.x*T,Y=tb.y*T;if(X<cam.x-80||X>cam.x+VW+40||Y<cam.y-60||Y>cam.y+VH+60)return;if(tb.deco)return label(tb.n,X+16,Y-26,'#ff9ad0',true);
     const n=seatedAt(tb).length;label(tb.n+' · '+n+'/'+tb.max,X+16,tb.max>2?Y-42:Y-12,n>=tb.min?'#7dffb0':'#ffd66b',true)});
+  label('Phoenix Portal · Lv 20',PORTAL_OUT.tx*T+8,PORTAL_OUT.ty*T-16,'#fb923c',true);label('Exit',PORTAL_IN.tx*T+8,PORTAL_IN.ty*T-16,'#fde047',true);
+  POPS.forEach(q=>label(q.t,q.x,q.y,q.c,false));
+  if(BOSS.on){const B=BOSS,w=Math.min(uic.width*.6,420),x0=(uic.width-w)/2,y0=78;ux.fillStyle='#000c';ux.fillRect(x0-8,y0-26,w+16,44);ux.font='22px VT323,monospace';ux.textAlign='center';ux.fillStyle='#fde047';
+    ux.fillText(B.phase===2?'PHOENIX — REBORN':'PHOENIX',uic.width/2,y0-6);ux.fillStyle='#3d1a10';ux.fillRect(x0,y0,w,10);ux.fillStyle=B.phase===2?'#fb923c':'#dc2626';ux.fillRect(x0,y0,w*Math.max(0,B.hp)/B.max,10);ux.fillStyle='#ffffff55';ux.fillRect(x0,y0,w*Math.max(0,B.hp)/B.max,2)}
   label('★ PIXEL ARCADE ★',26*T,43*T-15,'#ffffff',false);label('↓ Arcade Hall',26*T,37*T+2,'#ff9ad0',true);
   label(S.name,P.x,P.y-28,'#9fe0b0');if(mySay&&mySayT>time)label(mySay,P.x,P.y-37,'#fff',true)}
 let last=0;function frame(t){const dt=Math.min(.05,(t-last)/1000||0);last=t;tick(dt);if(started)draw();requestAnimationFrame(frame)}
@@ -672,7 +766,7 @@ function netTick(dt){if(!NET.peer)return;NET.acc+=dt;NET.bacc+=dt;
 
 /* ---------- start ---------- */
 SFX.add({swing:()=>SFX.tone(300,0,.06,'square',.04,140),hit:()=>SFX.tone(180,0,.09,'sawtooth',.06,70),tick:()=>SFX.tone(880,0,.05,'triangle',.06,1320)});
-MUSIC.set({bpm:92,lead:'triangle',arp:'triangle',ch:[[48,55,60,64],[45,52,57,60],[41,48,53,57],[43,50,55,59]],mel:[67,0,72,0,76,0,72,0, 69,0,72,0,76,0,0,0, 65,0,69,0,72,0,69,0, 67,0,71,0,74,0,0,0]});
+const WORLD_SONG={bpm:92,lead:'triangle',arp:'triangle',ch:[[48,55,60,64],[45,52,57,60],[41,48,53,57],[43,50,55,59]],mel:[67,0,72,0,76,0,72,0, 69,0,72,0,76,0,0,0, 65,0,69,0,72,0,69,0, 67,0,71,0,74,0,0,0]};MUSIC.set(WORLD_SONG);
 function begin(){started=true;hud();if(!S.hall){S.hall=1;save();setTimeout(()=>toast('New: the Arcade Hall is just south of the village!'),2400)}addChat('','Welcome to Pixel World, '+S.name+'! Tap the ground to walk. Tap a villager to talk.',true);netJoin(0);if(!Object.keys(S.q).length)setTimeout(()=>toast('Elder Oro is waiting in the square'),900)}
 addEventListener('beforeunload',()=>{save();netLeave()});
 addEventListener('pagehide',()=>{save();netLeave()});
@@ -682,7 +776,7 @@ const enter=()=>{begin();if(TOUCH)goLandscape();checkRot()};
 if(!S.look||!S.name)lookEditor(enter,true);
 else if(TOUCH)dlg('Pixel World','Welcome back, '+S.name+'!\n\nThis world is played with your phone held sideways.',[{t:'Play',p:1,fn:enter},{t:'< Back to Arcade',fn:()=>{location.href='../'}}]);
 else enter();
-window._W={S,P,NET,tick,draw,talk,attack,findPath,slimes,ITEMS,QUESTS,NPCS,map,idx,shop,menu,TABLES,chairsOf,seatedAt,sit,stand,startTable,goHere,tableDlg,goTable};
+window._W={S,P,NET,tick,draw,talk,attack,findPath,slimes,ITEMS,QUESTS,NPCS,map,idx,shop,menu,TABLES,chairsOf,seatedAt,BOSS,BFLY,enterArena,leaveArena,hitBoss,portalDlg,maxHP,dmg,sit,stand,startTable,goHere,tableDlg,goTable};
 </script>
 </body>
 </html>
