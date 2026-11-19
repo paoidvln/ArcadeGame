@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwo00p8u';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
+<script data-arcade-version>window.AV='mwo0a0zg';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwo00p8u">
-<script data-pwa defer src="../shared/wand.js?v=mwo00p8u"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwo0a0zg">
+<script data-pwa defer src="../shared/wand.js?v=mwo0a0zg"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Pixel World</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwo00p8u">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwo0a0zg">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js" defer></script>
 <style>
 :root{--bg:#0b1020;--panel:#1d2a3f;--panel2:#131c2c;--edge:#4f8f6a;--accent:#3f9a5a;--accent-d:#1f5a34;--accent-l:#9fe0b0;--gold:#ffd66b}
@@ -25,10 +25,10 @@ body::after{display:none}
 #cv,#ui{position:fixed;left:0;top:0;display:block}
 #cv{image-rendering:pixelated;image-rendering:crisp-edges;transform-origin:0 0}
 #ui{pointer-events:none}
-#hud{position:fixed;left:8px;right:8px;top:8px;display:flex;justify-content:flex-end;pointer-events:none;z-index:5}
+#hud{position:fixed;left:8px;right:8px;top:52px;display:flex;justify-content:flex-end;pointer-events:none;z-index:5}
 .chip{background:#000b;border:3px solid #000;box-shadow:inset 0 0 0 2px #ffffff26;padding:6px 8px;font:18px/1 VT323,monospace;color:#fff}
 #qt{max-width:min(48%,360px);text-align:right;font-size:17px;line-height:1.1}#qt b{color:var(--gold);font-weight:400}
-#bar{position:fixed;left:0;right:0;bottom:0;height:44px;z-index:7;display:flex;align-items:center;gap:8px;padding:0 8px;background:#4a4a58;border-top:3px solid #000;box-shadow:inset 0 3px 0 #77778a,inset 0 -3px 0 #2f2f3a;font:19px/1 VT323,monospace;color:#fff}
+#bar{position:fixed;left:0;right:0;top:0;height:44px;z-index:7;display:flex;align-items:center;gap:8px;padding:0 8px;background:#4a4a58;border-bottom:3px solid #000;box-shadow:inset 0 3px 0 #77778a,inset 0 -3px 0 #2f2f3a;font:19px/1 VT323,monospace;color:#fff}
 #hpw{flex:1 1 90px;max-width:230px;min-width:64px;display:flex;align-items:center;gap:5px}#hpw span{color:#ff5d6e;text-shadow:1px 1px 0 #000;font-size:22px}
 #hpb{flex:1;height:16px;background:#1a1026;border:3px solid #000;box-shadow:inset 0 0 0 1px #77778a}#hpb i{display:block;height:100%;width:100%;background:#e0303f;box-shadow:inset 0 3px 0 #ff7a86,inset 0 -3px 0 #a01c2a;transition:width .2s steps(4)}
 .bi{background:#2f2f3a;border:3px solid #000;padding:4px 7px;white-space:nowrap}#sGold{color:var(--gold)}
@@ -36,18 +36,18 @@ body::after{display:none}
 #net{margin-left:auto}
 #bar button{flex:none;width:36px;height:34px;padding:0;margin:0;font-size:15px;background:#2f2f3a;box-shadow:inset -2px -2px 0 #1c1c24,inset 2px 2px 0 #77778a}
 @media(max-width:520px){#bar{gap:4px;padding:0 4px}#xpb{display:none}.bi{padding:4px 4px}#bar button{width:30px}#hpw{min-width:48px}#net{max-width:62px;overflow:hidden}}
-#chat{position:fixed;left:8px;bottom:52px;width:min(360px,calc(100vw - 96px));z-index:5;pointer-events:none}
+#chat{position:fixed;left:8px;bottom:8px;width:min(360px,calc(100vw - 96px));z-index:5;pointer-events:none}
 #clog{font:18px/1.05 VT323,monospace;color:#fff;text-shadow:1px 1px 0 #000,-1px 1px 0 #000,1px -1px 0 #000,-1px -1px 0 #000}
 #clog div{overflow-wrap:anywhere}#clog b{color:var(--gold);font-weight:400}#clog .sys{color:#9fe0b0}
 #cform{display:flex;gap:6px;margin-top:6px;pointer-events:auto}
 #cin{flex:1;min-width:0;font-size:18px;padding:6px 8px;margin:0;-webkit-user-select:text;user-select:text}
 #cform button{flex:none;margin:0}
-#act{position:fixed;right:10px;bottom:56px;z-index:5;display:flex;flex-direction:column;gap:8px}
+#act{position:fixed;right:10px;bottom:14px;z-index:5;display:flex;flex-direction:column;gap:8px}
 #act button{width:64px;height:56px;font-size:18px;padding:0;margin:0}
-#joy{position:fixed;left:22px;bottom:62px;width:124px;height:124px;border-radius:50%!important;background:#0007;border:3px solid #ffffff66;z-index:6;display:none;touch-action:none}
+#joy{position:fixed;left:22px;bottom:22px;width:124px;height:124px;border-radius:50%!important;background:#0007;border:3px solid #ffffff66;z-index:6;display:none;touch-action:none}
 #joy i{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%!important;background:#ffffffb0;border:3px solid #000;pointer-events:none}
 body.touch #joy{display:block}
-body.touch #chat{left:8px;top:8px;bottom:auto;width:min(320px,46vw)}
+body.touch #chat{left:8px;top:52px;bottom:auto;width:min(320px,46vw)}
 #cform{display:none}body.chatting #cform{display:flex}
 #rot{z-index:90;background:#04020cf5}#rot .card{text-align:center}#rot b{color:var(--gold);font-weight:400}
 #rot .ph{height:84px;display:flex;align-items:center;justify-content:center;margin-bottom:6px}
@@ -107,7 +107,7 @@ body.touch #chat{left:8px;top:8px;bottom:auto;width:min(320px,46vw)}
 </div></div>
 <div class="overlay" id="dlg"><div class="card"><h2 id="dT"></h2><p id="dX"></p><div id="dBody"></div><div id="dB"></div></div></div>
 
-<script src="../shared/arcade.js?v=mwo00p8u"></script>
+<script src="../shared/arcade.js?v=mwo0a0zg"></script>
 <script>
 const {$,el,SFX,MUSIC,clean}=Arcade;
 /* =====================================================================================
@@ -541,14 +541,15 @@ addEventListener('keydown',e=>{if(typing()||paused||!started)return;const k=e.ke
   if(k.startsWith('Arrow'))e.preventDefault()});
 addEventListener('keyup',e=>{const k=e.key.length===1?e.key.toLowerCase():e.key;keys[k]=false});
 addEventListener('blur',()=>{keys={}});
-cv.addEventListener('pointerdown',e=>{if(!started||paused)return;MUSIC.kick();if(typing())document.activeElement.blur();const wx=cam.x+e.clientX/Z,wy=cam.y+e.clientY/Z;
-  const n=NPCS.find(n=>Math.abs(wx-n.x)<9&&wy>n.y-18&&wy<n.y+6);if(n)return goTalk(n);
-  const tbl=tableAt(Math.floor(wx/T),Math.floor(wy/T))||TABLES.find(t=>t.deco&&wx>=t.x*T&&wx<t.x*T+32&&wy>=t.y*T-18&&wy<t.y*T+32);if(tbl)return goTable(tbl);
-  if(LOOT.on&&!LOOT.open&&Math.hypot(wx-LOOT.x,wy-LOOT.y)<16){const p=findPath(Math.floor(LOOT.x/T),Math.floor(LOOT.y/T),false);if(p){P.path=p;P.tgt=null}return}
-  if(BOSS.on&&Math.hypot(wx-BOSS.x,wy-(BOSS.y-BOSS.alt))<20){if(Math.hypot(P.x-BOSS.x,P.y-BOSS.y)<30)return attack();const p=findPath(Math.floor(BOSS.x/T),Math.floor(BOSS.y/T),true);if(p){P.path=p;P.tgt=null}return}
-  {const ptx=Math.floor(wx/T),pty=Math.floor(wy/T),pt=[PORTAL_OUT,PORTAL_IN].find(q=>q.tx===ptx&&(q.ty===pty||q.ty===pty+1));if(pt)return goPortal(pt.tx,pt.ty)}
-  const s=slimes.find(s=>!s.dead&&Math.abs(wx-s.x)<10&&Math.abs(wy-(s.y-4))<10);if(s){P.tgt=s;P.then=null;return}
-  const tx=Math.floor(wx/T),ty=Math.floor(wy/T);if(tx<0||ty<0||tx>=MW||ty>=MH)return;const i=idx(tx,ty),p=findPath(tx,ty,SOLID[map[i]]||npcTiles.has(i));if(p){P.path=p;P.tgt=null;P.then=null}});
+cv.addEventListener('pointerdown',e=>{if(!started||paused)return;MUSIC.kick();if(typing())document.activeElement.blur();
+  const wx=cam.x+e.clientX/Z,wy=cam.y+e.clientY/Z,near=(x,y,r)=>Math.hypot(P.x-x,P.y-y)<r;
+  const n=NPCS.find(n=>Math.abs(wx-n.x)<10&&wy>n.y-26&&wy<n.y+6);if(n)return near(n.x,n.y,40)?talk(n):toast('Walk closer to talk to '+n.n);
+  const tbl=tableAt(Math.floor(wx/T),Math.floor(wy/T))||TABLES.find(t=>t.deco&&wx>=t.x*T&&wx<t.x*T+32&&wy>=t.y*T-18&&wy<t.y*T+32);
+  if(tbl)return Math.abs(P.x-(tbl.x*T+16))<42&&Math.abs(P.y-(tbl.y*T+16))<42?tableDlg(tbl):toast('Walk closer to the '+tbl.n+(tbl.deco?'':' table'));
+  {const ptx=Math.floor(wx/T),pty=Math.floor(wy/T),pt=[PORTAL_OUT,PORTAL_IN].find(q=>q.tx===ptx&&(q.ty===pty||q.ty===pty+1));if(pt)return near(pt.tx*T+8,pt.ty*T+8,40)?portalDlg(pt===PORTAL_IN):toast('Walk closer to the portal')}
+  if(LOOT.on&&!LOOT.open&&Math.hypot(wx-LOOT.x,wy-LOOT.y)<16)return near(LOOT.x,LOOT.y,40)?openChest():toast('Walk over to the chest to open it');
+  if(P.seat)return;
+  const dx=wx-P.x,dy=wy-(P.y-10);if(Math.abs(dx)>2)P.f=dx<0?-1:1;P.d=Math.abs(dy)>Math.abs(dx)*1.2?(dy>0?0:1):2;attack()});
 $('#bAtk').onclick=()=>attack();
 // touch: a thumb stick on the left, attack and chat buttons on the right
 const TOUCH=matchMedia('(pointer:coarse)').matches||navigator.maxTouchPoints>0,joy={x:0,y:0,id:null};document.body.classList.toggle('touch',TOUCH);
@@ -810,7 +811,7 @@ function draw(){cam.x=MW*T<=VW?(MW*T-VW)/2:Math.max(0,Math.min(MW*T-VW,P.x-VW/2)
     const n=seatedAt(tb).length;label(tb.n+' · '+n+'/'+tb.max,X+16,tb.max>2?Y-42:Y-12,n>=tb.min?'#7dffb0':'#ffd66b',true)});
   label('Phoenix Portal · Lv 20',PORTAL_OUT.tx*T+8,(PORTAL_OUT.ty+1)*T+14,'#fb923c',true);label('Exit',PORTAL_IN.tx*T+8,PORTAL_IN.ty*T-16,'#fde047',true);
   POPS.forEach(q=>label(q.t,q.x,q.y,q.c,false));
-  if(BOSS.on){const B=BOSS,w=Math.min(uic.width*.6,420),x0=(uic.width-w)/2,y0=78;ux.fillStyle='#000c';ux.fillRect(x0-8,y0-26,w+16,44);ux.font='22px VT323,monospace';ux.textAlign='center';ux.fillStyle='#fde047';
+  if(BOSS.on){const B=BOSS,w=Math.min(uic.width*.6,420),x0=(uic.width-w)/2,y0=124;ux.fillStyle='#000c';ux.fillRect(x0-8,y0-26,w+16,44);ux.font='22px VT323,monospace';ux.textAlign='center';ux.fillStyle='#fde047';
     ux.fillText(B.phase===2?'PHOENIX — REBORN':'PHOENIX',uic.width/2,y0-6);ux.fillStyle='#3d1a10';ux.fillRect(x0,y0,w,10);ux.fillStyle=B.phase===2?'#fb923c':'#dc2626';ux.fillRect(x0,y0,w*Math.max(0,B.hp)/B.max,10);ux.fillStyle='#ffffff55';ux.fillRect(x0,y0,w*Math.max(0,B.hp)/B.max,2)}
   label('★ PIXEL ARCADE ★',26*T,43*T-15,'#ffffff',false);label('↓ Arcade Hall',26*T,37*T+2,'#ff9ad0',true);
   if(EQUIP.on&&EQUIP.sw)label('✦ '+EQUIP.name+' ✦',P.x,P.y-44-Math.round((EQUIP.t-.95)*8),'#fde047',true);
@@ -883,7 +884,7 @@ function netTick(dt){if(!NET.peer)return;NET.acc+=dt;NET.bacc+=dt;
 /* ---------- start ---------- */
 SFX.add({swing:()=>SFX.tone(300,0,.06,'square',.04,140),hit:()=>SFX.tone(180,0,.09,'sawtooth',.06,70),tick:()=>SFX.tone(880,0,.05,'triangle',.06,1320)});
 const WORLD_SONG={bpm:92,lead:'triangle',arp:'triangle',ch:[[48,55,60,64],[45,52,57,60],[41,48,53,57],[43,50,55,59]],mel:[67,0,72,0,76,0,72,0, 69,0,72,0,76,0,0,0, 65,0,69,0,72,0,69,0, 67,0,71,0,74,0,0,0]};MUSIC.set(WORLD_SONG);
-function begin(){started=true;hud();if(!S.hall){S.hall=1;save();setTimeout(()=>toast('New: the Arcade Hall is just south of the village!'),2400)}addChat('','Welcome to Pixel World, '+S.name+'! Tap the ground to walk. Tap a villager to talk.',true);netJoin(0);if(!Object.keys(S.q).length)setTimeout(()=>toast('Elder Oro is waiting in the square'),900)}
+function begin(){started=true;hud();if(!S.hall){S.hall=1;save();setTimeout(()=>toast('New: the Arcade Hall is just south of the village!'),2400)}addChat('','Welcome to Pixel World, '+S.name+'! '+(TOUCH?'Walk with the joystick and tap to attack. Tap someone nearby to talk.':'Walk with the arrow keys or WASD and click to attack. Click someone nearby to talk.'),true);netJoin(0);if(!Object.keys(S.q).length)setTimeout(()=>toast('Elder Oro is waiting in the square'),900)}
 addEventListener('beforeunload',()=>{save();netLeave()});
 addEventListener('pagehide',()=>{save();netLeave()});
 setInterval(save,15000);
