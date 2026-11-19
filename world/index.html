@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwnkhgdo';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
+<script data-arcade-version>window.AV='mwnvwem5';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwnkhgdo">
-<script data-pwa defer src="../shared/wand.js?v=mwnkhgdo"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwnvwem5">
+<script data-pwa defer src="../shared/wand.js?v=mwnvwem5"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Pixel World</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwnkhgdo">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwnvwem5">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js" defer></script>
 <style>
 :root{--bg:#0b1020;--panel:#1d2a3f;--panel2:#131c2c;--edge:#4f8f6a;--accent:#3f9a5a;--accent-d:#1f5a34;--accent-l:#9fe0b0;--gold:#ffd66b}
@@ -60,7 +60,7 @@ body.touch #chat{left:8px;top:8px;bottom:auto;width:min(320px,46vw)}
 #dT{color:var(--gold)}#dX{font-size:22px;line-height:1.15;margin:0 0 14px;white-space:pre-line}
 #dB{display:flex;flex-direction:column;gap:8px}#dB button{margin:0;width:100%}
 .lk{display:flex;gap:14px;align-items:center;margin-bottom:10px}
-.lk canvas{width:96px;height:152px;image-rendering:pixelated;background:var(--panel2);border:3px solid #000;flex:none}
+.lk canvas{width:96px;height:144px;image-rendering:pixelated;background:var(--panel2);border:3px solid #000;flex:none}
 .lk .opts{flex:1;min-width:0}
 .lab{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--accent-l);margin:8px 0 4px}
 .swr{display:flex;flex-wrap:wrap;gap:5px}.swr b{width:24px;height:24px;border:3px solid #000;opacity:.55;cursor:pointer}.swr b.sel{opacity:1;box-shadow:0 0 0 2px #fff}
@@ -68,7 +68,7 @@ body.touch #chat{left:8px;top:8px;bottom:auto;width:min(320px,46vw)}
 #nameIn{width:100%;margin:0;-webkit-user-select:text;user-select:text}
 .shop{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:8px;margin-bottom:12px}
 .it{background:var(--panel2);border:3px solid #000;padding:8px;text-align:center;font-size:18px;line-height:1.05}
-.it canvas{width:48px;height:76px;image-rendering:pixelated;display:block;margin:0 auto 4px}
+.it canvas{width:48px;height:72px;image-rendering:pixelated;display:block;margin:0 auto 4px}
 .it b{display:block;color:var(--gold);font-weight:400;margin:2px 0 6px}.it button{margin:0;width:100%;font-size:9px;padding:7px 4px}
 .ql{background:var(--panel2);border:3px solid #000;padding:8px 10px;margin-bottom:8px;font-size:19px;line-height:1.1}
 .ql b{display:block;font-family:'Press Start 2P',monospace;font-weight:400;font-size:8px;color:var(--gold);margin-bottom:5px;line-height:1.5}
@@ -98,7 +98,7 @@ body.touch #chat{left:8px;top:8px;bottom:auto;width:min(320px,46vw)}
 </div></div>
 <div class="overlay" id="dlg"><div class="card"><h2 id="dT"></h2><p id="dX"></p><div id="dBody"></div><div id="dB"></div></div></div>
 
-<script src="../shared/arcade.js?v=mwnkhgdo"></script>
+<script src="../shared/arcade.js?v=mwnvwem5"></script>
 <script>
 const {$,el,SFX,MUSIC,clean}=Arcade;
 /* =====================================================================================
@@ -198,53 +198,61 @@ function safeLook(l){l=l||{};const n=(v,max)=>Math.min(max,Math.max(0,v|0));
 const sprC=new Map();
 function outlined(src){const o=document.createElement('canvas');o.width=src.width+2;o.height=src.height+2;const x=o.getContext('2d');[[0,1],[2,1],[1,0],[1,2]].forEach(([a,b])=>x.drawImage(src,a,b));
   x.globalCompositeOperation='source-in';x.fillStyle='#1a1026';x.fillRect(0,0,o.width,o.height);x.globalCompositeOperation='source-over';x.drawImage(src,1,1);return o}
-// A character is drawn from parts on a 12x19 grid, then outlined.
+// 16-bit style characters: drawn from parts on a 16x25 grid with three or four shades per colour, then outlined.
 // dir: 0 facing down (front), 1 facing up (back), 2 facing right (side; drawn flipped for left).
 // fr: 0 standing, 1-6 the six steps of a walk, 7 standing with eyes shut (a blink).
-const HEADF=["....hhhh....","...hhhhhh...","..hhhhhhhh..","..hssssssh..","..hsessesh..","..ssssssss..","...ssmmss..."],
-      HEADB=["....hhhh....","...hhhhhh...","..hhhhhhhh..","..hhhhhhhh..","..hhhhhhhh..","..hhhhhhhh..","...hssssh..."],
-      HEADS=["....hhhh....","...hhhhhh...","..hhhhhhhh..","..hhhhssss..","..hhhsssess.","..hhhssssss.","...hhsssms.."];
+// Head rows: h hair, H hair shine, d hair shadow, s skin, S skin shadow, w eye white, e pupil, r blush, m mouth.
+const HEADF=[".....hhhhhh.....","...hhHHhhhhhh...","..hhHHhhhhhhhd..","..hHhhhhhhhhhd..","..hhhssssssshd..","..hhsssssssshh..","..hsswssssswsh..","..hsseSsssSesh..","..hsrssssssrsh..","...hsssmmsssh..."],
+      HEADB=[".....hhhhhh.....","...hhHHhhhhhh...","..hhHHhhhhhhhd..","..hHhhhhhhhhhd..","..hhhhhhhhhhhd..","..hhhhhhhhhhhd..","..hhhhhhhhhhdd..","..dhhhhhhhhhdd..","...dhhhhhhhdd...","....dSssssSd...."],
+      HEADS=[".....hhhhhh.....","...hhHHhhhhh....","..hhHHhhhhhhh...","..hHhhhhhhhhhh..","..hhhhhhssssh...","..hhhhhsssssss..","..dhhhsssswess..","..dhhhsssseesss.","..ddhhssssssrs..","...ddhSsssmsS..."];
 function charSprite(lk,fr,dir){fr=fr||0;dir=dir|0;const key=[lk.sk,lk.hs,lk.hc,lk.oc,lk.out,lk.hat,fr,dir].join('|');let cv=sprC.get(key);if(cv)return cv;
-  const o=OUT[lk.out]||OUT.basic,c=o.c||lk.oc||CLOTH[0],pc=o.p||'#3b4a7a',ty=o.type,
-    col={h:HAIRC[lk.hc],H:shade(HAIRC[lk.hc],1.4),s:SKIN[lk.sk],S:shade(SKIN[lk.sk],.85),e:'#1a1026',m:shade(SKIN[lk.sk],.72),c,C:shade(c,.72),L:shade(c,1.2),t:o.t||shade(c,.8),p:pc,Q:shade(pc,.72),b:'#3a2a1c',B:'#5c4430'};
-  const raw=document.createElement('canvas');raw.width=12;raw.height=19;const x=raw.getContext('2d');
-  const P=(a,b,k)=>{a=Math.round(a);b=Math.round(b);if(a<0||a>11||b<0||b>18)return;x.fillStyle=col[k]||k;x.fillRect(a,b,1,1)},R=(a,b,w,h,k)=>{for(let j=0;j<h;j++)for(let i=0;i<w;i++)P(a+i,b+j,k)};
+  const o=OUT[lk.out]||OUT.basic,c=o.c||lk.oc||CLOTH[0],pc=o.p||'#3b4a7a',ty=o.type,hc=HAIRC[lk.hc],sk=SKIN[lk.sk],tr=o.t||shade(c,.8),
+    col={h:hc,H:shade(hc,1.45),d:shade(hc,.65),s:sk,S:shade(sk,.82),r:'#f08a8a',w:'#ffffff',e:'#1a1026',m:shade(sk,.62),
+      c,L:shade(c,1.25),C:shade(c,.75),D:shade(c,.55),t:tr,T:shade(tr,1.3),y:'#ffd66b',p:pc,P:shade(pc,1.25),Q:shade(pc,.72),
+      b:'#5a3a22',B:'#8a5a34',k:'#2a1a10'};
+  const raw=document.createElement('canvas');raw.width=16;raw.height=25;const x=raw.getContext('2d');
+  const P=(a,b,k)=>{a=Math.round(a);b=Math.round(b);if(a<0||a>15||b<0||b>24)return;x.fillStyle=col[k]||k;x.fillRect(a,b,1,1)},R=(a,b,w,h,k)=>{for(let j=0;j<h;j++)for(let i=0;i<w;i++)P(a+i,b+j,k)};
   const walk=fr>=1&&fr<=6,ph=walk?(fr-1)/6*Math.PI*2:0,sw=walk?Math.sin(ph):0,cs=walk?Math.cos(ph):1;
-  const bob=walk&&Math.abs(sw)<.6?-1:0;            // the body rises as the legs pass each other
-  const side=dir===2,blink=fr===7;
+  const bob=walk&&Math.abs(sw)<.6?-1:0,side=dir===2,blink=fr===7,y0=bob;
+  const boot=(a,row,w,toe)=>{R(a,row,w,1,'B');R(a,row+1,w,1,'b');if(toe)P(a+w,row+1,'b');R(a,row+2,w+(toe?1:0),1,'k')};
   /* legs and feet */
-  if(side){const front=Math.round(2*sw),back=-front,liftF=walk&&cs>.4?1:0,liftB=walk&&cs<-.4?1:0;
-    const leg=(off,lift,k,kb)=>{const top=ty==='shirt'?15:ty==='dress'?17:18;for(let r=top+bob;r<=17-lift;r++){const sh=Math.round(off*(r-14)/4);R(5+sh,r,2,1,k)}
-      const fx=5+off;R(fx,18-lift,3,1,kb);P(fx+2,18-lift,'B')};
-    leg(back,liftB,ty==='shirt'?'Q':'S','b');leg(front,liftF,ty==='shirt'?'p':'s','b')}
-  else{const lL=walk&&sw>.3?1:0,lR=walk&&sw<-.3?1:0,top=ty==='shirt'?15:ty==='dress'?17:18;
-    [[4,lL],[6,lR]].forEach(([a,lift])=>{for(let r=top+bob;r<=17-lift;r++){R(a,r,2,1,ty==='shirt'?'p':'s');P(a+1,r,ty==='shirt'?'Q':'S')}R(a,18-lift,2,1,'b');if(lift)P(a,18,'#00000033')})}
+  const legTop=ty==='shirt'?19:ty==='dress'?22:24;
+  if(side){const front=Math.round(3*sw),back=-front,liftF=walk&&cs>.4?1:0,liftB=walk&&cs<-.4?1:0;
+    const leg=(off,lift,near)=>{for(let r=legTop+bob;r<=21-lift;r++){const sh=Math.round(off*(r-18)/4);R(7+sh,r,2,1,ty==='shirt'?(near?'p':'Q'):(near?'s':'S'));if(near&&ty==='shirt')P(7+sh,r,'P')}
+      const fx=7+off;if(ty==='robe'&&!lift)R(fx,23,3,1,near?'b':'k');else if(ty!=='robe')boot(fx,22-lift,2,1)};
+    leg(back,liftB,false);leg(front,liftF,true)}
+  else{const lL=walk&&sw>.3?1:0,lR=walk&&sw<-.3?1:0;
+    [[5,lL],[8,lR]].forEach(([a,lift])=>{for(let r=legTop+bob;r<=21-lift;r++){if(ty==='shirt'){R(a,r,3,1,'p');P(a,r,'P');P(a+2,r,'Q')}else{R(a+1,r,2,1,'s');P(a+2,r,'S')}}
+      if(ty==='robe'){if(!lift)R(a,23,3,1,'b'),R(a,24,3,1,'k')}else boot(a,22-lift,3,0);if(lift)R(a,24,3,1,'#00000030')})}
   /* body */
-  const y0=bob;
-  if(side){const hx=-Math.round(2*sw);   // the arm swings opposite the front leg
-    for(let r=11;r<=12;r++)P(5-Math.round(hx*(r-10)/3)+(r===12?0:0),r+y0,'C');P(5-hx,13+y0,'S');     // far arm, mostly hidden
-    R(4,10+y0,4,4,'c');R(4,10+y0,1,4,'C');R(4,13+y0,4,1,ty==='shirt'?'t':'c');R(4,14+y0,4,1,ty==='shirt'?'c':'c');
-    if(ty==='dress'){const sh=Math.round(sw);R(3,14+y0,6,2,'c');R(3+sh,16+y0,6,1,'c');R(3+sh,16+y0,6,1,'t');R(3,14+y0,1,2,'C')}
-    if(ty==='robe'){const sh=Math.round(sw*.6);R(3,14+y0,6,3,'c');R(3+sh,17+y0,6,1,'t');R(3,14+y0,1,3,'C')}
-    for(let r=11;r<=12;r++)P(6+Math.round(hx*(r-10)/3),r+y0,'L');P(6+hx,13+y0,'s')}              // near arm, in front
-  else{R(4,10+y0,4,1,'c');R(3,11+y0,6,4,'c');R(8,11+y0,1,4,'C');R(3,13+y0,6,1,ty==='shirt'?'t':'c');if(ty!=='shirt')P(5,11+y0,'t'),P(6,11+y0,'t');
-    if(ty==='dress'){const sh=Math.round(sw);R(2,15+y0,8,1,'c');R(2+sh,16+y0,8,1,'t');R(9,15+y0,1,1,'C')}
-    if(ty==='robe'){const sh=Math.round(sw*.6);R(3,15+y0,6,2,'c');R(3+sh,17+y0,6,1,'t');R(8,15+y0,1,2,'C')}
-    const aL=walk?(sw<-.3?-1:sw>.3?1:0):0,aR=-aL;   // arms swing opposite the legs
-    [[2,aL],[9,aR]].forEach(([a,da])=>{R(a,11+y0+Math.min(0,da),1,2,a===9?'C':'c');P(a,13+y0+da,'s')})}
+  if(side){const hx=-Math.round(2*sw);
+    R(7-hx,14+y0,2,2,'D');P(7-hx,16+y0,'S');                                        // far arm, mostly hidden
+    R(6,13+y0,4,1,'c');R(6,14+y0,4,4,'c');R(6,14+y0,1,4,'C');R(9,14+y0,1,4,'L');R(6,18+y0,4,1,'c');
+    if(ty==='shirt'){R(6,17+y0,4,1,'t');P(9,17+y0,'y')}
+    if(ty==='dress'){const sh=Math.round(sw);R(5,17+y0,6,2,'c');R(4,19+y0,8,2,'c');R(4+sh,21+y0,8,1,'t');R(5,17+y0,1,4,'C');R(10,18+y0,1,3,'L')}
+    if(ty==='robe'){const sh=Math.round(sw*.7);R(5,17+y0,6,4,'c');R(4,21+y0,8,2,'c');R(4+sh,23+y0,8,1,'t');R(5,17+y0,1,6,'C');R(10,18+y0,1,4,'L')}
+    for(let r=14;r<=16;r++){const ax=8+Math.round(hx*(r-13)/4);R(ax,r+y0,2,1,'c');P(ax+1,r+y0,'L')}R(8+hx,17+y0,2,1,'s');P(8+hx,17+y0,'S')}   // near arm
+  else{const back=dir===1;
+    R(4,13+y0,8,1,'c');if(!back)R(6,13+y0,4,1,'S');R(5,13+y0,1,1,'L');
+    R(4,14+y0,8,4,'c');R(4,14+y0,1,4,'L');R(10,14+y0,1,4,'C');R(11,14+y0,1,4,'D');R(4,18+y0,8,1,'c');R(11,18+y0,1,1,'D');
+    if(!back)R(7,14+y0,2,1,'C');                                                     // a fold under the collar
+    if(ty==='shirt'){R(4,17+y0,8,1,'t');if(!back)R(7,17+y0,2,1,'y')}
+    if(ty==='dress'){const sh=Math.round(sw);R(4,17+y0,8,1,'c');R(3,18+y0,10,2,'c');R(2,20+y0,12,1,'c');R(2+sh,21+y0,12,1,'t');R(2+sh,21+y0,12,1,'t');R(3,18+y0,1,2,'L');R(12,18+y0,1,3,'C');if(!back)R(7,15+y0,2,2,'T')}
+    if(ty==='robe'){const sh=Math.round(sw*.7);R(4,17+y0,8,3,'c');R(3,20+y0,10,3,'c');R(3+sh,23+y0,10,1,'t');R(3,20+y0,1,3,'L');R(12,20+y0,1,3,'C');if(!back)R(7,14+y0,2,6,'t')}
+    const aL=walk?(sw<-.3?-1:sw>.3?1:0):0,aR=-aL;
+    [[2,aL,'L','c'],[12,aR,'C','D']].forEach(([a,da,k1,k2])=>{R(a,14+y0+Math.min(0,da),2,3,'c');R(a+(a===2?0:1),14+y0+Math.min(0,da),1,3,a===2?k1:k2);R(a,17+y0+da,2,1,'s');P(a+(a===2?1:0),17+y0+da,'S')})}
   /* head and hair */
   const H=side?HEADS:dir===1?HEADB:HEADF;
-  H.forEach((row,r)=>{for(let i=0;i<12;i++){let ch=row[i];if(ch==='.')continue;if(blink&&ch==='e')ch='S';P(i,3+r+y0,ch)}});
-  P(4,4+y0,'H');P(3,5+y0,'H');
-  if(lk.hs===1){if(side)R(2,8+y0,2,4,'h');else if(dir===1)R(3,9+y0,6,3,'h');else{R(1,8+y0,1,4,'h');R(10,8+y0,1,4,'h')}}
-  if(lk.hs===2){x.clearRect(0,3+y0,12,1);'..h.hh.hh.h.'.split('').forEach((ch,i)=>{if(ch==='h')P(i,3+y0,'h')})}   // spiky top
-  if(lk.hs===3){if(side){R(0,6+y0,2,4,'h');P(1,5+y0,'h')}else if(dir===1)R(5,9+y0,2,4,'h');else{R(10,6+y0,1,4,'h');R(11,7+y0,1,3,'h')}}
+  H.forEach((row,r)=>{for(let i=0;i<16;i++){let ch=row[i];if(ch==='.')continue;if(blink&&(ch==='e'||ch==='w'))ch=r===6?'S':'s';P(i,3+r+y0,ch)}});
+  if(lk.hs===1){if(side){R(2,9+y0,3,6,'h');R(2,9+y0,1,6,'d')}else if(dir===1){R(3,12+y0,10,4,'h');R(3,15+y0,10,1,'d')}else{R(2,9+y0,1,6,'h');R(13,9+y0,1,6,'d');R(3,10+y0,1,4,'h');R(12,10+y0,1,4,'h')}}
+  if(lk.hs===2){x.clearRect(0,3+y0,16,2);'..h.hh.hh.hh.h..'.split('').forEach((ch,i)=>{if(ch==='h')P(i,3+y0,'h')});'..hhHhhhhhhhhd..'.split('').forEach((ch,i)=>{if(ch!=='.')P(i,4+y0,ch)})}
+  if(lk.hs===3){if(side){R(0,6+y0,3,6,'h');R(0,6+y0,1,6,'d');P(2,5+y0,'t')}else if(dir===1){R(7,12+y0,2,5,'h');P(8,16+y0,'d');R(7,11+y0,2,1,'t')}else{R(13,6+y0,2,6,'h');P(14,11+y0,'d');P(13,5+y0,'t')}}
   /* hats */
   const Q2=(a,b,w,h,k)=>R(a,b+y0,w,h,k);
-  if(lk.hat==='straw'){Q2(3,3,6,2,'#e3c46a');Q2(3,4,6,1,'#b5533c');Q2(0,5,12,1,'#e3c46a');Q2(3,3,2,1,'#f3dc94')}
-  if(lk.hat==='wiz'){Q2(6,0,2,1,'#3d4fc4');Q2(5,1,3,1,'#3d4fc4');Q2(4,2,4,1,'#3d4fc4');Q2(3,3,6,1,'#3d4fc4');Q2(2,4,8,1,'#3d4fc4');Q2(0,5,12,1,'#2a3690');Q2(5,3,1,1,'#ffd66b');Q2(4,2,1,1,'#6f80e8')}
-  if(lk.hat==='crown'){[3,5,6,8].forEach(i=>Q2(i,2,1,1,'#ffd66b'));Q2(3,3,6,1,'#ffd66b');if(dir!==1)Q2(5,3,2,1,'#ff5d8f');Q2(3,3,1,1,'#fff4c2')}
-  if(lk.hat==='bow'){if(side){Q2(3,3,2,2,'#ff5d8f');Q2(2,4,1,1,'#c0306a')}else{Q2(7,3,2,2,'#ff5d8f');Q2(10,3,2,2,'#ff5d8f');Q2(9,3,1,2,'#c0306a')}}
+  if(lk.hat==='straw'){Q2(4,1,8,3,'#e3c46a');Q2(4,1,8,1,'#f3dc94');Q2(4,3,8,1,'#b5533c');Q2(1,4,14,1,'#e3c46a');Q2(1,4,14,1,'#e3c46a');Q2(11,1,1,3,'#c9a84f')}
+  if(lk.hat==='wiz'){Q2(9,0,2,1,'#3d4fc4');Q2(7,1,3,1,'#3d4fc4');Q2(6,2,5,1,'#3d4fc4');Q2(5,3,7,1,'#3d4fc4');Q2(2,4,12,1,'#2a3690');Q2(6,1,1,2,'#6f80e8');Q2(8,2,1,1,'#ffd66b');Q2(10,3,1,1,'#ffd66b')}
+  if(lk.hat==='crown'){[4,7,8,11].forEach(i=>Q2(i,1,1,1,'#ffd66b'));Q2(4,2,8,2,'#ffd66b');Q2(4,3,8,1,'#c9a84f');Q2(4,2,1,1,'#fff4c2');if(dir!==1){Q2(7,2,2,1,'#ff5d8f')}else Q2(7,2,2,1,'#6ff7ff')}
+  if(lk.hat==='bow'){if(side){Q2(3,3,3,3,'#ff5d8f');Q2(3,4,1,1,'#c0306a')}else{Q2(9,3,2,2,'#ff5d8f');Q2(12,3,2,2,'#ff5d8f');Q2(11,3,1,2,'#c0306a');Q2(9,3,1,1,'#ff9ad0')}}
   cv=outlined(raw);sprC.set(key,cv);return cv}
 function slimeSprite(f){const key='sl'+f;let cv=sprC.get(key);if(cv)return cv;const raw=document.createElement('canvas');raw.width=12;raw.height=9;const x=raw.getContext('2d'),P=(a,b,w,h,c)=>{x.fillStyle=c;x.fillRect(a,b,w,h)},o=f?1:0;
   P(3,1+o,6,1,'#6fd36f');P(2,2+o,8,1,'#6fd36f');P(1,3+o,10,5-o,'#6fd36f');P(1,7,10,2,'#3e9a4a');P(9,3+o,2,4-o,'#55b85a');P(3,2+o,2,1,'#c8f7c8');P(2,3+o,1,2,'#c8f7c8');P(3,4+o,2,2,'#fff');P(7,4+o,2,2,'#fff');P(4,5+o,1,1,'#10301a');P(8,5+o,1,1,'#10301a');
@@ -289,8 +297,8 @@ function hud(){$('#sLv').textContent='Lv '+S.lv;$('#sLv').title=rankOf(S.lv);$('
 
 /* ---------- looks: creator, wardrobe, shop ---------- */
 function preview(lk){const sp=charSprite(lk,0),c=document.createElement('canvas');c.width=sp.width;c.height=sp.height;c.getContext('2d').drawImage(sp,0,0);return c}
-function lookEditor(done,first){const lk=Object.assign({sk:0,hs:0,hc:0,oc:CLOTH[0],out:'basic',hat:'none'},S.look||{}),wrap=el('div'),row=el('div','lk'),pv=document.createElement('canvas');pv.width=14;pv.height=21;
-  const opts=el('div','opts'),draw=()=>{const x=pv.getContext('2d');x.clearRect(0,0,14,21);x.drawImage(charSprite(lk,0),0,0)};
+function lookEditor(done,first){const lk=Object.assign({sk:0,hs:0,hc:0,oc:CLOTH[0],out:'basic',hat:'none'},S.look||{}),wrap=el('div'),row=el('div','lk'),pv=document.createElement('canvas');pv.width=18;pv.height=27;
+  const opts=el('div','opts'),draw=()=>{const x=pv.getContext('2d');x.clearRect(0,0,18,27);x.drawImage(charSprite(lk,0),0,0)};
   const sw=(label,list,get,set,asText)=>{opts.append(el('div','lab',label));const r=el('div','swr');const paint=()=>{[...r.children].forEach((b,i)=>b.classList.toggle('sel',get()===i))};
     list.forEach((v,i)=>{const b=asText?el('button',null,v):el('b');if(asText)b.type='button';else b.style.background=v;b.onclick=()=>{set(i);paint();draw();SFX.play('tick')};r.append(b)});opts.append(r);paint()};
   let nameIn=null;if(first){wrap.append(el('div','lab','Your name'));nameIn=el('input');nameIn.id='nameIn';nameIn.maxLength=14;nameIn.value=S.name||'';nameIn.placeholder='Type your name';wrap.append(nameIn)}
@@ -568,10 +576,10 @@ function tick(dt){if(!started||paused||rotOn)return;time+=dt;
 // walking runs through six steps at ten a second; standing characters blink now and then
 function drawChar(lk,x,y,f,mov,ghost,dir){dir=dir|0;const seed=(x*7+y*3)|0,fr=mov?1+Math.floor(time*10+seed)%6:(((time*1000+seed*37)%3400)<130?7:0),
     sp=charSprite(lk,fr,dir),X=Math.round(x-cam.x),Y=Math.round(y-cam.y);
-  ctx.fillStyle='#00000050';ctx.fillRect(X-4,Y+1,8,2);ctx.fillRect(X-3,Y+3,6,1);
+  ctx.fillStyle='#00000050';ctx.fillRect(X-5,Y+1,10,2);ctx.fillRect(X-4,Y+3,8,1);
   if(mov&&(fr===1||fr===4)){const k=dir===2?-f:(fr===1?-1:1);ctx.fillStyle='rgba(240,230,205,.55)';ctx.fillRect(X+k*5,Y+1,2,1);ctx.fillRect(X+k*6,Y,1,1);ctx.fillRect(X+k*4,Y+2,1,1)}
   if(ghost)ctx.globalAlpha=.5;
-  if(dir===2&&f<0){ctx.save();ctx.translate(X,0);ctx.scale(-1,1);ctx.drawImage(sp,-7,Y-18);ctx.restore()}else ctx.drawImage(sp,X-7,Y-18);ctx.globalAlpha=1}
+  if(dir===2&&f<0){ctx.save();ctx.translate(X,0);ctx.scale(-1,1);ctx.drawImage(sp,-9,Y-24);ctx.restore()}else ctx.drawImage(sp,X-9,Y-24);ctx.globalAlpha=1}
 function label(text,x,y,col,bg){const X=(x-cam.x)*Z,Y=(y-cam.y)*Z;ux.font=(Z>2?20:17)+'px VT323,monospace';ux.textAlign='center';const w=ux.measureText(text).width;
   if(bg){ux.fillStyle='#000a';ux.fillRect(X-w/2-5,Y-16,w+10,21)}ux.lineWidth=3;ux.strokeStyle='#000';ux.strokeText(text,X,Y);ux.fillStyle=col;ux.fillText(text,X,Y)}
 function draw(){cam.x=MW*T<=VW?(MW*T-VW)/2:Math.max(0,Math.min(MW*T-VW,P.x-VW/2));cam.y=MH*T<=VH?(MH*T-VH)/2:Math.max(0,Math.min(MH*T-VH,P.y-8-VH/2));cam.x=Math.round(cam.x);cam.y=Math.round(cam.y);
@@ -590,13 +598,13 @@ function draw(){cam.x=MW*T<=VW?(MW*T-VW)/2:Math.max(0,Math.min(MW*T-VW,P.x-VW/2)
   WORLD.chims.forEach(([x,y],i)=>{for(let k=0;k<3;k++){const a=(time*.35+k/3+i*.2)%1,sz=2+(a*3|0);ctx.globalAlpha=.55*(1-a);ctx.fillStyle='#eceaf5';ctx.fillRect(Math.round(x-cam.x+Math.sin((a+k)*5)*3),Math.round(y-cam.y-a*18),sz,sz)}});ctx.globalAlpha=1;
   const night=(Math.sin(time/90)+1)/2;if(night>.55){const k=(night-.55)/.45;ctx.fillStyle='rgba(12,14,60,'+(k*.42).toFixed(3)+')';ctx.fillRect(0,0,VW,VH);ctx.globalCompositeOperation='lighter';
     GLOW.forEach(([x,y])=>{[[22,.05],[14,.08],[7,.13]].forEach(([r,a])=>{ctx.fillStyle='rgba(255,190,90,'+(a*k).toFixed(3)+')';ctx.fillRect(Math.round(x-cam.x)-r,Math.round(y-cam.y)-r,r*2,r*2)})});ctx.globalCompositeOperation='source-over'}
-  NPCS.forEach(n=>{label(n.n,n.x,n.y-21,'#ffd66b',true);const mark=QUESTS.some(q=>q.npc===n.id&&qs(q)==='r')?'?':QUESTS.some(q=>q.npc===n.id&&(qs(q)===''||(q.rep&&qs(q)==='c')))&&!QUESTS.some(q=>q.npc===n.id&&qs(q)==='a')?'!':'';
-    if(mark)label(mark,n.x,n.y-29-(Math.floor(time*2)%2),mark==='?'?'#6ff7ff':'#ffd66b')});
-  NET.others.forEach(o=>{label(o.n+' · Lv '+o.lv,o.x,o.y-21,'#fff');if(o.say&&o.sayT>time)label(o.say,o.x,o.y-30,'#fff',true)});
+  NPCS.forEach(n=>{label(n.n,n.x,n.y-28,'#ffd66b',true);const mark=QUESTS.some(q=>q.npc===n.id&&qs(q)==='r')?'?':QUESTS.some(q=>q.npc===n.id&&(qs(q)===''||(q.rep&&qs(q)==='c')))&&!QUESTS.some(q=>q.npc===n.id&&qs(q)==='a')?'!':'';
+    if(mark)label(mark,n.x,n.y-36-(Math.floor(time*2)%2),mark==='?'?'#6ff7ff':'#ffd66b')});
+  NET.others.forEach(o=>{label(o.n+' · Lv '+o.lv,o.x,o.y-28,'#fff');if(o.say&&o.sayT>time)label(o.say,o.x,o.y-37,'#fff',true)});
   TABLES.forEach(tb=>{const X=tb.x*T,Y=tb.y*T;if(X<cam.x-80||X>cam.x+VW+40||Y<cam.y-60||Y>cam.y+VH+60)return;if(tb.deco)return label(tb.n,X+16,Y-26,'#ff9ad0',true);
-    const n=seatedAt(tb).length;label(tb.n+' · '+n+'/'+tb.max,X+16,tb.max>2?Y-34:Y-12,n>=tb.min?'#7dffb0':'#ffd66b',true)});
+    const n=seatedAt(tb).length;label(tb.n+' · '+n+'/'+tb.max,X+16,tb.max>2?Y-42:Y-12,n>=tb.min?'#7dffb0':'#ffd66b',true)});
   label('★ PIXEL ARCADE ★',26*T,43*T-15,'#ffffff',false);label('↓ Arcade Hall',26*T,37*T+2,'#ff9ad0',true);
-  label(S.name,P.x,P.y-21,'#9fe0b0');if(mySay&&mySayT>time)label(mySay,P.x,P.y-30,'#fff',true)}
+  label(S.name,P.x,P.y-28,'#9fe0b0');if(mySay&&mySayT>time)label(mySay,P.x,P.y-37,'#fff',true)}
 let last=0;function frame(t){const dt=Math.min(.05,(t-last)/1000||0);last=t;tick(dt);if(started)draw();requestAnimationFrame(frame)}
 
 /* ---------- chat ---------- */
