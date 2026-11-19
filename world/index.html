@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwnz5re5';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
+<script data-arcade-version>window.AV='mwnzdonr';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwnz5re5">
-<script data-pwa defer src="../shared/wand.js?v=mwnz5re5"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwnzdonr">
+<script data-pwa defer src="../shared/wand.js?v=mwnzdonr"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Pixel World</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwnz5re5">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwnzdonr">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js" defer></script>
 <style>
 :root{--bg:#0b1020;--panel:#1d2a3f;--panel2:#131c2c;--edge:#4f8f6a;--accent:#3f9a5a;--accent-d:#1f5a34;--accent-l:#9fe0b0;--gold:#ffd66b}
@@ -98,7 +98,7 @@ body.touch #chat{left:8px;top:8px;bottom:auto;width:min(320px,46vw)}
 </div></div>
 <div class="overlay" id="dlg"><div class="card"><h2 id="dT"></h2><p id="dX"></p><div id="dBody"></div><div id="dB"></div></div></div>
 
-<script src="../shared/arcade.js?v=mwnz5re5"></script>
+<script src="../shared/arcade.js?v=mwnzdonr"></script>
 <script>
 const {$,el,SFX,MUSIC,clean}=Arcade;
 /* =====================================================================================
@@ -344,8 +344,16 @@ function talk(n){SFX.play('good');progress('talk',n.id);const extra=n.id==='tail
   dlg(n.n,n.idle,extra.concat([{t:'Goodbye',p:!extra.length}]))}
 function questLog(){const b=el('div');QUESTS.forEach(q=>{const s=qs(q);if(!s)return;const d=el('div','ql');d.append(el('b',null,q.t+(s==='c'?' · DONE':s==='r'?' · RETURN TO '+npcName(q.npc).toUpperCase():' · '+S.q[q.id].n+'/'+q.need)),q.d);b.append(d)});
   if(!b.children.length)b.append(el('p','tag','No quests yet. Talk to the villagers marked with a !'));dlg('Quests','',[{t:'Close',p:1}],b)}
+// redeem codes: only a fingerprint (SHA-256) of each code is stored here, so the codes themselves stay private
+const CODES={'bcef8d26397975e2c2f51609c578b16fe88532666c60e08014f503e268534733':{lv:20,msg:'Level 20 unlocked! The Phoenix Portal is open to you.'}};
+function redeemDlg(){const box=el('div'),inp=el('input'),err=el('p','tag');inp.maxLength=24;inp.placeholder='Enter your code';inp.autocomplete='off';inp.style.cssText='width:100%;margin:0;text-transform:uppercase;-webkit-user-select:text;user-select:text';err.style.cssText='margin:8px 0 0;color:#ff9a9a';box.append(inp,err);
+  dlg('Redeem a code','Have a code? Type it here. Each code works once on each device.',[{t:'Redeem',p:1,keep:1,fn:async()=>{const c=inp.value.trim().toUpperCase().replace(/s+/g,'');if(!c)return;let h='';
+      try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(c));h=[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){err.textContent='Codes only work on the online (https) site.';return}
+      const g=CODES[h];S.codes=Array.isArray(S.codes)?S.codes:[];if(!g){err.textContent='That code is not valid.';SFX.play('deny');return}if(S.codes.includes(h)){err.textContent='This code was already used on this device.';return}
+      S.codes.push(h);if(g.lv&&S.lv<g.lv){S.lv=g.lv;S.xp=0}P.hp=maxHP();save();hud();sendState();closeDlg();SFX.play('win');try{Arcade.burst(innerWidth/2,innerHeight/2,['#ffd66b','#ffffff','#6ff7ff'],60)}catch(e){}toast(g.msg)}},{t:'Close'}],box);
+  setTimeout(()=>inp.focus(),60)}
 function menu(){dlg('Menu','Level '+S.lv+' '+rankOf(S.lv)+' · '+S.gold+' gold',[
-  {t:'Quests',p:1,fn:questLog},{t:'My look',fn:()=>lookEditor(()=>sendState(true))},
+  {t:'Quests',p:1,fn:questLog},{t:'Redeem a code',fn:redeemDlg},{t:'My look',fn:()=>lookEditor(()=>sendState(true))},
   {t:'Music: '+(MUSIC.on?'on':'off'),keep:1,fn:()=>{MUSIC.toggle();menu()}},{t:'Sound: '+(SFX.muted?'off':'on'),keep:1,fn:()=>{SFX.toggle();menu()}},
   {t:'Back to the game'},{t:'< Leave the world',fn:()=>{location.href='../'}}])}
 $('#bMenu').onclick=menu;$('#bQ').onclick=questLog;
