@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script data-arcade-version>window.AV='mwo0a0zg';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
+<script data-arcade-version>window.AV='mwo0sel6';fetch('../version.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v&&j.v!==AV){const u=new URL(location.href);if(u.searchParams.get('v')!==j.v){u.searchParams.set('v',j.v);location.replace(u)}}}).catch(()=>{});if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});try{if(localStorage.getItem('arcade-wand')!=='0')document.documentElement.classList.add('wand')}catch(e){};window.backTo=()=>{let u='../';try{u=sessionStorage.getItem('arcade-back')||u}catch(e){}location.href=u}</script>
 <link data-pwa rel="manifest" href="../manifest.webmanifest">
 <meta data-pwa name="theme-color" content="#1a1030">
 <meta data-pwa name="mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-capable" content="yes">
 <meta data-pwa name="apple-mobile-web-app-title" content="Pixel Arcade">
 <link data-pwa rel="apple-touch-icon" href="../icons/apple-180.png">
-<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwo0a0zg">
-<script data-pwa defer src="../shared/wand.js?v=mwo0a0zg"></script>
+<link data-pwa rel="stylesheet" href="../shared/wand.css?v=mwo0sel6">
+<script data-pwa defer src="../shared/wand.js?v=mwo0sel6"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Pixel World</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../shared/arcade.css?v=mwo0a0zg">
+<link rel="stylesheet" href="../shared/arcade.css?v=mwo0sel6">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js" defer></script>
 <style>
 :root{--bg:#0b1020;--panel:#1d2a3f;--panel2:#131c2c;--edge:#4f8f6a;--accent:#3f9a5a;--accent-d:#1f5a34;--accent-l:#9fe0b0;--gold:#ffd66b}
@@ -97,6 +97,7 @@ body.touch #chat{left:8px;top:52px;bottom:auto;width:min(320px,46vw)}
 <div id="act"><button type="button" id="bAtk" title="Attack (Space)">⚔</button></div>
 <div id="joy" aria-hidden="true"><i></i></div>
 <div id="toast"></div>
+<button type="button" class="small" id="cineSkip" style="display:none;position:fixed;right:14px;bottom:14px;z-index:60">Skip ▶</button>
 
 <div class="overlay" id="rot"><div class="card">
   <div class="ph"><i></i></div>
@@ -107,7 +108,7 @@ body.touch #chat{left:8px;top:52px;bottom:auto;width:min(320px,46vw)}
 </div></div>
 <div class="overlay" id="dlg"><div class="card"><h2 id="dT"></h2><p id="dX"></p><div id="dBody"></div><div id="dB"></div></div></div>
 
-<script src="../shared/arcade.js?v=mwo0a0zg"></script>
+<script src="../shared/arcade.js?v=mwo0sel6"></script>
 <script>
 const {$,el,SFX,MUSIC,clean}=Arcade;
 /* =====================================================================================
@@ -118,8 +119,8 @@ const {$,el,SFX,MUSIC,clean}=Arcade;
    - Progress (gold, rank, outfits, quests) is saved on this device.
    ===================================================================================== */
 const T=16,MW=64,MH=64,SPEED=62,KEY='pixelworld-1';
-const G=0,PATH=1,WTR=2,TREE=3,WALL=4,FENCE=5,STONE=6,SAND=7,FLOOR=8,WELL=9,LAMP=10,BARREL=11,STALL=12,SOIL=13,DIRT=14,COBBLE=15,ARC=16,TBL=17,CAB=18,BONSAI=19,PORTAL=20,EMBER=21,LAVA=22,STATUE=23;
-const SOLID=[0,0,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,1,1];
+const G=0,PATH=1,WTR=2,TREE=3,WALL=4,FENCE=5,STONE=6,SAND=7,FLOOR=8,WELL=9,LAMP=10,BARREL=11,STALL=12,SOIL=13,DIRT=14,COBBLE=15,ARC=16,TBL=17,CAB=18,BONSAI=19,PORTAL=20,EMBER=21,LAVA=22,STATUE=23,BOARD=24;
+const SOLID=[0,0,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,1,1,1];
 const map=new Uint8Array(MW*MH),gnd=new Uint8Array(MW*MH),idx=(x,y)=>y*MW+x;   // map = what stands on a tile, gnd = the ground under it
 function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 const HOUSES=[{x:14,y:14,w:6,h:4,roof:'#b5533c'},{x:30,y:14,w:7,h:4,roof:'#7a5aa0'},{x:14,y:27,w:6,h:4,roof:'#3d7ab5'},{x:31,y:27,w:6,h:4,roof:'#c98a2b'}];
@@ -178,7 +179,7 @@ const inA=(a,x,y)=>x>=a[0]&&x<=a[2]&&y>=a[1]&&y<=a[3];
   [[15,44],[16,44],[36,44],[37,44]].forEach(([x,y])=>map[idx(x,y)]=CAB);[[15,57],[37,57]].forEach(([x,y])=>map[idx(x,y)]=LAMP);
   TABLES.forEach(tb=>fill(tb.x,tb.y,tb.x+1,tb.y+1,TBL));
   [[16,57],[36,57],[18,20],[35,25]].forEach(([x,y])=>map[idx(x,y)]=BONSAI);   // potted bonsai
-  map[idx(58,11)]=PORTAL;map[idx(52,58)]=PORTAL;                                  // the way in, and the way out of the lair
+  map[idx(58,11)]=PORTAL;map[idx(52,58)]=PORTAL;map[idx(23,18)]=BOARD;   // the quest board stands in the square                                  // the way in, and the way out of the lair
 })();
 const npcTiles=new Set(NPCS.map(n=>idx(n.tx,n.ty)));
 NPCS.forEach(n=>{n.x=n.tx*T+8;n.y=n.ty*T+8});
@@ -186,6 +187,10 @@ function spots(a,k,seed){const R=mulberry(seed),out=[];let guard=0;while(out.len
   if(map[idx(x,y)]===G&&!out.some(o=>o[0]===x&&o[1]===y))out.push([x,y])}return out}
 const ITEMS=[...spots(AREA.meadow,16,5).map(([x,y])=>({k:'f',x:x*T+8,y:y*T+9,off:0})),...spots(AREA.north,9,6).concat(spots(AREA.grove,6,7)).map(([x,y])=>({k:'w',x:x*T+8,y:y*T+9,off:0}))];
 const GROVE=spots(AREA.grove,40,8);
+// quest spots: golden feathers, the buried X, the village lamps, the well and the vegetable patch
+const FEATH=spots(AREA.north,3,31).concat(spots(AREA.meadow,2,32)).map(([x,y])=>({x:x*T+8,y:y*T+8}));
+const DIG=(([x,y])=>({x:x*T+8,y:y*T+8}))(spots(AREA.meadow,1,77)[0]);
+const LAMPSPOTS=[[24,21],[27,24],[12,21],[38,24],[24,13],[27,33]].map(([x,y])=>({x:x*T+8,y:y*T+8})),WELLSPOT={x:22*T,y:20*T+4},PATCHSPOT={x:22*T+8,y:30*T+8};
 
 /* ---------- outfits, hats, looks ---------- */
 const SKIN=['#f6cfa6','#e0a878','#b97a4e','#7a4a2c'],HAIRC=['#2b1d14','#6b3e1e','#d9a441','#c0392b','#f1eaff','#3d4fc4','#e0409a'],HAIRN=['Short','Long','Spiky','Ponytail'];
@@ -286,6 +291,7 @@ try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){S=O
   // the Solaris Edge comes in the same chest as the Sunfire Paragon; an older loader dropped swords from saves, so give it back
   if((S.owned.includes('sunfire')||(S.look&&S.look.wep==='solaris'))&&!S.owned.includes('solaris'))S.owned.push('solaris');if(S.look)S.look=safeLook(S.look);if(!S.q||typeof S.q!=='object')S.q={}}}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+map[idx(58,11)]=S.portal?PORTAL:FLOOR;   // hidden (just ruin floor) until the opening cinematic has played on this device
 // hearts and sword damage grow with level: level 20 has 10 hearts and hits for 6
 const maxHP=()=>5+Math.floor(S.lv/4),dmg=()=>1+Math.floor(S.lv/4)+((S.look&&WEAPONS[S.look.wep]||WEAPONS.none).bonus);
 const P={x:SPAWN.x,y:SPAWN.y,f:1,mov:false,path:null,then:null,tgt:null,hp:maxHP(),inv:0,cd:0,slash:0,regen:0,seat:'',chair:-1,d:0};
@@ -300,13 +306,35 @@ const QUESTS=[
  {id:'shrine',npc:'elder',t:'The old shrine',d:'Follow the road east into the forest, then north, and find the old shrine.',kind:'shrine',need:1,g:50,xp:60},
  {id:'flowers',npc:'florist',t:'Meadow flowers',d:'Pick 10 flowers in the meadow, south-east of the village.',kind:'f',need:10,g:40,xp:40,rep:1},
  {id:'wood',npc:'jack',t:'Firewood',d:'Gather 8 pieces of wood. Look in the clearing up north and in the eastern grove.',kind:'w',need:8,g:40,xp:40,rep:1},
- {id:'slimes',npc:'guard',t:'Slime trouble',d:'Defeat 5 slimes in the grove east of the gate. Tap a slime, or press Space when you are close.',kind:'s',need:5,g:60,xp:60,rep:1}];
+ {id:'slimes',npc:'guard',t:'Slime trouble',d:'Defeat 5 slimes in the grove east of the gate. Tap toward a slime, or press Space when you are close.',kind:'s',need:5,g:60,xp:60,rep:1},
+ {id:'outfit',npc:'tailor',t:'A new look',d:'Buy any outfit or hat from my shop. Every adventurer deserves to look the part!',kind:'buy',need:1,g:20,xp:30},
+ {id:'arcade',npc:'keeper',t:'Arcade regular',d:'Sit down at 3 different tables here in the Arcade Hall.',kind:'sit',need:3,g:30,xp:50},
+ {id:'friend',npc:'keeper',t:'A friendly face',d:'Say something in the chat while another player is in the world.',kind:'friend',need:1,g:20,xp:30},
+ {id:'water',npc:'florist',t:'Garden water',d:'Fill a bucket at the well in the square, then pour it on the vegetable patch south of the well. Do it 3 times.',kind:'water',need:3,g:30,xp:40,lv:2},
+ {id:'bfly',npc:'florist',t:'Butterfly catcher',d:'Catch 5 butterflies. Walk up close and tap one to catch it. They love the meadow and the village.',kind:'bfly',need:5,g:45,xp:50,lv:3},
+ {id:'lamps',npc:'elder',t:'Lamplighter',d:'Light the 6 lamp posts around the village. Walk right up to each one.',kind:'lamp',need:6,g:40,xp:60,lv:4},
+ {id:'slime2',npc:'guard',t:'Slime hunter',d:'The grove is crawling with slimes. Defeat 15 of them.',kind:'s',need:15,g:80,xp:120,lv:5},
+ {id:'treasure',npc:'keeper',t:'Buried treasure',d:'An old map shows a red X somewhere in the meadow, south-east of the village. Find it and stand on it to dig.',kind:'dig',need:1,g:120,xp:100,lv:6},
+ {id:'king',npc:'guard',t:'The King Slime',d:'A huge King Slime has appeared in the grove east of the gate. Defeat it! It hits for 2 hearts, so keep moving.',kind:'king',need:1,g:150,xp:220,lv:10,after:'slime2'},
+ {id:'tale',npc:'elder',t:'The old tale',d:'They say a fire-bird sleeps beneath the shrine ruins in the north-east. Go to the ruins and look closely at the stone bird statue.',kind:'statue',need:1,g:60,xp:120,lv:10},
+ {id:'ember',npc:'guard',t:'Ember trail',d:'Golden feathers have been seen in the forest, still warm. Find 5 of them in the north clearing and the meadow.',kind:'feather',need:5,g:100,xp:200,lv:15,after:'tale'},
+ {id:'rumor',auto:1,portal:1,t:'The rumour was true',d:'The Phoenix Portal has opened in the shrine ruins. Step through it.',kind:'enter',need:1,g:100,xp:150,lv:20},
+ {id:'rise',auto:1,t:'Rise of the Phoenix',d:'Defeat the Phoenix in its lair and claim its chest.',kind:'phoenix',need:1,g:200,xp:250,lv:20,after:'rumor'},
+ {id:'ashes',auto:1,daily:1,t:'From the ashes',d:'The Phoenix has risen again. Defeat it once more today.',kind:'phoenix',need:1,g:150,xp:120,lv:20,after:'rise'}];
+const today=()=>new Date().toISOString().slice(0,10);
+// a quest can be taken from its villager when you are high enough level and have finished the quest before it
+const avail=q=>!q.auto&&S.lv>=(q.lv||1)&&(!q.after||qs({id:q.after})==='c')&&(qs(q)===''||(q.rep&&qs(q)==='c'));
 const qs=q=>S.q[q.id]?S.q[q.id].s:'';           // '' not taken · a active · r ready to hand in · c claimed
 const npcName=id=>NPCS.find(n=>n.id===id).n;
-function progress(kind,who){let hit=false;QUESTS.forEach(q=>{if(qs(q)!=='a'||q.kind!==kind||(q.who&&q.who!==who))return;const st=S.q[q.id];st.n++;hit=true;
-  if(st.n>=q.need){st.s='r';toast('Quest ready: return to '+npcName(q.npc));SFX.play('good')}});if(hit){save();hud()}return hit}
+function progress(kind,who){let hit=false;QUESTS.filter(q=>qs(q)==='a'&&q.kind===kind&&(!q.who||q.who===who)).forEach(q=>{const st=S.q[q.id];st.n++;hit=true;
+  if(st.n>=q.need){if(q.auto)claimAuto(q);else{st.s='r';toast('Quest ready: return to '+npcName(q.npc));SFX.play('good')}}});if(hit){save();hud()}return hit}
+// story quests have no villager: they start and finish on their own
+function claimAuto(q){S.q[q.id]={s:'c',n:0,day:today()};toast('Quest complete: '+q.t+' · +'+q.g+' gold · +'+q.xp+' XP');SFX.play('win');reward(q.g,q.xp);setTimeout(autoQuests,1500)}
+function autoQuests(){if(!started)return;QUESTS.forEach(q=>{if(!q.auto||S.lv<(q.lv||1)||(q.after&&qs({id:q.after})!=='c')||(q.portal&&!S.portal))return;const st=qs(q);
+  if(st===''||(q.daily&&st==='c'&&S.q[q.id].day!==today())){S.q[q.id]={s:'a',n:0};toast('New quest: '+q.t);SFX.play('good');save();hud()}})}
+setInterval(autoQuests,30000);
 const xpNeed=lv=>30+12*lv;
-function reward(g,xp){S.gold+=g;S.xp+=xp;while(S.xp>=xpNeed(S.lv)){S.xp-=xpNeed(S.lv);S.lv++;P.hp=maxHP();const bonus=20*S.lv;S.gold+=bonus;toast('Rank up! Level '+S.lv+' · '+rankOf(S.lv)+' · +'+bonus+' gold');SFX.play('win');try{Arcade.burst(innerWidth/2,innerHeight/2,['#ffd66b','#fff','#6ff7ff'],40)}catch(e){}}save();hud()}
+function reward(g,xp){S.gold+=g;S.xp+=xp;while(S.xp>=xpNeed(S.lv)){S.xp-=xpNeed(S.lv);S.lv++;P.hp=maxHP();if(S.lv===20&&!S.portal)setTimeout(teaser,900);const bonus=20*S.lv;S.gold+=bonus;toast('Rank up! Level '+S.lv+' · '+rankOf(S.lv)+' · +'+bonus+' gold');SFX.play('win');try{Arcade.burst(innerWidth/2,innerHeight/2,['#ffd66b','#fff','#6ff7ff'],40)}catch(e){}}save();hud();autoQuests()}
 
 /* ---------- small UI helpers ---------- */
 function toast(t){const b=$('#toast'),d=el('div',null,t);b.append(d,document.createElement('br'));while(b.children.length>6)b.firstChild.remove();setTimeout(()=>{if(d.nextSibling&&d.nextSibling.tagName==='BR')d.nextSibling.remove();d.remove()},3200)}
@@ -337,7 +365,7 @@ function lookEditor(done,first){const lk=Object.assign({sk:0,hs:0,hc:0,oc:CLOTH[
     [{t:first?'Enter the world':'Save',p:1,keep:first,fn:()=>{if(first){const n=clean(nameIn.value,'');if(!n){nameIn.focus();SFX.play('deny');return}S.name=n;closeDlg()}const nl=safeLook(lk);if(!first&&S.look&&SPECIAL(nl)&&(nl.out!==S.look.out&&nl.out==='sunfire'||nl.wep!==S.look.wep&&nl.wep==='solaris'||nl.hat!==S.look.hat&&nl.hat==='phoenix')){equipAnim(nl,nl.out==='sunfire'&&S.look.out!=='sunfire'?OUT.sunfire.n:nl.wep==='solaris'&&S.look.wep!=='solaris'?WEAPONS.solaris.n:HATS.phoenix.n);done&&done();return}S.look=nl;save();done&&done()}}].concat(first?[{t:'< Back to Arcade',fn:()=>{location.href='../'}}]:[{t:'Cancel'}]),wrap)}
 function shop(){const g=el('div','shop'),add=(k,o,isHat)=>{if(!o.price)return;const d=el('div','it'),lk=Object.assign({},S.look,isHat?{hat:k}:{out:k});d.append(preview(lk),o.n,el('b',null,o.price+' gold'));
     const own=S.owned.includes(k),on=isHat?S.look.hat===k:S.look.out===k,b=el('button',own?'':'primary',on?'Wearing':own?'Wear':'Buy');b.type='button';b.disabled=on||(!own&&S.gold<o.price);
-    b.onclick=()=>{if(!own){if(S.gold<o.price)return;S.gold-=o.price;S.owned.push(k);SFX.play('win');toast('Bought: '+o.n)}else SFX.play('good');if(isHat)S.look.hat=k;else S.look.out=k;save();hud();shop()};d.append(b);g.append(d)};
+    b.onclick=()=>{if(!own){if(S.gold<o.price)return;S.gold-=o.price;S.owned.push(k);SFX.play('win');toast('Bought: '+o.n);progress('buy')}else SFX.play('good');if(isHat)S.look.hat=k;else S.look.out=k;save();hud();shop()};d.append(b);g.append(d)};
   Object.entries(OUT).forEach(([k,o])=>add(k,o,false));Object.entries(HATS).forEach(([k,o])=>add(k,o,true));
   dlg("Mira's shop",'You have '+S.gold+' gold. Finish quests and rank up to earn more.',[{t:'Close',p:1}],g)}
 
@@ -347,9 +375,15 @@ function talk(n){SFX.play('good');progress('talk',n.id);const extra=n.id==='tail
   if(ready)return dlg(n.n,'Wonderful work! "'+ready.t+'" is done.\n\nReward: '+ready.g+' gold · '+ready.xp+' XP',[{t:'Claim reward',p:1,fn:()=>{S.q[ready.id]={s:'c',n:0};toast('+'+ready.g+' gold · +'+ready.xp+' XP');reward(ready.g,ready.xp)}}]);
   const act=QUESTS.find(q=>q.npc===n.id&&qs(q)==='a');
   if(act)return dlg(n.n,act.d+'\n\nProgress: '+S.q[act.id].n+' / '+act.need,extra.concat([{t:'I am on it',p:!extra.length}]));
-  const next=QUESTS.find(q=>q.npc===n.id&&(qs(q)===''||(q.rep&&qs(q)==='c')));
+  const next=QUESTS.find(q=>q.npc===n.id&&avail(q));
   if(next)return dlg(n.n+' — '+next.t,next.d+'\n\nReward: '+next.g+' gold · '+next.xp+' XP',[{t:'Accept quest',p:1,fn:()=>{S.q[next.id]={s:'a',n:0};save();hud();toast('Quest accepted: '+next.t)}}].concat(extra.map(e=>({t:e.t,fn:e.fn})),[{t:'Maybe later'}]));
-  dlg(n.n,n.idle,extra.concat([{t:'Goodbye',p:!extra.length}]))}
+  dlg(n.n,idleLine(n),extra.concat([{t:'Goodbye',p:!extra.length}]))}
+// what villagers say when they have no work for you: the Phoenix rumour grows as you level up
+function idleLine(n){const lock=QUESTS.filter(q=>q.npc===n.id&&qs(q)===''&&S.lv<(q.lv||1)).sort((a,b)=>a.lv-b.lv)[0];let t=n.idle;
+  if(n.id==='elder'&&S.lv>=10)t=S.portal?'So the rumour was true. Be careful out there. The Phoenix does not forgive the unprepared.':'Old tales say a fire-bird sleeps beneath the shrine ruins in the north-east. Some nights I think I hear it breathing.';
+  if(n.id==='guard'&&S.lv>=15&&!S.portal)t='Travellers swear they have seen flames dancing at the shrine ruins at night. They say only heroes of level 20 ever find anything there.';
+  if(n.id==='florist'&&S.lv>=18&&!S.portal)t="Look at this. I found it near the shrine: a feather, still warm, golden as the sun. Strange, isn't it?";
+  return t+(lock?'\n\nCome back at level '+lock.lv+'. I may have work for you then.':'')}
 function questLog(){const b=el('div');QUESTS.forEach(q=>{const s=qs(q);if(!s)return;const d=el('div','ql');d.append(el('b',null,q.t+(s==='c'?' · DONE':s==='r'?' · RETURN TO '+npcName(q.npc).toUpperCase():' · '+S.q[q.id].n+'/'+q.need)),q.d);b.append(d)});
   if(!b.children.length)b.append(el('p','tag','No quests yet. Talk to the villagers marked with a !'));dlg('Quests','',[{t:'Close',p:1}],b)}
 // redeem codes: only a fingerprint (SHA-256) of each code is stored here, so the codes themselves stay private
@@ -358,13 +392,13 @@ function redeemDlg(){const box=el('div'),inp=el('input'),err=el('p','tag');inp.m
   dlg('Redeem a code','Have a code? Type it here. Each code works once on each device.',[{t:'Redeem',p:1,keep:1,fn:async()=>{const c=inp.value.trim().toUpperCase().replace(/s+/g,'');if(!c)return;let h='';
       try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(c));h=[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){err.textContent='Codes only work on the online (https) site.';return}
       const g=CODES[h];S.codes=Array.isArray(S.codes)?S.codes:[];if(!g){err.textContent='That code is not valid.';SFX.play('deny');return}if(S.codes.includes(h)){err.textContent='This code was already used on this device.';return}
-      S.codes.push(h);if(g.lv&&S.lv<g.lv){S.lv=g.lv;S.xp=0}P.hp=maxHP();save();hud();sendState();closeDlg();SFX.play('win');try{Arcade.burst(innerWidth/2,innerHeight/2,['#ffd66b','#ffffff','#6ff7ff'],60)}catch(e){}toast(g.msg)}},{t:'Close'}],box);
+      S.codes.push(h);if(g.lv&&S.lv<g.lv){S.lv=g.lv;S.xp=0}P.hp=maxHP();save();hud();sendState();closeDlg();SFX.play('win');try{Arcade.burst(innerWidth/2,innerHeight/2,['#ffd66b','#ffffff','#6ff7ff'],60)}catch(e){}toast(g.msg);if(S.lv>=20&&!S.portal)setTimeout(teaser,1200);autoQuests()}},{t:'Close'}],box);
   setTimeout(()=>inp.focus(),60)}
 function menu(){dlg('Menu','Level '+S.lv+' '+rankOf(S.lv)+' · '+S.gold+' gold',[
   {t:'Quests',p:1,fn:questLog},{t:'Inventory',fn:inventory},{t:'Redeem a code',fn:redeemDlg},{t:'My look',fn:()=>lookEditor(()=>sendState(true))},
   {t:'Music: '+(MUSIC.on?'on':'off'),keep:1,fn:()=>{MUSIC.toggle();menu()}},{t:'Sound: '+(SFX.muted?'off':'on'),keep:1,fn:()=>{SFX.toggle();menu()}},
   {t:'Back to the game'},{t:'< Leave the world',fn:()=>{location.href='../'}}])}
-$('#bMenu').onclick=menu;$('#bQ').onclick=questLog;$('#bBag').onclick=()=>{if(!paused&&!EQUIP.on)inventory()};
+$('#cineSkip').onclick=()=>endCine();$('#bMenu').onclick=menu;$('#bQ').onclick=questLog;$('#bBag').onclick=()=>{if(!paused&&!EQUIP.on)inventory()};
 // your bag: every outfit, hat and sword you own, with a picture; tap to wear it
 function inventory(){const box=el('div');
   const section=(title,keys,field,names,pic)=>{box.append(el('div','lab',title));const g=el('div','shop');
@@ -450,7 +484,10 @@ function renderMap(){const mk=()=>{const g=document.createElement('canvas');g.wi
         p(X+3,Y+2,4,3,first?'#ffd66b':'#6ff7ff');p(X+9,Y+1,4,4,first?'#ff8fc0':'#b796ff')})}
     if(t===FLOOR&&((x===57&&y===13)||(x===59&&y===8)||(x===60&&y===11))){px(X+3,Y+8,5,4,'#6f6c88');px(X+4,Y+8,3,2,'#b9b6cc');px(X+9,Y+10,3,3,'#5d5a75');px(X+10,Y+10,1,1,'#b9b6cc')}
     if(t===STATUE){px(X-6,Y+10,28,6,'#00000045')}
-    if(t===PORTAL){px(X-5,Y+9,26,6,'#00000045');px(X-4,Y+8,24,6,'#3a3448');px(X-3,Y+8,22,2,'#6f6c88');px(X-3,Y+12,22,1,'#2a2438')}
+    if(t===BOARD){px(X-4,Y+13,24,3,'#00000045');tall(X,Y,p=>{p(X+1,Y-14,3,29,'#3a2a1c');p(X+12,Y-14,3,29,'#3a2a1c');p(X+2,Y-14,1,29,'#8a5a34');p(X+13,Y-14,1,29,'#8a5a34');
+        p(X-4,Y-19,24,15,'#3a2a1c');p(X-3,Y-18,22,13,'#8a5a34');p(X-3,Y-18,22,1,'#a8703a');p(X-5,Y-21,26,3,'#5a3d22');p(X-5,Y-21,26,1,'#8a5a34');
+        p(X-1,Y-16,7,8,'#fff4d6');p(X,Y-14,5,1,'#8d8aa3');p(X,Y-12,4,1,'#8d8aa3');p(X+2,Y-16,1,1,'#dc2626');p(X+8,Y-17,7,6,'#f1eaff');p(X+9,Y-15,5,1,'#8d8aa3');p(X+11,Y-17,1,1,'#2563eb');p(X+7,Y-10,6,4,'#fde68a');p(X+8,Y-9,4,1,'#8d8aa3')})}
+    if(t===PORTAL&&!(x===58&&y===11)){px(X-5,Y+9,26,6,'#00000045');px(X-4,Y+8,24,6,'#3a3448');px(X-3,Y+8,22,2,'#6f6c88');px(X-3,Y+12,22,1,'#2a2438')}
     if(t===CAB){const c=['#5b2fd6','#e0409a','#2a9df4','#3f9a5a'][(x+y)%4];px(X+1,Y+13,14,3,'#00000050');
       tall(X,Y,p=>{p(X+1,Y-16,14,30,'#1a1026');p(X+2,Y-15,12,28,c);p(X+2,Y-15,2,28,shade(c,1.3));p(X+3,Y-14,10,3,'#ffd66b');p(X+3,Y-10,10,8,'#0b1030');p(X+4,Y-9,8,6,'#6ff7ff');p(X+5,Y-8,3,2,'#e9fdff');p(X+4,Y-6,8,1,'#2a9df4');
         p(X+3,Y-1,10,4,shade(c,.7));p(X+5,Y-3,1,3,'#1a1026');p(X+4,Y-4,3,2,'#ff4d6d');p(X+9,Y-2,2,2,'#ffd66b');p(X+12,Y-2,1,2,'#7dffb0');p(X+4,Y+4,8,8,shade(c,.55));p(X+6,Y+6,4,2,'#1a1026')})}
@@ -537,7 +574,7 @@ function goTalk(n){if(Math.hypot(P.x-n.x,P.y-n.y)<28){P.path=null;return talk(n)
 let keys={},started=false,time=0;
 const typing=()=>/INPUT|TEXTAREA/.test(document.activeElement.tagName);
 addEventListener('keydown',e=>{if(typing()||paused||!started)return;const k=e.key.length===1?e.key.toLowerCase():e.key;keys[k]=true;
-  if(k===' '){e.preventDefault();attack()}if(k==='e'){const n=NPCS.find(n=>Math.hypot(P.x-n.x,P.y-n.y)<30);if(n)talk(n);else{const tb=TABLES.find(t=>Math.abs(P.x-(t.x*T+16))<34&&Math.abs(P.y-(t.y*T+16))<34);if(tb)tableDlg(tb);else{const pt=[PORTAL_OUT,PORTAL_IN].find(q=>Math.hypot(P.x-(q.tx*T+8),P.y-(q.ty*T+8))<28);if(pt)portalDlg(pt===PORTAL_IN)}}}if(k==='Enter'){e.preventDefault();document.body.classList.add('chatting');$('#cin').focus()}
+  if(k===' '){e.preventDefault();attack()}if(k==='e'){const n=NPCS.find(n=>Math.hypot(P.x-n.x,P.y-n.y)<30);if(n)talk(n);else{const tb=TABLES.find(t=>Math.abs(P.x-(t.x*T+16))<34&&Math.abs(P.y-(t.y*T+16))<34);if(tb)tableDlg(tb);else{const pt=[PORTAL_OUT,PORTAL_IN].find(q=>(q!==PORTAL_OUT||S.portal)&&Math.hypot(P.x-(q.tx*T+8),P.y-(q.ty*T+8))<28);if(pt)portalDlg(pt===PORTAL_IN)}}}if(k==='Enter'){e.preventDefault();document.body.classList.add('chatting');$('#cin').focus()}
   if(k.startsWith('Arrow'))e.preventDefault()});
 addEventListener('keyup',e=>{const k=e.key.length===1?e.key.toLowerCase():e.key;keys[k]=false});
 addEventListener('blur',()=>{keys={}});
@@ -546,8 +583,12 @@ cv.addEventListener('pointerdown',e=>{if(!started||paused)return;MUSIC.kick();if
   const n=NPCS.find(n=>Math.abs(wx-n.x)<10&&wy>n.y-26&&wy<n.y+6);if(n)return near(n.x,n.y,40)?talk(n):toast('Walk closer to talk to '+n.n);
   const tbl=tableAt(Math.floor(wx/T),Math.floor(wy/T))||TABLES.find(t=>t.deco&&wx>=t.x*T&&wx<t.x*T+32&&wy>=t.y*T-18&&wy<t.y*T+32);
   if(tbl)return Math.abs(P.x-(tbl.x*T+16))<42&&Math.abs(P.y-(tbl.y*T+16))<42?tableDlg(tbl):toast('Walk closer to the '+tbl.n+(tbl.deco?'':' table'));
-  {const ptx=Math.floor(wx/T),pty=Math.floor(wy/T),pt=[PORTAL_OUT,PORTAL_IN].find(q=>q.tx===ptx&&(q.ty===pty||q.ty===pty+1));if(pt)return near(pt.tx*T+8,pt.ty*T+8,40)?portalDlg(pt===PORTAL_IN):toast('Walk closer to the portal')}
+  {const ptx=Math.floor(wx/T),pty=Math.floor(wy/T),pt=[PORTAL_OUT,PORTAL_IN].find(q=>(q!==PORTAL_OUT||S.portal)&&q.tx===ptx&&(q.ty===pty||q.ty===pty+1));if(pt)return near(pt.tx*T+8,pt.ty*T+8,40)?portalDlg(pt===PORTAL_IN):toast('Walk closer to the portal')}
   if(LOOT.on&&!LOOT.open&&Math.hypot(wx-LOOT.x,wy-LOOT.y)<16)return near(LOOT.x,LOOT.y,40)?openChest():toast('Walk over to the chest to open it');
+  if(Math.abs(wx-(58*T+8))<14&&wy>9*T-30&&wy<9*T+16)return near(58*T+8,9*T+14,52)?statueTap():toast('Walk closer to the statue');
+  if(Math.floor(wx/T)===23&&(Math.floor(wy/T)===18||Math.floor(wy/T)===17))return near(23*T+8,18*T+8,42)?boardDlg():toast('Walk closer to the quest board');
+  if(S.q.bfly&&S.q.bfly.s==='a'){const b=BFLY.find(b=>Math.hypot(wx-b.x,wy-(b.y-14))<11);if(b){if(!near(b.x,b.y,46))return toast('Get closer to catch it');
+    b.x=(b.h[0]+Math.random()*(b.h[2]-b.h[0]))*T;b.y=(b.h[1]+Math.random()*(b.h[3]-b.h[1]))*T;b.tx=b.x;b.ty=b.y;SFX.play('tick');toast('Caught a butterfly!');return progress('bfly')}}
   if(P.seat)return;
   const dx=wx-P.x,dy=wy-(P.y-10);if(Math.abs(dx)>2)P.f=dx<0?-1:1;P.d=Math.abs(dy)>Math.abs(dx)*1.2?(dy>0?0:1):2;attack()});
 $('#bAtk').onclick=()=>attack();
@@ -572,6 +613,7 @@ const slimes=[];function placeSlime(s){const[x,y]=GROVE[Math.random()*GROVE.leng
 for(let i=0;i<8;i++){const s={};placeSlime(s);slimes.push(s)}
 function attack(){if(P.cd>0||paused||!started)return;P.cd=.35;P.slash=.16;SFX.play('swing');
   if(BOSS.on&&BOSS.st==='rest'&&Math.hypot(BOSS.x-P.x,BOSS.y-P.y)<30){P.f=BOSS.x<P.x?-1:1;return hitBoss()}
+  if(KING.on&&Math.hypot(KING.x-P.x,KING.y-P.y)<32){P.f=KING.x<P.x?-1:1;return hitKing()}
   let best=null,bd=26;slimes.forEach(s=>{if(s.dead)return;const d=Math.hypot(s.x-P.x,s.y-P.y);if(d<bd){bd=d;best=s}});if(!best)return;
   if(Math.abs(best.x-P.x)>2)P.f=best.x<P.x?-1:1;P.d=Math.abs(best.y-P.y)>Math.abs(best.x-P.x)?(best.y>P.y?0:1):2;best.hp-=dmg();best.hit=.2;const a=Math.atan2(best.y-P.y,best.x-P.x);best.vx=Math.cos(a)*70;best.vy=Math.sin(a)*70;best.t=.25;SFX.play('hit');
   if(best.hp<=0){best.dead=true;best.resp=10+Math.random()*6;if(P.tgt===best)P.tgt=null;S.gold+=3;toast('+3 gold');progress('s');reward(0,8+Math.floor(S.lv/2))}}
@@ -581,7 +623,7 @@ const tableAt=(tx,ty)=>TABLES.find(t=>tx>=t.x&&tx<=t.x+1&&ty>=t.y&&ty<=t.y+1);
 function seatedAt(tb){const l=[];if(P.seat===tb.id)l.push({id:NET.id,n:S.name,lv:S.lv,me:1});NET.others.forEach((o,k)=>{if(o.seat===tb.id)l.push({id:k,n:o.n,lv:o.lv})});return l.slice(0,tb.max)}
 function freeChair(tb){const cs=chairsOf(tb),others=[...NET.others.values()].filter(o=>o.seat===tb.id);return cs.findIndex(c=>!others.some(o=>Math.hypot(o.tx-c.x,o.ty-c.y)<8))}
 function sit(tb){const k=freeChair(tb);if(k<0||seatedAt(tb).length>=tb.max)return toast('That table is full.');const c=chairsOf(tb)[k];
-  P.path=null;P.then=null;P.tgt=null;P.x=c.x;P.y=c.y;P.f=c.f;P.d=c.d;P.seat=tb.id;P.chair=k;SFX.play('good');sendState();lastSeatN=seatedAt(tb).length;
+  P.path=null;P.then=null;P.tgt=null;P.x=c.x;P.y=c.y;P.f=c.f;P.d=c.d;P.seat=tb.id;P.chair=k;if(S.q.arcade&&S.q.arcade.s==='a'){const st=S.q.arcade;st.tb=st.tb||[];if(!st.tb.includes(tb.id)){st.tb.push(tb.id);progress('sit')}}SFX.play('good');sendState();lastSeatN=seatedAt(tb).length;
   const need=tb.min-lastSeatN;toast(need>0?'Waiting for '+need+' more player'+(need>1?'s':'')+'. Invite someone in the chat!':'Enough players! Tap the table to start.')}
 function stand(){if(!P.seat)return;P.seat='';P.chair=-1;lastSeatN=0;sendState()}
 function launch(tb,hash){netLeave();try{sessionStorage.setItem('arcade-back','../world/'+(WTAG?'#w='+WTAG:''));sessionStorage.setItem('world-pos',JSON.stringify({x:Math.round(P.x),y:Math.round(P.y)}))}catch(e){}save();location.href='../'+tb.id+'/'+hash}
@@ -632,8 +674,8 @@ const POPS=[];const pop=(t,x,y,c)=>POPS.push({t,x,y,c,life:.8});
 function drawSwirl(cx,cy,R0,t,big){for(let arm=0;arm<3;arm++)for(let i=0;i<(big?44:16);i++){const q=i/(big?44:16),r=q*R0,a=t*3+arm*2.094+q*4.4,x=Math.round(cx+Math.cos(a)*r-cam.x),y=Math.round(cy+Math.sin(a)*r*.85-cam.y);
     ctx.fillStyle=FIRE[Math.min(5,Math.floor(q*6))];const sz=q<.35?3:2;ctx.fillRect(x-1,y-1,sz,sz)}
   ctx.fillStyle=FIRE[0];ctx.fillRect(Math.round(cx-cam.x)-2,Math.round(cy-cam.y)-2,big?5:3,big?5:3)}
-const phC={},STONEC={'#fde047':'#b9b6cc','#facc15':'#a5a2ba','#fef3c7':'#d3d0e2','#fb923c':'#8d8aa3','#dc2626':'#6f6c88','#ea580c':'#6f6c88','#c2410c':'#5d5a75','#1a1026':'#ff9a3c'};
-function phoenixSprite(fr,flash,stone){const key=fr+'|'+flash+'|'+(stone?1:0);if(phC[key])return phC[key];const cv=document.createElement('canvas');cv.width=40;cv.height=32;const x=cv.getContext('2d'),p=(a,b,c)=>{x.fillStyle=flash?'#ffffff':stone?(STONEC[c]||'#8d8aa3'):c;x.fillRect(Math.round(a),Math.round(b),1,1)};
+const phC={},STONEC2={'#1a1026':'#2a2438'},STONEC={'#fde047':'#b9b6cc','#facc15':'#a5a2ba','#fef3c7':'#d3d0e2','#fb923c':'#8d8aa3','#dc2626':'#6f6c88','#ea580c':'#6f6c88','#c2410c':'#5d5a75','#1a1026':'#ff9a3c'};
+function phoenixSprite(fr,flash,stone){const key=fr+'|'+flash+'|'+(stone|0);if(phC[key])return phC[key];const cv=document.createElement('canvas');cv.width=40;cv.height=32;const x=cv.getContext('2d'),p=(a,b,c)=>{x.fillStyle=flash?'#ffffff':stone?((stone===2&&STONEC2[c])||STONEC[c]||'#8d8aa3'):c;x.fillRect(Math.round(a),Math.round(b),1,1)};
   const base=[-1.15,-.25,.45][fr];   // wings up, level, down
   [-1,1].forEach(sd=>{for(let k=0;k<6;k++){const ang=base+k*.2,len=15-k*1.6;for(let l=0;l<len;l++){const q=l/len,c=q<.4?'#fde047':q<.75?'#fb923c':'#dc2626';p(20+sd*(3+Math.cos(ang)*l),14+Math.sin(ang)*l,c);p(20+sd*(3+Math.cos(ang)*l),15+Math.sin(ang)*l,q<.4?'#facc15':c)}}});
   for(let yy=-7;yy<=7;yy++){const hw=Math.round(Math.sqrt(1-(yy/7.5)**2)*4);for(let xx=-hw;xx<=hw;xx++)p(20+xx,17+yy,Math.abs(xx)<2&&yy<3?'#fef3c7':'#facc15')}
@@ -654,7 +696,7 @@ function goPortal(tx,ty){const inside=tx===PORTAL_IN.tx&&ty===PORTAL_IN.ty,cx=tx
   const p=findPath(tx,ty,true);if(p){P.path=p;P.tgt=null;P.then=()=>portalDlg(inside);if(!p.length){P.then=null;portalDlg(inside)}}}
 function resetBoss(){Object.assign(BOSS,{on:true,hp:BOSS.max,x:ARENA_C.x,y:ARENA_C.y-30,alt:22,st:'fly',t:2.5,shots:[],trail:[],flash:0,phase:1,n:0})}
 function enterArena(){stand();P.path=null;P.tgt=null;P.x=PORTAL_IN.tx*T+8;P.y=(PORTAL_IN.ty-2)*T+8;P.d=1;P.hp=maxHP();resetBoss();MUSIC.set(BOSS_SONG);SFX.play('win');
-  toast('The Phoenix rises! Dodge its fire, and strike when it lands.');hud()}
+  toast('The Phoenix rises! Dodge its fire, and strike when it lands.');hud();progress('enter')}
 function leaveArena(msg){if(LOOT.on&&!LOOT.open)openChest(true);LOOT.on=false;BOSS.on=false;BOSS.shots=[];P.path=null;P.x=PORTAL_OUT.tx*T+8;P.y=(PORTAL_OUT.ty+1)*T+12;P.d=0;MUSIC.set(WORLD_SONG);if(msg)toast(msg);hud()}
 function hurt(n,fx,fy){if(P.inv>0)return;P.hp-=n;P.inv=1.2;SFX.play('bad');const a=Math.atan2(P.y-fy,P.x-fx),kx=P.x+Math.cos(a)*12,ky=P.y+Math.sin(a)*12;if(!blocked(kx,ky)){P.x=kx;P.y=ky}P.path=null;
   if(P.hp<=0){P.hp=maxHP();if(BOSS.on)leaveArena("The Phoenix's flames were too strong. You wake up outside the portal.");else{P.x=SPAWN.x;P.y=SPAWN.y;P.tgt=null;toast('You fainted… the villagers carried you home.')}}hud()}
@@ -664,7 +706,7 @@ function hitBoss(){const d=dmg(),B=BOSS;B.hp-=d;B.flash=.12;SFX.play('hit');pop(
 function bossDown(){const B=BOSS;BOSS.on=false;BOSS.shots=[];S.boss=(S.boss|0)+1;const first=S.boss===1,g=first?500:150,xp=first?300:100;MUSIC.set(WORLD_SONG);SFX.play('win');
   LOOT.on=true;LOOT.open=false;LOOT.t=0;LOOT.x=Math.min(57*T,Math.max(46*T,B.x));LOOT.y=Math.min(57*T,Math.max(49*T,B.y));
   for(let k=0;k<6;k++)setTimeout(()=>{try{Arcade.burst(innerWidth*(.25+.5*Math.random()),innerHeight*(.25+.35*Math.random()),['#fde047','#fb923c','#dc2626','#ffffff'],40)}catch(e){}},k*250);
-  save();reward(g,xp);toast('The Phoenix falls! +'+g+' gold · +'+xp+' XP');setTimeout(()=>toast('A blazing chest appears where it fell. Open it!'),1200)}
+  save();reward(g,xp);progress('phoenix');toast('The Phoenix falls! +'+g+' gold · +'+xp+' XP');setTimeout(()=>toast('A blazing chest appears where it fell. Open it!'),1200)}
 // equipping special gear: you rise in a column of light while flames spiral up around you; a flash swaps the outfit in
 const EQUIP={on:false,t:0,dur:2,nw:null,name:'',sw:false};
 const SPECIAL=l=>l.out==='sunfire'||l.wep==='solaris'||l.hat==='phoenix';
@@ -704,9 +746,10 @@ function drawChest(){const X=Math.round(LOOT.x-cam.x),Y=Math.round(LOOT.y-cam.y)
   else{R(-9,-10,18,5,'#3a2a1c');R(-8,-9,16,3,'#d97706');R(-8,-9,16,1,'#fde047')}}
 function drawStatue(){const X=Math.round(58*T+8-cam.x),Y=Math.round(9*T+14-cam.y);if(X<-40||X>VW+40||Y<-60||Y>VH+30)return;const R=(a,b,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(X+a,Y+b,w,h)};
   R(-12,-8,24,8,'#4b4a5e');R(-11,-8,22,6,'#8d8aa3');R(-11,-8,22,1,'#b9b6cc');R(-9,-3,4,2,'#3f8f4e');R(5,-4,3,1,'#5d5a75');
-  ctx.drawImage(phoenixSprite(0,false,true),X-20,Y-40);
-  const g=.5+Math.sin(time*3)*.3;ctx.globalAlpha=g;R(0,-35,3,3,'#fb923c');ctx.globalAlpha=1;
-  for(let k=0;k<3;k++){const a=(time*.7+k/3)%1;ctx.globalAlpha=1-a;R(Math.round(Math.sin(k*2+time)*6),-44-a*14,1,1,'#fb923c');ctx.globalAlpha=1}}
+  const lit=S.portal||(CINE.on&&CINE.t>2.3);ctx.drawImage(phoenixSprite(0,false,lit?1:2),X-20,Y-40);
+  if(CINE.on&&CINE.t>2.3&&CINE.t<7){ctx.globalAlpha=Math.min(1,(CINE.t-2.3)/.8)*(.6+Math.sin(time*14)*.3);ctx.fillStyle='#fb923c';[[-12,-26,6,1],[-7,-25,1,4],[6,-27,7,1],[8,-27,1,5],[-2,-14,1,6],[-1,-9,4,1],[3,-20,1,4],[-14,-6,9,1],[6,-6,7,1]].forEach(([a,b,w,h])=>ctx.fillRect(X+a,Y+b,w,h));ctx.globalAlpha=1}
+  if(lit){const g=.5+Math.sin(time*3)*.3;ctx.globalAlpha=g;R(0,-35,3,3,'#fb923c');ctx.globalAlpha=1;
+    for(let k=0;k<3;k++){const a=(time*.7+k/3)%1;ctx.globalAlpha=1-a;R(Math.round(Math.sin(k*2+time)*6),-44-a*14,1,1,'#fb923c');ctx.globalAlpha=1}}}
 
 const fireAt=(sx,sy,tx,ty,sp,spread)=>{const a=Math.atan2(ty-sy,tx-sx)+(spread||0);BOSS.shots.push({x:sx,y:sy,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:4})};
 // the fight: it circles the arena, throws fireballs, then dives at you and lands to rest; only a resting Phoenix can be hit
@@ -723,8 +766,72 @@ function bossTick(dt){const B=BOSS;if(!B.on)return;if(!inArena()){B.on=false;B.s
   else if(B.st==='rest'){if(B.t<=0){B.st='fly';B.t=2.6/fast}}
   B.shots=B.shots.filter(q=>{q.x+=q.vx*dt;q.y+=q.vy*dt;q.life-=dt;if(Math.hypot(P.x-q.x,P.y-8-q.y)<8){hurt(1,q.x,q.y);return false}return q.life>0&&inA([44,46,61,61],Math.floor(q.x/T),Math.floor(q.y/T))})}
 
+/* ---------- quest helpers: King Slime, quest marks, statue and board ---------- */
+const KING={on:false,x:0,y:0,hp:40,max:40,vx:0,vy:0,t:0,hit:0,jump:0};
+function spawnKing(){Object.assign(KING,{on:true,x:52*T+8,y:21*T+8,hp:40,max:40,t:1,hit:0,jump:0,vx:0,vy:0});toast('The King Slime appears in the grove!');SFX.play('bad')}
+function kingTick(dt){const K=KING;K.hit=Math.max(0,K.hit-dt);K.t-=dt;K.jump=Math.max(0,K.jump-dt);const d=Math.hypot(P.x-K.x,P.y-K.y)||1;
+  if(K.t<=0){K.t=1.6+Math.random();if(d<140){const sp=K.hp<K.max/2?75:55;K.vx=(P.x-K.x)/d*sp;K.vy=(P.y-K.y)/d*sp;K.jump=.45}else K.vx=K.vy=0}
+  if(K.jump<=0){K.vx*=.9;K.vy*=.9}
+  const nx=K.x+K.vx*dt,ny=K.y+K.vy*dt;if(!blocked(nx,K.y)&&inA(AREA.grove,Math.floor(nx/T),Math.floor(K.y/T)))K.x=nx;else K.vx=-K.vx;if(!blocked(K.x,ny)&&inA(AREA.grove,Math.floor(K.x/T),Math.floor(ny/T)))K.y=ny;else K.vy=-K.vy;
+  if(P.inv<=0&&d<16)hurt(2,K.x,K.y)}
+function hitKing(){const K=KING,d=dmg();K.hp-=d;K.hit=.15;const a=Math.atan2(K.y-P.y,K.x-P.x);K.vx=Math.cos(a)*40;K.vy=Math.sin(a)*40;SFX.play('hit');pop('-'+d,K.x,K.y-24,'#fde047');
+  if(K.hp<=0){K.on=false;SFX.play('win');try{Arcade.burst(innerWidth/2,innerHeight/2,['#6fd36f','#c8f7c8','#ffd66b','#ffffff'],50)}catch(e){}toast('The King Slime is defeated!');progress('king')}}
+function drawKing(){const K=KING,X=Math.round(K.x-cam.x),Y=Math.round(K.y-cam.y),h=K.jump>0?Math.round(Math.sin(K.jump/.45*Math.PI)*6):0;
+  ctx.fillStyle='#00000055';ctx.fillRect(X-12,Y+1,24,4);if(K.hit>0)ctx.globalAlpha=.5;ctx.drawImage(slimeSprite(Math.floor(time*3)%2),X-14,Y-19-h,28,20);ctx.globalAlpha=1;
+  ctx.fillStyle='#ffd66b';ctx.fillRect(X-6,Y-23-h,12,3);[-6,-2,2,5].forEach(a=>ctx.fillRect(X+a,Y-26-h,1,3));ctx.fillStyle='#ff5d8f';ctx.fillRect(X-1,Y-22-h,2,1);
+  ctx.fillStyle='#000';ctx.fillRect(X-12,Y-31-h,24,3);ctx.fillStyle='#e0303f';ctx.fillRect(X-12,Y-31-h,Math.round(24*Math.max(0,K.hp)/K.max),3)}
+const qOn=id=>S.q[id]&&S.q[id].s==='a';
+function questWorld(dt){
+  if(qOn('ember')){const st=S.q.ember;st.got=st.got||[];FEATH.forEach((p,i)=>{if(!st.got.includes(i)&&Math.hypot(P.x-p.x,P.y-p.y)<12){st.got.push(i);SFX.play('tick');toast('A golden feather! ('+st.got.length+'/5)');progress('feather')}})}
+  if(qOn('lamps')){const st=S.q.lamps;st.lit=st.lit||[];LAMPSPOTS.forEach((p,i)=>{if(!st.lit.includes(i)&&Math.hypot(P.x-p.x,P.y-p.y)<24){st.lit.push(i);SFX.play('tick');toast('Lamp lit ('+st.lit.length+'/6)');progress('lamp')}})}
+  if(qOn('water')){if(!P.bucket&&Math.hypot(P.x-WELLSPOT.x,P.y-WELLSPOT.y)<30){P.bucket=true;SFX.play('tick');toast('You filled a bucket at the well.')}
+    else if(P.bucket&&Math.hypot(P.x-PATCHSPOT.x,P.y-PATCHSPOT.y)<40){P.bucket=false;SFX.play('good');toast('You watered the vegetables.');progress('water')}}else P.bucket=false;
+  if(qOn('treasure')&&Math.hypot(P.x-DIG.x,P.y-DIG.y)<10){SFX.play('win');toast('You dug up a buried chest!');progress('dig')}
+  if(qOn('king')&&!KING.on)spawnKing();if(!qOn('king'))KING.on=false;if(KING.on)kingTick(dt);
+  if(!S.portal&&S.lv>=20&&!CINE.on&&!BOSS.on&&Math.hypot(P.x-(58*T+8),P.y-(11*T+8))<100)startCine()}
+function questMarks(){const R=(x,y,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(Math.round(x-cam.x),Math.round(y-cam.y),w,h)};
+  if(qOn('ember')){const got=S.q.ember.got||[];FEATH.forEach((p,i)=>{if(got.includes(i))return;const b=Math.round(Math.sin(time*3+i)*2);ctx.globalAlpha=.3+.2*Math.sin(time*4+i);R(p.x-5,p.y-13+b,11,11,'#fde047');ctx.globalAlpha=1;
+    R(p.x,p.y-12+b,1,9,'#b45309');R(p.x-2,p.y-11+b,2,6,'#fde047');R(p.x+1,p.y-11+b,2,6,'#fb923c');R(p.x-1,p.y-12+b,3,1,'#fffbe6')})}
+  if(qOn('treasure'))[[-3,-3],[-2,-2],[-1,-1],[0,0],[1,1],[2,2],[3,3],[3,-3],[2,-2],[1,-1],[-1,1],[-2,2],[-3,3]].forEach(([a,b])=>R(DIG.x+a-1,DIG.y+b-1,2,2,'#dc2626'));
+  if(qOn('lamps')){const lit=S.q.lamps.lit||[];LAMPSPOTS.forEach((p,i)=>{if(!lit.includes(i)&&Math.floor(time*2)%2)R(p.x-1,p.y-30,3,3,'#fffbe6')})}
+  if(P.bucket){R(P.x+5,P.y-12,6,5,'#6b7280');R(P.x+6,P.y-11,4,2,'#5aa9ff')}}
+function statueTap(){if(qOn('tale')){progress('statue');return dlg('The stone bird','A Phoenix carved in old stone, wings spread wide. At its feet, worn letters read:\n\n"When a hero of twenty seasons stands here, I will wake."',[{t:'Close',p:1}])}
+  dlg('The stone bird',S.portal?'Its eyes burn like embers. The portal at its feet hums with heat.':S.lv>=20?'The air around the statue is hot. Something is about to happen…':'An old stone bird. Its eyes are cold.',[{t:'Close',p:1}])}
+function boardDlg(){const b=el('div');QUESTS.slice().sort((a,c)=>(a.lv||1)-(c.lv||1)).forEach(q=>{const st=qs(q),locked=S.lv<(q.lv||1),pre=q.after&&qs({id:q.after})!=='c'&&st===''&&!q.auto,d=el('div','ql');
+    const tag=st==='c'&&!q.rep&&!q.daily?'✔ DONE':st==='a'?'▶ '+S.q[q.id].n+'/'+q.need:st==='r'?'★ RETURN TO '+npcName(q.npc).toUpperCase():locked?'🔒 LV '+q.lv:pre?'🔒 AFTER "'+QUESTS.find(x=>x.id===q.after).t.toUpperCase()+'"':q.auto?'… SOON':'! '+npcName(q.npc).toUpperCase();
+    d.append(el('b',null,q.t+' · '+tag),(q.auto&&!S.portal)?'A secret. Some say only heroes of level 20 ever find it.':q.d);b.append(d)});
+  dlg('Quest board','Every job in the land. Talk to the person named to take one.',[{t:'Close',p:1}],b)}
+
+/* ---------- the Phoenix Portal opening: a short cinematic ---------- */
+const CINE={on:false,t:0,cx:0,cy:0,r:0,shake:0};let SHAKE=0,TEASE=0;
+const ease=x=>x<=0?0:x>=1?1:x*x*(3-2*x);
+function startCine(){Object.assign(CINE,{on:true,t:0,r:0,cx:P.x,cy:P.y,s1:0,s2:0,s3:0,s4:0,s5:0});P.path=null;keys={};joy.x=joy.y=0;stand();$('#cineSkip').style.display='block';SFX.play('bad')}
+function cineTick(dt){const c=CINE;c.t+=dt;const t=c.t,sx=58*T+8,sy=10*T+8,k=t<.8?0:t<2.3?ease((t-.8)/1.5):t<8.2?1:1-ease((t-8.2)/.8);
+  c.cx=P.x+(sx-P.x)*k;c.cy=P.y+(sy-P.y)*k;c.shake=t>2.3&&t<3.8?1:t>4.6&&t<6.4?.6:0;c.r=t<4.6?0:Math.min(13,(t-4.6)/1.8*13);
+  if(!c.s1&&t>2.3){c.s1=1;SFX.play('bad')}if(!c.s2&&t>3.8){c.s2=1;SFX.play('swing')}if(!c.s3&&t>4.6){c.s3=1;SFX.play('hit')}if(!c.s4&&t>6){c.s4=1;SFX.play('bad')}if(!c.s5&&t>6.6){c.s5=1;SFX.play('win')}
+  if(t>=9)endCine()}
+function endCine(){if(!CINE.on)return;CINE.on=false;S.portal=true;if(Math.floor(P.x/T)===58&&Math.floor(P.y/T)===11)P.y=12*T+12;map[idx(58,11)]=PORTAL;save();$('#cineSkip').style.display='none';
+  toast('The Phoenix Portal is open. Step through it when you are ready.');setTimeout(autoQuests,800)}
+const phoenixShadow=()=>{if(phC.shadow)return phC.shadow;const sp=phoenixSprite(1,false),c=document.createElement('canvas');c.width=sp.width;c.height=sp.height;const x=c.getContext('2d');x.drawImage(sp,0,0);x.globalCompositeOperation='source-in';x.fillStyle='#120808';x.fillRect(0,0,c.width,c.height);return phC.shadow=c};
+function drawCine(){const t=CINE.t;
+  if(t>3.8&&t<4.7){const q=Math.min(1,(t-3.8)/.8),x=58*T+9-cam.x,y=(9*T-22)+(11*T+2-(9*T-22))*q*q-cam.y;for(let i=0;i<5;i++){ctx.globalAlpha=1-i*.18;ctx.fillStyle=FIRE[Math.min(5,i+1)];ctx.fillRect(Math.round(x)-1,Math.round(y-i*3)-1,3,3)}ctx.globalAlpha=1}
+  if(t>4.6&&t<7.2){const a=t<5.4?(t-4.6)/.8:t>6.4?1-(t-6.4)/.8:1;ctx.globalAlpha=.22*a;ctx.fillStyle='#fb923c';ctx.fillRect(0,0,VW,VH);ctx.globalAlpha=1}
+  if(t>6&&t<6.9){const q=(t-6)/.9;ctx.globalAlpha=.85;ctx.drawImage(phoenixShadow(),Math.round(-130+q*(VW+260)),Math.round(VH*.18-Math.sin(q*Math.PI)*12),120,96);ctx.globalAlpha=1}}
+function drawCineUI(){const t=CINE.t,W=uic.width,H=uic.height,bh=Math.round(Math.min(70,H*.13)*(t<.8?ease(t/.8):t>8.2?1-ease((t-8.2)/.8):1)),small=W<600;
+  ux.fillStyle='#000';ux.fillRect(0,0,W,bh);ux.fillRect(0,H-bh,W,bh);ux.textAlign='center';
+  if(t>1&&t<2.4){ux.globalAlpha=Math.min(1,(t-1)/.4)*(t>2.1?1-(t-2.1)/.3:1);ux.font='22px VT323,monospace';ux.fillStyle='#ffd9a0';ux.fillText('The rumour was true…',W/2,H-bh/2+7);ux.globalAlpha=1}
+  if(t>6.6&&t<8.6){if(t<6.9){ux.globalAlpha=1-(t-6.6)/.3;ux.fillStyle='#ffffff';ux.fillRect(0,0,W,H)}ux.globalAlpha=Math.max(0,t>8.2?1-(t-8.2)/.4:Math.min(1,(t-6.6)/.25));
+    ux.font=(small?'14px':'22px')+' "Press Start 2P",monospace';ux.lineWidth=6;ux.strokeStyle='#000';const y=H*.42,gap=small?28:40;
+    ux.strokeText('THE PHOENIX PORTAL',W/2,y);ux.fillStyle='#fde047';ux.fillText('THE PHOENIX PORTAL',W/2,y);ux.strokeText('HAS OPENED',W/2,y+gap);ux.fillStyle='#fb923c';ux.fillText('HAS OPENED',W/2,y+gap);ux.globalAlpha=1}}
+// reaching level 20 anywhere: the ground shakes and the rumour comes true
+function teaser(){TEASE=4;SHAKE=1.2;SFX.play('bad');setTimeout(()=>SFX.play('bad'),400);toast('The ground trembles… flames rise over the shrine ruins to the north-east.')}
+function drawTease(){const W=uic.width,a=Math.min(1,TEASE)*Math.min(1,(4-TEASE)/.5);ux.globalAlpha=a;ux.textAlign='center';ux.font=(W<600?'13px':'18px')+' "Press Start 2P",monospace';ux.lineWidth=5;ux.strokeStyle='#000';
+  ux.strokeText('THE RUMOUR WAS TRUE…',W/2,uic.height*.3);ux.fillStyle='#fb923c';ux.fillText('THE RUMOUR WAS TRUE…',W/2,uic.height*.3);ux.globalAlpha=1}
+
 /* ---------- one step of the game ---------- */
 function tick(dt){if(!started||paused||rotOn)return;time+=dt;
+  if(CINE.on){cineTick(dt);P.mov=false;NET.others.forEach(o=>{o.x+=(o.tx-o.x)*Math.min(1,dt*10);o.y+=(o.ty-o.y)*Math.min(1,dt*10)});bflyTick(dt);netTick(dt);return}
+  TEASE=Math.max(0,TEASE-dt);SHAKE=Math.max(0,SHAKE-dt);
   if(EQUIP.on){equipTick(dt);P.mov=false;NET.others.forEach(o=>{o.x+=(o.tx-o.x)*Math.min(1,dt*10);o.y+=(o.ty-o.y)*Math.min(1,dt*10)});bflyTick(dt);netTick(dt);return}
   let mx=0,my=0;if(!typing()){if(keys.ArrowLeft||keys.a)mx--;if(keys.ArrowRight||keys.d)mx++;if(keys.ArrowUp||keys.w)my--;if(keys.ArrowDown||keys.s)my++}
   if(joy.x||joy.y){mx=joy.x;my=joy.y}
@@ -745,6 +852,7 @@ function tick(dt){if(!started||paused||rotOn)return;time+=dt;
     if((s.t-=dt)<=0){s.t=.8+Math.random()*1.2;const d=Math.hypot(P.x-s.x,P.y-s.y);if(d<70){s.vx=(P.x-s.x)/d*24;s.vy=(P.y-s.y)/d*24}else{const a=Math.random()*6.28,m=Math.random()<.4?0:16;s.vx=Math.cos(a)*m;s.vy=Math.sin(a)*m}}
     const nx=s.x+s.vx*dt,ny=s.y+s.vy*dt;if(!blocked(nx,s.y)&&inA(AREA.grove,Math.floor(nx/T),Math.floor(s.y/T)))s.x=nx;else s.vx=-s.vx;if(!blocked(s.x,ny)&&inA(AREA.grove,Math.floor(s.x/T),Math.floor(ny/T)))s.y=ny;else s.vy=-s.vy;
     if(P.inv<=0&&Math.hypot(P.x-s.x,P.y-s.y)<9)hurt(1,s.x,s.y)});
+  questWorld(dt);
   if(LOOT.on&&!LOOT.open&&Math.hypot(P.x-LOOT.x,P.y-LOOT.y)<18)openChest();
   bossTick(dt);bflyTick(dt);for(let i=POPS.length-1;i>=0;i--){POPS[i].life-=dt;POPS[i].y-=dt*24;if(POPS[i].life<=0)POPS.splice(i,1)}
   NET.others.forEach(o=>{o.x+=(o.tx-o.x)*Math.min(1,dt*10);o.y+=(o.ty-o.y)*Math.min(1,dt*10)});
@@ -783,7 +891,8 @@ function drawChar(lk,x,y,f,mov,ghost,dir,swing){dir=dir|0;const seed=(x*7+y*3)|0
   if(sword)drawSword(X,Y,f,dir,fr,swing===undefined?-1:swing);ctx.globalAlpha=1}
 function label(text,x,y,col,bg){const X=(x-cam.x)*Z,Y=(y-cam.y)*Z;ux.font=(Z>2?20:17)+'px VT323,monospace';ux.textAlign='center';const w=ux.measureText(text).width;
   if(bg){ux.fillStyle='#000a';ux.fillRect(X-w/2-5,Y-16,w+10,21)}ux.lineWidth=3;ux.strokeStyle='#000';ux.strokeText(text,X,Y);ux.fillStyle=col;ux.fillText(text,X,Y)}
-function draw(){cam.x=MW*T<=VW?(MW*T-VW)/2:Math.max(0,Math.min(MW*T-VW,P.x-VW/2));cam.y=MH*T<=VH?(MH*T-VH)/2:Math.max(0,Math.min(MH*T-VH,P.y-8-VH/2));cam.x=Math.round(cam.x);cam.y=Math.round(cam.y);
+function draw(){cam.x=MW*T<=VW?(MW*T-VW)/2:Math.max(0,Math.min(MW*T-VW,(CINE.on?CINE.cx:P.x)-VW/2));cam.y=MH*T<=VH?(MH*T-VH)/2:Math.max(0,Math.min(MH*T-VH,(CINE.on?CINE.cy:P.y)-8-VH/2));cam.x=Math.round(cam.x);cam.y=Math.round(cam.y);
+  {const sh=Math.max(CINE.on?CINE.shake:0,SHAKE>0?1:0);if(sh){cam.x+=Math.round((Math.random()-.5)*3*sh);cam.y+=Math.round((Math.random()-.5)*3*sh)}}
   ctx.imageSmoothingEnabled=false;ctx.fillStyle='#1c4a27';ctx.fillRect(0,0,VW,VH);ctx.drawImage(MAPIMG,-cam.x,-cam.y);ux.clearRect(0,0,uic.width,uic.height);
   WORLD.waters.forEach(([X,Y],i)=>{if(X<cam.x-T||Y<cam.y-T||X>cam.x+VW||Y>cam.y+VH)return;const ph=Math.floor(time*2+i*1.7)%7;if(ph<2){ctx.fillStyle='#bfe6ff';ctx.fillRect(X-cam.x+(i*5%11),Y-cam.y+2+(i*7%11)+ph,4,1)}});
   const want={f:QUESTS.some(q=>q.kind==='f'&&qs(q)==='a'),w:QUESTS.some(q=>q.kind==='w'&&qs(q)==='a')},R=(x,y,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(Math.round(x-cam.x),Math.round(y-cam.y),w,h)};
@@ -795,27 +904,31 @@ function draw(){cam.x=MW*T<=VW?(MW*T-VW)/2:Math.max(0,Math.min(MW*T-VW,P.x-VW/2)
   NET.others.forEach(o=>list.push({y:o.y,d:()=>drawChar(o.lk,o.x,o.y,o.f,o.m,false,o.d)}));
   list.push({y:P.y,d:()=>{drawChar(S.look,P.x,P.y-(EQUIP.on?Math.round(Math.sin(EQUIP.t/EQUIP.dur*Math.PI)*5):0),P.f,P.mov,P.inv>0&&Math.floor(time*12)%2,P.d,P.slash>0?1-P.slash/.16:-1);if(P.slash>0){const sol=S.look.wep==='solaris';ctx.fillStyle=sol?'#fde047':'#fff';const X=Math.round(P.x-cam.x)+P.f*8,Y=Math.round(P.y-cam.y)-10;ctx.fillRect(X,Y,2,2);ctx.fillRect(X+P.f*2,Y+2,2,4);ctx.fillRect(X,Y+6,2,2);
     if(sol){ctx.fillStyle='#fb923c';ctx.fillRect(X+P.f*4,Y-2,2,2);ctx.fillRect(X+P.f*5,Y+3,2,4);ctx.fillRect(X+P.f*4,Y+9,2,2);ctx.fillStyle='#dc2626';ctx.fillRect(X+P.f*6,Y+1,1,1);ctx.fillRect(X+P.f*7,Y+6,1,1)}}}});
-  [PORTAL_OUT,PORTAL_IN].forEach(p=>{const cx=p.tx*T+8,cy=p.ty*T+2;if(cx>cam.x-30&&cx<cam.x+VW+30&&cy>cam.y-30&&cy<cam.y+VH+30)drawSwirl(cx,cy,13,time,true)});
+  [PORTAL_OUT,PORTAL_IN].forEach(p=>{const out=p===PORTAL_OUT,cx=p.tx*T+8,cy=p.ty*T+2;if(!(cx>cam.x-30&&cx<cam.x+VW+30&&cy>cam.y-30&&cy<cam.y+VH+30))return;
+    if(out&&!S.portal&&!(CINE.on&&CINE.t>4.4))return;
+    if(out){const X=p.tx*T-cam.x,Y=p.ty*T-cam.y;ctx.fillStyle='#00000045';ctx.fillRect(X-5,Y+9,26,6);ctx.fillStyle='#3a3448';ctx.fillRect(X-4,Y+8,24,6);ctx.fillStyle='#6f6c88';ctx.fillRect(X-3,Y+8,22,2)}
+    const r=out&&CINE.on?CINE.r:13;if(r>.5)drawSwirl(cx,cy,r,time,r>6)});
+  questMarks();if(KING.on)list.push({y:KING.y,d:drawKing});
   list.push({y:9*T+14,d:drawStatue});if(LOOT.on)list.push({y:LOOT.y,d:drawChest});
   list.sort((a,b)=>a.y-b.y).forEach(o=>o.d());
   if(BOSS.on){BOSS.shots.forEach(q=>drawSwirl(q.x,q.y,5,time*2.5,false));drawPhoenix()}
   BFLY.forEach(drawButterfly);if(EQUIP.on)drawEquip();
-  ctx.drawImage(TOPIMG,-cam.x,-cam.y);
+  ctx.drawImage(TOPIMG,-cam.x,-cam.y);if(CINE.on)drawCine();
   WORLD.chims.forEach(([x,y],i)=>{for(let k=0;k<3;k++){const a=(time*.35+k/3+i*.2)%1,sz=2+(a*3|0);ctx.globalAlpha=.55*(1-a);ctx.fillStyle='#eceaf5';ctx.fillRect(Math.round(x-cam.x+Math.sin((a+k)*5)*3),Math.round(y-cam.y-a*18),sz,sz)}});ctx.globalAlpha=1;
   const night=(Math.sin(time/90)+1)/2;if(night>.55){const k=(night-.55)/.45;ctx.fillStyle='rgba(12,14,60,'+(k*.42).toFixed(3)+')';ctx.fillRect(0,0,VW,VH);ctx.globalCompositeOperation='lighter';
     GLOW.forEach(([x,y])=>{[[22,.05],[14,.08],[7,.13]].forEach(([r,a])=>{ctx.fillStyle='rgba(255,190,90,'+(a*k).toFixed(3)+')';ctx.fillRect(Math.round(x-cam.x)-r,Math.round(y-cam.y)-r,r*2,r*2)})});ctx.globalCompositeOperation='source-over'}
-  NPCS.forEach(n=>{label(n.n,n.x,n.y-28,'#ffd66b',true);const mark=QUESTS.some(q=>q.npc===n.id&&qs(q)==='r')?'?':QUESTS.some(q=>q.npc===n.id&&(qs(q)===''||(q.rep&&qs(q)==='c')))&&!QUESTS.some(q=>q.npc===n.id&&qs(q)==='a')?'!':'';
+  NPCS.forEach(n=>{label(n.n,n.x,n.y-28,'#ffd66b',true);const mark=QUESTS.some(q=>q.npc===n.id&&qs(q)==='r')?'?':QUESTS.some(q=>q.npc===n.id&&avail(q))&&!QUESTS.some(q=>q.npc===n.id&&qs(q)==='a')?'!':'';
     if(mark)label(mark,n.x,n.y-36-(Math.floor(time*2)%2),mark==='?'?'#6ff7ff':'#ffd66b')});
   NET.others.forEach(o=>{label(o.n+' · Lv '+o.lv,o.x,o.y-28,'#fff');if(o.say&&o.sayT>time)label(o.say,o.x,o.y-37,'#fff',true)});
   TABLES.forEach(tb=>{const X=tb.x*T,Y=tb.y*T;if(X<cam.x-80||X>cam.x+VW+40||Y<cam.y-60||Y>cam.y+VH+60)return;if(tb.deco)return label(tb.n,X+16,Y-26,'#ff9ad0',true);
     const n=seatedAt(tb).length;label(tb.n+' · '+n+'/'+tb.max,X+16,tb.max>2?Y-42:Y-12,n>=tb.min?'#7dffb0':'#ffd66b',true)});
-  label('Phoenix Portal · Lv 20',PORTAL_OUT.tx*T+8,(PORTAL_OUT.ty+1)*T+14,'#fb923c',true);label('Exit',PORTAL_IN.tx*T+8,PORTAL_IN.ty*T-16,'#fde047',true);
+  if(S.portal)label('Phoenix Portal · Lv 20',PORTAL_OUT.tx*T+8,(PORTAL_OUT.ty+1)*T+14,'#fb923c',true);label('Exit',PORTAL_IN.tx*T+8,PORTAL_IN.ty*T-16,'#fde047',true);
   POPS.forEach(q=>label(q.t,q.x,q.y,q.c,false));
   if(BOSS.on){const B=BOSS,w=Math.min(uic.width*.6,420),x0=(uic.width-w)/2,y0=124;ux.fillStyle='#000c';ux.fillRect(x0-8,y0-26,w+16,44);ux.font='22px VT323,monospace';ux.textAlign='center';ux.fillStyle='#fde047';
     ux.fillText(B.phase===2?'PHOENIX — REBORN':'PHOENIX',uic.width/2,y0-6);ux.fillStyle='#3d1a10';ux.fillRect(x0,y0,w,10);ux.fillStyle=B.phase===2?'#fb923c':'#dc2626';ux.fillRect(x0,y0,w*Math.max(0,B.hp)/B.max,10);ux.fillStyle='#ffffff55';ux.fillRect(x0,y0,w*Math.max(0,B.hp)/B.max,2)}
   label('★ PIXEL ARCADE ★',26*T,43*T-15,'#ffffff',false);label('↓ Arcade Hall',26*T,37*T+2,'#ff9ad0',true);
   if(EQUIP.on&&EQUIP.sw)label('✦ '+EQUIP.name+' ✦',P.x,P.y-44-Math.round((EQUIP.t-.95)*8),'#fde047',true);
-  label(S.name,P.x,P.y-28,'#9fe0b0');if(mySay&&mySayT>time)label(mySay,P.x,P.y-37,'#fff',true)}
+  label(S.name,P.x,P.y-28,'#9fe0b0');if(mySay&&mySayT>time)label(mySay,P.x,P.y-37,'#fff',true);if(CINE.on)drawCineUI();if(TEASE>0)drawTease()}
 let last=0;function frame(t){const dt=Math.min(.05,(t-last)/1000||0);last=t;tick(dt);if(started)draw();requestAnimationFrame(frame)}
 
 /* ---------- chat ---------- */
@@ -824,7 +937,7 @@ function addChat(n,m,sys){const l=$('#clog'),d=el('div',sys?'sys':'');if(!sys)d.
 const cleanMsg=m=>String(m||'').replace(/[\u0000-\u001f]/g,' ').replace(/\s+/g,' ').trim().slice(0,120);
 $('#cin').addEventListener('blur',()=>setTimeout(()=>{if(document.activeElement!==$('#cin'))document.body.classList.remove('chatting')},150));
 $('#cform').onsubmit=e=>{e.preventDefault();const inp=$('#cin'),m=cleanMsg(inp.value);if(!m)return inp.blur();if(Date.now()-lastSent<800)return;lastSent=Date.now();inp.value='';document.body.classList.remove('chatting');
-  addChat(S.name,m);mySay=m.slice(0,40);mySayT=time+4;netChat(m);progress('chat');inp.blur()};
+  addChat(S.name,m);mySay=m.slice(0,40);mySayT=time+4;netChat(m);progress('chat');if(NET.others.size)progress('friend');inp.blur()};
 
 /* ---------- other players: peer-to-peer worlds (no server) ---------- */
 const NET={peer:null,host:false,hc:null,conns:new Map(),pl:new Map(),others:new Map(),id:'',gen:0,acc:0,bacc:0,wait:0,world:0};
@@ -884,7 +997,7 @@ function netTick(dt){if(!NET.peer)return;NET.acc+=dt;NET.bacc+=dt;
 /* ---------- start ---------- */
 SFX.add({swing:()=>SFX.tone(300,0,.06,'square',.04,140),hit:()=>SFX.tone(180,0,.09,'sawtooth',.06,70),tick:()=>SFX.tone(880,0,.05,'triangle',.06,1320)});
 const WORLD_SONG={bpm:92,lead:'triangle',arp:'triangle',ch:[[48,55,60,64],[45,52,57,60],[41,48,53,57],[43,50,55,59]],mel:[67,0,72,0,76,0,72,0, 69,0,72,0,76,0,0,0, 65,0,69,0,72,0,69,0, 67,0,71,0,74,0,0,0]};MUSIC.set(WORLD_SONG);
-function begin(){started=true;hud();if(!S.hall){S.hall=1;save();setTimeout(()=>toast('New: the Arcade Hall is just south of the village!'),2400)}addChat('','Welcome to Pixel World, '+S.name+'! '+(TOUCH?'Walk with the joystick and tap to attack. Tap someone nearby to talk.':'Walk with the arrow keys or WASD and click to attack. Click someone nearby to talk.'),true);netJoin(0);if(!Object.keys(S.q).length)setTimeout(()=>toast('Elder Oro is waiting in the square'),900)}
+function begin(){started=true;hud();setTimeout(autoQuests,1500);if(S.lv>=20&&!S.portal)setTimeout(()=>toast('Rumours speak of flames at the shrine ruins in the north-east…'),4200);if(!S.hall){S.hall=1;save();setTimeout(()=>toast('New: the Arcade Hall is just south of the village!'),2400)}addChat('','Welcome to Pixel World, '+S.name+'! '+(TOUCH?'Walk with the joystick and tap to attack. Tap someone nearby to talk.':'Walk with the arrow keys or WASD and click to attack. Click someone nearby to talk.'),true);netJoin(0);if(!Object.keys(S.q).length)setTimeout(()=>toast('Elder Oro is waiting in the square'),900)}
 addEventListener('beforeunload',()=>{save();netLeave()});
 addEventListener('pagehide',()=>{save();netLeave()});
 setInterval(save,15000);
@@ -893,7 +1006,7 @@ const enter=()=>{begin();if(TOUCH)goLandscape();checkRot()};
 if(!S.look||!S.name)lookEditor(enter,true);
 else if(TOUCH)dlg('Pixel World','Welcome back, '+S.name+'!\n\nThis world is played with your phone held sideways.',[{t:'Play',p:1,fn:enter},{t:'< Back to Arcade',fn:()=>{location.href='../'}}]);
 else enter();
-window._W={S,P,NET,tick,draw,talk,attack,findPath,slimes,ITEMS,QUESTS,NPCS,map,idx,shop,menu,TABLES,chairsOf,seatedAt,BOSS,BFLY,LOOT,openChest,EQUIP,equipAnim,inventory,showcase,enterArena,leaveArena,hitBoss,portalDlg,maxHP,dmg,sit,stand,startTable,goHere,tableDlg,goTable};
+window._W={S,P,NET,tick,draw,talk,attack,findPath,slimes,ITEMS,QUESTS,NPCS,map,idx,shop,menu,TABLES,chairsOf,seatedAt,BOSS,BFLY,LOOT,openChest,EQUIP,equipAnim,CINE,startCine,endCine,KING,teaser,autoQuests,boardDlg,FEATH,DIG,progress,inventory,showcase,enterArena,leaveArena,hitBoss,portalDlg,maxHP,dmg,sit,stand,startTable,goHere,tableDlg,goTable};
 </script>
 </body>
 </html>
